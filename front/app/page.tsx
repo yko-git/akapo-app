@@ -1,9 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
+import Image from "next/image";
 
 const UploadImage = () => {
   const [file, setFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
 
   const handleFileChange = (event: any) => {
     setFile(event.target.files[0]);
@@ -27,7 +29,8 @@ const UploadImage = () => {
         },
       });
 
-      console.log(signedUrl);
+      const uploadedImageUrl = signedUrl.split("?")[0]; // 署名付きURLのクエリを除外
+      setImageUrl(uploadedImageUrl);
       alert("画像がアップロードされました");
     } catch (err) {
       console.error("エラーが発生しました", err);
@@ -46,6 +49,18 @@ const UploadImage = () => {
           upload
         </button>
       </div>
+      {imageUrl && (
+        <div>
+          <p>{imageUrl}</p>
+          <Image
+            src={imageUrl}
+            alt="Uploaded Image"
+            width={500}
+            height={500}
+            unoptimized
+          />
+        </div>
+      )}
     </>
   );
 };
