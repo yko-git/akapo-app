@@ -7,22 +7,13 @@ import jwt from "jsonwebtoken";
 import { Post } from "./models/post";
 import { sequelize } from "./models";
 import Category from "./models/category";
-import AWS from "aws-sdk";
+import configureAWS from "./aws";
 import cors from "cors";
 
 if (!process.env.MYPEPPER || !process.env.JWT_SECRET) {
   console.error("env vars are not set.");
   process.exit(1);
 }
-
-// AWS SDK
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
-
-const s3 = new AWS.S3();
 
 const app = express();
 app.listen(3001);
@@ -304,6 +295,7 @@ app.delete(
 // アップロード用署名付きURLを生成するエンドポイント
 app.get("/generate-upload-url", (req, res) => {
   const { filename } = req.query;
+  const s3 = configureAWS();
 
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
@@ -327,6 +319,7 @@ app.get("/generate-upload-url", (req, res) => {
 // ダウンロード用署名付きURLを生成するエンドポイント
 app.get("/generate-download-url", (req, res) => {
   const { filename } = req.query;
+  const s3 = configureAWS();
 
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
