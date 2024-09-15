@@ -2,9 +2,9 @@ require("dotenv").config();
 
 const configs = {
   development: {
-    username: "root",
-    password: process.env.SECRET_KEY,
-    database: "database_development",
+    username: "akapo",
+    password: "20240915",
+    database: "akapodb",
     host: "127.0.0.1",
     dialect: "mysql",
   },
