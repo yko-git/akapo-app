@@ -19,6 +19,7 @@ class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
   declare title: string;
   declare body: string;
   declare status: number;
+  declare imageUrl: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare setCategories: BelongsToManySetAssociationsMixin<Category, number>;
@@ -87,6 +88,15 @@ Post.init(
       validate: {
         notNull: {
           msg: "ステータスは必ず入力してください",
+        },
+      },
+    },
+    imageUrl: {
+      allowNull: false,
+      type: DataTypes.TEXT,
+      validate: {
+        notNull: {
+          msg: "画像は必ず登録してください",
         },
       },
     },

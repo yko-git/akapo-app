@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import { Post } from "./models/post";
 import { sequelize } from "./models";
 import Category from "./models/category";
-import AWS from "aws-sdk";
+import configureAWS from "./aws";
 import cors from "cors";
 
 if (!process.env.MYPEPPER || !process.env.JWT_SECRET) {
@@ -22,6 +22,13 @@ app.listen(3001);
   // await sequelize.sync({ alter: true });
   console.log("synchronized");
 })();
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 // passportの初期化
 app.use(passport.initialize());
@@ -152,13 +159,14 @@ app.post(
     }
     try {
       const { post: params } = req.body;
-      const { title, body, status, categoryIds } = params || {};
+      const { title, body, status, categoryIds, imageUrl } = params || {};
 
       const post = Post.build({
         userId: user.id,
         title,
         body,
         status,
+        imageUrl,
       });
 
       await post.upsert(categoryIds);
@@ -284,38 +292,42 @@ app.delete(
   }
 );
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
-
-// AWS SDK
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
-
-const s3 = new AWS.S3();
-
-app.get("/imgupload", (req, res) => {
+// アップロード用署名付きURLを生成するエンドポイント
+app.get("/generate-upload-url", (req, res) => {
   const { filename } = req.query;
+  const s3 = configureAWS();
 
-  if (!filename) {
-    return res.status(400).json({ errorMessage: "Filenameは必須です。" });
-  }
-
-  // 署名付きURLを生成
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
     Key: filename,
     Expires: 60 * 5,
-    ContentType: "image/jpeg",
+    ContentType: "application/octet-stream",
   };
 
   s3.getSignedUrl("putObject", params, (err, url) => {
+    if (err) {
+      console.error(err);
+      return res
+        .status(500)
+        .json({ errorMessage: "署名付きURLの生成に失敗しました。" });
+    }
+
+    res.status(200).json({ signedUrl: url });
+  });
+});
+
+// ダウンロード用署名付きURLを生成するエンドポイント
+app.get("/generate-download-url", (req, res) => {
+  const { filename } = req.query;
+  const s3 = configureAWS();
+
+  const params = {
+    Bucket: process.env.AWS_S3_BUCKET_NAME,
+    Key: filename,
+    Expires: 60 * 5,
+  };
+
+  s3.getSignedUrl("getObject", params, (err, url) => {
     if (err) {
       console.error(err);
       return res
