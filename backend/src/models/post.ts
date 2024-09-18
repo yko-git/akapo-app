@@ -19,7 +19,7 @@ class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
   declare title: string;
   declare body: string;
   declare status: number;
-  declare imageUrl: string;
+  declare imageKey: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare setCategories: BelongsToManySetAssociationsMixin<Category, number>;
@@ -91,7 +91,7 @@ Post.init(
         },
       },
     },
-    imageUrl: {
+    imageKey: {
       allowNull: false,
       type: DataTypes.TEXT,
       validate: {

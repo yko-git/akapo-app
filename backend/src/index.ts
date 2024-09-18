@@ -159,14 +159,14 @@ app.post(
     }
     try {
       const { post: params } = req.body;
-      const { title, body, status, categoryIds, imageUrl } = params || {};
+      const { title, body, status, categoryIds, imageKey } = params || {};
 
       const post = Post.build({
         userId: user.id,
         title,
         body,
         status,
-        imageUrl,
+        imageKey,
       });
 
       await post.upsert(categoryIds);
@@ -293,8 +293,9 @@ app.delete(
 );
 
 // アップロード用署名付きURLを生成するエンドポイント
-app.get("/generate-upload-url", (req, res) => {
+app.get("/postsimage", (req, res) => {
   const { filename } = req.query;
+
   const s3 = configureAWS();
 
   const params = {
@@ -317,7 +318,7 @@ app.get("/generate-upload-url", (req, res) => {
 });
 
 // ダウンロード用署名付きURLを生成するエンドポイント
-app.get("/generate-download-url", (req, res) => {
+app.get("/imageurl", (req, res) => {
   const { filename } = req.query;
   const s3 = configureAWS();
 
@@ -337,4 +338,29 @@ app.get("/generate-download-url", (req, res) => {
 
     res.status(200).json({ signedUrl: url });
   });
+});
+
+// モックユーザー発行エンドポイント
+app.post("/mockurl", async (req: Request, res: Response) => {
+  try {
+    // モックのユーザー情報
+    const mockUser = {
+      id: 1,
+      loginId: "user1",
+      name: "hoge1",
+      iconUrl: "http://localhost",
+    };
+
+    // jwtのtokenを作成
+    const payload = { user: mockUser };
+    const token = jwt.sign(payload, `${process.env.JWT_SECRET}` as string, {
+      expiresIn: "30days",
+    });
+
+    res.json({ user: mockUser, token });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ errorMessage: "モックユーザーの作成に失敗しました。" });
+  }
 });
