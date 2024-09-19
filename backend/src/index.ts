@@ -183,16 +183,40 @@ app.get(
   passport.authenticate("jwt", { session: false }),
   async (req: any, res) => {
     try {
-      const status = req.query;
-      const posts = await Post.findAll({
-        where: status,
-        include: {
-          model: Category,
-          through: { attributes: [] },
-        },
-      });
+      const { filename, ...status } = req.query;
+      const s3 = configureAWS();
 
-      return res.json({ posts });
+      // S3の署名付きURLを生成する処理
+      const params = {
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Key: filename,
+        Expires: 60 * 5,
+      };
+
+      s3.getSignedUrl("getObject", params, async (err, url) => {
+        if (err) {
+          console.error(err);
+          return res
+            .status(500)
+            .json({ errorMessage: "署名付きURLの生成に失敗しました。" });
+        }
+        try {
+          const posts = await Post.findAll({
+            where: status,
+            include: {
+              model: Category,
+              through: { attributes: [] },
+            },
+          });
+
+          return res.json({ posts, signedUrl: url });
+        } catch (err) {
+          console.log(err);
+          return res
+            .status(401)
+            .json({ errorMessage: "投稿データの取得に失敗しました。" });
+        }
+      });
     } catch (err) {
       console.log(err);
       return res
@@ -306,29 +330,6 @@ app.get("/postsimage", (req, res) => {
   };
 
   s3.getSignedUrl("putObject", params, (err, url) => {
-    if (err) {
-      console.error(err);
-      return res
-        .status(500)
-        .json({ errorMessage: "署名付きURLの生成に失敗しました。" });
-    }
-
-    res.status(200).json({ signedUrl: url });
-  });
-});
-
-// ダウンロード用署名付きURLを生成するエンドポイント
-app.get("/imageurl", (req, res) => {
-  const { filename } = req.query;
-  const s3 = configureAWS();
-
-  const params = {
-    Bucket: process.env.AWS_S3_BUCKET_NAME,
-    Key: filename,
-    Expires: 60 * 5,
-  };
-
-  s3.getSignedUrl("getObject", params, (err, url) => {
     if (err) {
       console.error(err);
       return res
