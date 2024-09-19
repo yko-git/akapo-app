@@ -78,12 +78,13 @@ const CreatePost = () => {
       console.log("Post created:", postResponse.data.post);
 
       // 画像のダウンロード用署名付きURLを取得
-      const imageUrlResponse = await axios.get(
-        "http://localhost:3001/imageurl",
-        {
-          params: { filename: file.name },
-        }
-      );
+      const imageUrlResponse = await axios.get("http://localhost:3001/posts", {
+        params: { filename: file.name },
+        headers: {
+          Authorization: `Bearer ${token}`, // モックユーザーのトークンを指定
+        },
+      });
+      console.log(imageUrlResponse);
       setImageUrl(imageUrlResponse.data.signedUrl);
     } catch (error) {
       console.error("投稿中にエラーが発生しました", error);
