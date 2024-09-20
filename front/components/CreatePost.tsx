@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Image from "next/image";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
@@ -46,7 +47,7 @@ const CreatePost = () => {
           },
         }
       );
-      const signedUrl = signedUrlResponse.data.signedUrl;
+      const { signedUrl, safeFilePath } = signedUrlResponse.data;
 
       // S3に画像をアップロード
       await axios.put(signedUrl, file, {
@@ -64,7 +65,7 @@ const CreatePost = () => {
             body,
             status,
             categoryIds,
-            imageKey: file.name,
+            imageKey: safeFilePath,
           },
         },
         {
@@ -78,14 +79,16 @@ const CreatePost = () => {
       console.log("Post created:", postResponse.data.post);
 
       // 画像のダウンロード用署名付きURLを取得
-      const imageUrlResponse = await axios.get("http://localhost:3001/posts", {
-        params: { filename: file.name },
-        headers: {
-          Authorization: `Bearer ${token}`, // モックユーザーのトークンを指定
-        },
-      });
-      console.log(imageUrlResponse);
-      setImageUrl(imageUrlResponse.data.signedUrl);
+      const imageUrlResponse = await axios.get(
+        `http://localhost:3001/posts/${postResponse.data.post.id}`,
+        {
+          params: { imageKey: file.name },
+          headers: {
+            Authorization: `Bearer ${token}`, // モックユーザーのトークンを指定
+          },
+        }
+      );
+      setImageUrl(imageUrlResponse.data.post.signedUrl);
     } catch (error) {
       console.error("投稿中にエラーが発生しました", error);
     }
@@ -153,7 +156,7 @@ const CreatePost = () => {
       {imageUrl && (
         <div>
           <h3>アップロードされた画像:</h3>
-          <img src={imageUrl} alt="Uploaded" className="w-full h-auto" />
+          <Image src={imageUrl} alt="Uploaded" width={400} height={400} />
         </div>
       )}
     </div>

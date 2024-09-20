@@ -183,39 +183,13 @@ app.get(
   passport.authenticate("jwt", { session: false }),
   async (req: any, res) => {
     try {
-      const { filename, ...status } = req.query;
-      const s3 = configureAWS();
-
-      // S3の署名付きURLを生成する処理
-      const params = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Key: filename,
-        Expires: 60 * 5,
-      };
-
-      s3.getSignedUrl("getObject", params, async (err, url) => {
-        if (err) {
-          console.error(err);
-          return res
-            .status(500)
-            .json({ errorMessage: "署名付きURLの生成に失敗しました。" });
-        }
-        try {
-          const posts = await Post.findAll({
-            where: status,
-            include: {
-              model: Category,
-              through: { attributes: [] },
-            },
-          });
-
-          return res.json({ posts, signedUrl: url });
-        } catch (err) {
-          console.log(err);
-          return res
-            .status(401)
-            .json({ errorMessage: "投稿データの取得に失敗しました。" });
-        }
+      const status = req.query;
+      const posts = await Post.findAll({
+        where: status,
+        include: {
+          model: Category,
+          through: { attributes: [] },
+        },
       });
     } catch (err) {
       console.log(err);
@@ -230,24 +204,52 @@ app.get(
   "/posts/:id",
   passport.authenticate("jwt", { session: false }),
   async (req: any, res) => {
-    const requestParams = req.params;
-    const id = requestParams.id;
-    const post = await Post.findOne({
-      where: {
-        id,
-      },
-      include: {
-        model: Category,
-        through: { attributes: [] },
-      },
-    });
+    const { id } = req.params;
 
-    if (post) {
-      return res.json({ post });
-    } else {
+    try {
+      const post = await Post.findOne({
+        where: { id },
+        include: {
+          model: Category,
+          through: { attributes: [] },
+        },
+      });
+
+      if (!post) {
+        return res
+          .status(404)
+          .json({ errorMessage: "情報が取得できませんでした。" });
+      }
+
+      const s3 = configureAWS();
+      let signedUrl = null;
+
+      // 画像が存在する場合、S3の署名付きURLを生成
+      if (post.imageKey) {
+        const params = {
+          Bucket: process.env.AWS_S3_BUCKET_NAME,
+          Key: post.imageKey,
+          Expires: 60 * 5,
+        };
+
+        signedUrl = await new Promise<string>((resolve, reject) => {
+          s3.getSignedUrl("getObject", params, (err, url) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(url);
+            }
+          });
+        });
+      }
+
+      // 署名付きURLを含めたレスポンスを返す
+      return res.json({ post: { ...post.toJSON(), signedUrl } });
+    } catch (err) {
+      console.error(err);
       return res
-        .status(404)
-        .json({ errorMessage: "情報が取得できませんでした。" });
+        .status(500)
+        .json({ errorMessage: "投稿の取得に失敗しました。" });
     }
   }
 );
@@ -319,12 +321,13 @@ app.delete(
 // アップロード用署名付きURLを生成するエンドポイント
 app.get("/postsimage", (req, res) => {
   const { filename } = req.query;
+  const safeFilePath = `uploads/${Date.now()}-${filename}`;
 
   const s3 = configureAWS();
 
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
-    Key: filename,
+    Key: safeFilePath,
     Expires: 60 * 5,
     ContentType: "application/octet-stream",
   };
@@ -337,7 +340,7 @@ app.get("/postsimage", (req, res) => {
         .json({ errorMessage: "署名付きURLの生成に失敗しました。" });
     }
 
-    res.status(200).json({ signedUrl: url });
+    res.status(200).json({ signedUrl: url, safeFilePath });
   });
 });
 
