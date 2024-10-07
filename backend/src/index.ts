@@ -191,6 +191,8 @@ app.get(
           through: { attributes: [] },
         },
       });
+
+      return res.json({ posts });
     } catch (err) {
       console.log(err);
       return res

@@ -4,8 +4,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "aws-akapo-app.s3.us-east-2.amazonaws.com",
-        pathname: "/**",
+        hostname: "images.akapo-app.com",
+        port: "",
+        pathname: "/uploads/**",
       },
     ],
   },
