@@ -46,7 +46,7 @@ const CreatePost = () => {
           },
         }
       );
-      const signedUrl = signedUrlResponse.data.signedUrl;
+      const { signedUrl, safeFilePath } = signedUrlResponse.data;
 
       // S3に画像をアップロード
       await axios.put(signedUrl, file, {
@@ -64,7 +64,7 @@ const CreatePost = () => {
             body,
             status,
             categoryIds,
-            imageKey: file.name,
+            imageKey: safeFilePath,
           },
         },
         {
@@ -77,14 +77,8 @@ const CreatePost = () => {
       alert("記事が投稿されました！");
       console.log("Post created:", postResponse.data.post);
 
-      // 画像のダウンロード用署名付きURLを取得
-      const imageUrlResponse = await axios.get(
-        "http://localhost:3001/imageurl",
-        {
-          params: { filename: file.name },
-        }
-      );
-      setImageUrl(imageUrlResponse.data.signedUrl);
+      console.log(`https://images.akapo-app.com/${safeFilePath}`);
+      setImageUrl(`https://images.akapo-app.com/${safeFilePath}`);
     } catch (error) {
       console.error("投稿中にエラーが発生しました", error);
     }
@@ -152,7 +146,7 @@ const CreatePost = () => {
       {imageUrl && (
         <div>
           <h3>アップロードされた画像:</h3>
-          <img src={imageUrl} alt="Uploaded" className="w-full h-auto" />
+          <img src={imageUrl} alt="Uploaded" width={400} height={400} />
         </div>
       )}
     </div>
