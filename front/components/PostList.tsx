@@ -9,7 +9,6 @@ export default function PostList() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // モックユーザーのJWTトークンを取得
         const getMockUserToken = async () => {
           try {
             const response = await axios.post("http://localhost:3001/mockurl");
@@ -23,7 +22,6 @@ export default function PostList() {
         };
 
         const userToken = await getMockUserToken();
-
         const res = await axios.get("http://localhost:3001/posts", {
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -40,20 +38,45 @@ export default function PostList() {
     fetchData();
   }, []);
 
+  const reSignedUrl = async (postId: number) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3001/posts/${postId}/re-signedurl`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data.signedUrl;
+    } catch (error) {
+      console.error("署名付きURLの再取得に失敗しました", error);
+      return null;
+    }
+  };
+
   return (
     <div className="m-4">
       <h1 className="font-bold my-2">投稿一覧</h1>
       <ul className="gap-2 flex">
         {data.map((item, index) => (
-          <li key={index}>
-            <div>{item.title}</div>
+          <li key={index} className="border p-4 rounded">
+            <div className="font-semibold">{item.title}</div>
             <div>{item.body}</div>
-            <div>
+            <div className="mt-2">
               <img
-                src={`https://images.akapo-app.com/${item.imageKey}`}
+                src={item.signedUrl}
                 alt="Uploaded"
                 width={150}
                 height={150}
+                onError={async (e) => {
+                  // 署名付きURLが期限切れの場合に新しいURLを取得して再設定
+                  const newUrl = await reSignedUrl(item.id);
+                  if (newUrl) {
+                    (e.target as HTMLImageElement).src = newUrl;
+                  }
+                }}
               />
             </div>
           </li>
