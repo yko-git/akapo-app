@@ -1,35 +1,18 @@
-// app/page.tsx
-import React from "react";
+import Link from "next/link";
+import PostList from "@/components/PostList";
 
-const HomePage = () => {
+export default function Page() {
   return (
-    <main style={styles.main}>
-      <h1 style={styles.heading}>Welcome to My App</h1>
-      <p style={styles.description}>
-        This is the initial page of your application!
-      </p>
-    </main>
+    <>
+      <div className="m-4">
+        <Link href="/posts">
+          <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+            新しい投稿を作成
+          </button>
+        </Link>
+      </div>
+      <hr />
+      <PostList />
+    </>
   );
-};
-
-// CSS-in-JSのスタイル
-const styles = {
-  main: {
-    display: "flex",
-    flexDirection: "column" as "column",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
-    fontFamily: "Arial, sans-serif",
-  },
-  heading: {
-    fontSize: "3rem",
-    color: "#333",
-  },
-  description: {
-    fontSize: "1.5rem",
-    color: "#666",
-  },
-};
-
-export default HomePage;
+}
