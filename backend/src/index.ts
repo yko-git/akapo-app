@@ -218,7 +218,6 @@ app.get(
       const post = await Promise.all(
         posts.map(async (post) => {
           let signedUrl = post.signedUrl;
-
           // URLがない、または有効期限が切れている場合、新しい署名付きURLを生成
           if (!signedUrl || (post.urlExpiresAt && post.urlExpiresAt < now)) {
             const s3 = configureAWS();
@@ -233,7 +232,12 @@ app.get(
                 if (err) {
                   reject(err);
                 } else {
-                  resolve(url);
+                  resolve(
+                    url.replace(
+                      `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}/`,
+                      `https://images.akapo-app.com/`
+                    )
+                  );
                 }
               });
             });
@@ -285,7 +289,12 @@ app.post(
           if (err) {
             reject(err);
           } else {
-            resolve(url);
+            resolve(
+              url.replace(
+                `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}/`,
+                `https://images.akapo-app.com/`
+              )
+            );
           }
         });
       });
