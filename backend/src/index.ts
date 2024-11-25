@@ -232,13 +232,7 @@ app.get(
                 if (err) {
                   reject(err);
                 } else {
-                  console.log("Generated S3 signed URL:", url); // ここでログ
-                  const cloudflareUrl = url.replace(
-                    `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
-                    `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
-                  );
-                  resolve(cloudflareUrl);
-                  console.log("Custom Signed URL:", cloudflareUrl); // ここでログ
+                  resolve(url);
                 }
               });
             });
@@ -290,13 +284,11 @@ app.post(
           if (err) {
             reject(err);
           } else {
-            console.log("Generated S3 signed URL:", url); // ここでログ
             const cloudflareUrl = url.replace(
               `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
               `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
             );
             resolve(cloudflareUrl);
-            console.log("Custom Signed URL:", cloudflareUrl); // ここでログ
           }
         });
       });
