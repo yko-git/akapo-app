@@ -64,12 +64,12 @@ const CreatePost = () => {
             body,
             status,
             categoryIds,
-            imageKey: safeFilePath,
+            imageKey: safeFilePath, // 画像のキーを指定
           },
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // モックユーザーのトークンを指定
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -77,8 +77,7 @@ const CreatePost = () => {
       alert("記事が投稿されました！");
       console.log("Post created:", postResponse.data.post);
 
-      console.log(`https://images.akapo-app.com/${safeFilePath}`);
-      setImageUrl(`https://images.akapo-app.com/${safeFilePath}`);
+      setImageUrl(postResponse.data.post.signedUrl); // サーバーからの署名付きURLを使用
     } catch (error) {
       console.error("投稿中にエラーが発生しました", error);
     }

@@ -20,6 +20,8 @@ class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
   declare body: string;
   declare status: number;
   declare imageKey: string;
+  declare signedUrl: string;
+  declare urlExpiresAt: CreationOptional<Date>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare setCategories: BelongsToManySetAssociationsMixin<Category, number>;
@@ -99,6 +101,13 @@ Post.init(
           msg: "画像は必ず登録してください",
         },
       },
+    },
+    signedUrl: {
+      allowNull: false,
+      type: DataTypes.TEXT,
+    },
+    urlExpiresAt: {
+      type: DataTypes.DATE,
     },
     createdAt: {
       type: DataTypes.DATE,

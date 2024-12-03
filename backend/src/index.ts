@@ -161,12 +161,33 @@ app.post(
       const { post: params } = req.body;
       const { title, body, status, categoryIds, imageKey } = params || {};
 
+      // DBに保存用 画像ダウンロード用の署名付きURLを生成
+      const s3 = configureAWS();
+      const expiresIn = 60 * 5;
+      const paramsForS3 = {
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Key: imageKey,
+        Expires: expiresIn,
+      };
+      const signedUrl = await new Promise<string>((resolve, reject) => {
+        s3.getSignedUrl("getObject", paramsForS3, (err, url) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(url);
+          }
+        });
+      });
+
+      // 画像ダウンロード用の署名付きURLと有効期限も含めてDBに投稿
       const post = Post.build({
         userId: user.id,
         title,
         body,
         status,
         imageKey,
+        signedUrl,
+        urlExpiresAt: new Date(Date.now() + expiresIn * 1000),
       });
 
       await post.upsert(categoryIds);
@@ -192,7 +213,43 @@ app.get(
         },
       });
 
-      return res.json({ posts });
+      // 投稿ごとに署名付きURLを確認し、必要に応じて生成
+      const now = new Date();
+      const post = await Promise.all(
+        posts.map(async (post) => {
+          let signedUrl = post.signedUrl;
+          // URLがない、または有効期限が切れている場合、新しい署名付きURLを生成
+          if (!signedUrl || (post.urlExpiresAt && post.urlExpiresAt < now)) {
+            const s3 = configureAWS();
+            const params = {
+              Bucket: process.env.AWS_S3_BUCKET_NAME,
+              Key: post.imageKey,
+              Expires: 60 * 5, // 5分間の有効期限
+            };
+
+            signedUrl = await new Promise<string>((resolve, reject) => {
+              s3.getSignedUrl("getObject", params, (err, url) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(url);
+                }
+              });
+            });
+
+            // 新しい署名付きURLとその有効期限を保存
+            post.urlExpiresAt = new Date(Date.now() + 60 * 5 * 1000); // 5分後
+            await post.save();
+          }
+
+          return {
+            ...post.toJSON(),
+            signedUrl, // 新しい署名付きURL
+          };
+        })
+      );
+
+      return res.json({ posts: post });
     } catch (err) {
       console.log(err);
       return res
@@ -202,56 +259,75 @@ app.get(
   }
 );
 
+//有効期限が切れた場合に再生成するエンドポイント
+app.post(
+  "/posts/:id/re-signedurl",
+  passport.authenticate("jwt", { session: false }),
+  async (req: any, res) => {
+    try {
+      const postId = req.params.id;
+      const post = await Post.findByPk(postId);
+
+      if (!post) {
+        return res.status(404).json({ errorMessage: "投稿が見つかりません。" });
+      }
+
+      const s3 = configureAWS();
+      const params = {
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Key: post.imageKey,
+        Expires: 60 * 5, // 5分間の有効期限
+      };
+
+      const signedUrl = await new Promise<string>((resolve, reject) => {
+        s3.getSignedUrl("getObject", params, (err, url) => {
+          if (err) {
+            reject(err);
+          } else {
+            const cloudflareUrl = url.replace(
+              `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
+              `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
+            );
+            resolve(cloudflareUrl);
+          }
+        });
+      });
+
+      post.urlExpiresAt = new Date(Date.now() + 60 * 5 * 1000); // 新しい有効期限
+      post.signedUrl = signedUrl;
+      await post.save();
+
+      return res.json({ signedUrl });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ errorMessage: "署名付きURLの更新に失敗しました。" });
+    }
+  }
+);
+
 app.get(
   "/posts/:id",
   passport.authenticate("jwt", { session: false }),
   async (req: any, res) => {
-    const { id } = req.params;
-
-    try {
-      const post = await Post.findOne({
-        where: { id },
-        include: {
-          model: Category,
-          through: { attributes: [] },
-        },
-      });
-
-      if (!post) {
-        return res
-          .status(404)
-          .json({ errorMessage: "情報が取得できませんでした。" });
-      }
-
-      const s3 = configureAWS();
-      let signedUrl = null;
-
-      // 画像が存在する場合、S3の署名付きURLを生成
-      if (post.imageKey) {
-        const params = {
-          Bucket: process.env.AWS_S3_BUCKET_NAME,
-          Key: post.imageKey,
-          Expires: 60 * 5,
-        };
-
-        signedUrl = await new Promise<string>((resolve, reject) => {
-          s3.getSignedUrl("getObject", params, (err, url) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(url);
-            }
-          });
-        });
-      }
-
-      // 署名付きURLを含めたレスポンスを返す
-      return res.json({ post: { ...post.toJSON(), signedUrl } });
-    } catch (err) {
-      console.error(err);
+    const requestParams = req.params;
+    const id = requestParams.id;
+    const post = await Post.findOne({
+      where: {
+        id,
+      },
+      include: {
+        model: Category,
+        through: { attributes: [] },
+      },
+    });
+    if (post) {
+      return res.json({ post });
+    } else {
       return res
-        .status(500)
-        .json({ errorMessage: "投稿の取得に失敗しました。" });
+        .status(404)
+        .json({ errorMessage: "情報が取得できませんでした。" });
     }
   }
 );
