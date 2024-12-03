@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Link from "next/link";
 
-export default function PostList() {
+export default function ArticleMain() {
   const [data, setData] = useState<any[]>([]);
   const [token, setToken] = useState<string | null>(null);
 
@@ -29,7 +30,6 @@ export default function PostList() {
         });
 
         const items = res.data;
-        console.log(items.posts);
         setData(items.posts);
       } catch (error: any) {
         console.log(error);
@@ -64,19 +64,21 @@ export default function PostList() {
           {data.length > 0 ? (
             <>
               <div>
-                <img
-                  src={data[data.length - 1]?.signedUrl}
-                  alt="Uploaded"
-                  width={395}
-                  height={500}
-                  onError={async (e) => {
-                    // 署名付きURLが期限切れの場合に新しいURLを取得して再設定
-                    const newUrl = await reSignedUrl(data[0].id);
-                    if (newUrl) {
-                      (e.target as HTMLImageElement).src = newUrl;
-                    }
-                  }}
-                />
+                <Link href={`posts/${data[data.length - 1].id}`}>
+                  <img
+                    src={data[data.length - 1]?.signedUrl}
+                    alt="Uploaded"
+                    width={395}
+                    height={500}
+                    onError={async (e) => {
+                      // 署名付きURLが期限切れの場合に新しいURLを取得して再設定
+                      const newUrl = await reSignedUrl(data[0].id);
+                      if (newUrl) {
+                        (e.target as HTMLImageElement).src = newUrl;
+                      }
+                    }}
+                  />
+                </Link>
               </div>
               <div>{data[data.length - 1].title}</div>
             </>

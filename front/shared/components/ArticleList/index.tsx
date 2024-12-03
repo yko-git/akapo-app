@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Link from "next/link";
 
-export default function PostList() {
+export default function ArticleList() {
   const [data, setData] = useState<any[]>([]);
   const [token, setToken] = useState<string | null>(null);
 
@@ -57,7 +58,7 @@ export default function PostList() {
   };
 
   return (
-    <div className="m-4">
+    <>
       <h1 className="font-bold my-2">投稿一覧</h1>
       <ul className="gap-5 flex flex-wrap">
         {data.map((item, index) => (
@@ -65,23 +66,25 @@ export default function PostList() {
             <div className="font-semibold">{item.title}</div>
             <div>{item.body}</div>
             <div className="mt-2">
-              <img
-                src={item.signedUrl}
-                alt="Uploaded"
-                width={280}
-                height={280}
-                onError={async (e) => {
-                  // 署名付きURLが期限切れの場合に新しいURLを取得して再設定
-                  const newUrl = await reSignedUrl(item.id);
-                  if (newUrl) {
-                    (e.target as HTMLImageElement).src = newUrl;
-                  }
-                }}
-              />
+              <Link href={`/posts/${item.id}`}>
+                <img
+                  src={item.signedUrl}
+                  alt="Uploaded"
+                  width={280}
+                  height={280}
+                  onError={async (e) => {
+                    // 署名付きURLが期限切れの場合に新しいURLを取得して再設定
+                    const newUrl = await reSignedUrl(item.id);
+                    if (newUrl) {
+                      (e.target as HTMLImageElement).src = newUrl;
+                    }
+                  }}
+                />
+              </Link>
             </div>
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 }
