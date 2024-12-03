@@ -7,6 +7,8 @@ interface Post {
   title: string;
   body: string;
   signedUrl: string;
+  createdAt: string;
+  Categories: { id: number; name: string }[];
 }
 
 export default function ArticleMain({ id }: { id: number }) {
@@ -74,13 +76,14 @@ export default function ArticleMain({ id }: { id: number }) {
 
   // データが取得できていない場合の表示
   if (!data) {
-    return <p>投稿が見つかりません。</p>;
+    return <p>読み込み中・・・</p>;
   }
 
   return (
     <>
       <h1 className="font-bold my-2">{data.title}</h1>
-      <p>{data.body}</p>
+      <div>{new Date(data.createdAt).toLocaleString()}</div>
+      <div>{data.Categories.map((value: any) => value.name).join(", ")}</div>
       <div className="mt-4">
         <img
           src={data.signedUrl}
@@ -90,6 +93,7 @@ export default function ArticleMain({ id }: { id: number }) {
           onError={() => reSignedUrl()} // URL期限切れ時の処理
         />
       </div>
+      <div>{data.body}</div>
     </>
   );
 }
