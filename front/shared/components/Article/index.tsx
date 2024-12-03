@@ -2,6 +2,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+interface User {
+  id: number;
+  name: string;
+}
+
 interface Post {
   id: number;
   title: string;
@@ -9,8 +14,8 @@ interface Post {
   signedUrl: string;
   createdAt: string;
   Categories: { id: number; name: string }[];
+  User: User; // User プロパティを追加
 }
-
 export default function ArticleMain({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -41,7 +46,7 @@ export default function ArticleMain({ id }: { id: number }) {
           },
         });
 
-        console.log(res.data.post);
+        console.log(res.data);
         setData(res.data.post); // サーバーからのデータ構造に合わせる
       } catch (error) {
         console.error("投稿の取得に失敗しました", error);
@@ -81,6 +86,7 @@ export default function ArticleMain({ id }: { id: number }) {
 
   return (
     <>
+      <div>{data.User.name}</div>
       <h1 className="font-bold my-2">{data.title}</h1>
       <div>{new Date(data.createdAt).toLocaleString()}</div>
       <div>{data.Categories.map((value: any) => value.name).join(", ")}</div>

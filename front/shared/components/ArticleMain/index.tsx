@@ -80,7 +80,9 @@ export default function ArticleMain() {
                   />
                 </Link>
               </div>
-              <div>{data[data.length - 1].title}</div>
+              <div className="absolute bottom-1 right-1">
+                {data[data.length - 1].title}
+              </div>
             </>
           ) : (
             <p>投稿がありません。</p>

@@ -311,19 +311,31 @@ app.get(
   "/posts/:id",
   passport.authenticate("jwt", { session: false }),
   async (req: any, res) => {
+    const user = req.user.user.name;
     const requestParams = req.params;
     const id = requestParams.id;
     const post = await Post.findOne({
       where: {
         id,
       },
-      include: {
-        model: Category,
-        through: { attributes: [] },
-      },
+      include: [
+        {
+          model: Category, // カテゴリを取得
+          through: { attributes: [] },
+        },
+        {
+          model: User, // 投稿者の情報を取得
+          attributes: ["id", "name"], // 必要な属性だけ取得
+        },
+      ],
     });
     if (post) {
-      return res.json({ post });
+      return res.json({
+        post: {
+          ...post.toJSON(), // Sequelize オブジェクトを通常のオブジェクトに変換
+          user: post, // 投稿者情報を `user` として追加
+        },
+      });
     } else {
       return res
         .status(404)
