@@ -1,21 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Post } from "@/types";
 
-interface User {
-  id: number;
-  name: string;
-}
-
-interface Post {
-  id: number;
-  title: string;
-  body: string;
-  signedUrl: string;
-  createdAt: string;
-  Categories: { id: number; name: string }[];
-  User: User; // User プロパティを追加
-}
 export default function ArticleMain({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -89,7 +76,7 @@ export default function ArticleMain({ id }: { id: number }) {
       <div>{data.User.name}</div>
       <h1 className="font-bold my-2">{data.title}</h1>
       <div>{new Date(data.createdAt).toLocaleString()}</div>
-      <div>{data.Categories.map((value: any) => value.name).join(", ")}</div>
+      <div>{data.Categories.map((value) => value.name).join(", ")}</div>
       <div className="mt-4">
         <img
           src={data.signedUrl}

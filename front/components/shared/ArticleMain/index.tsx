@@ -2,9 +2,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { Post } from "@/types";
 
 export default function ArticleMain() {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<Post[]>([]);
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export default function ArticleMain() {
 
         const items = res.data;
         setData(items.posts);
-      } catch (error: any) {
+      } catch (error) {
         console.log(error);
       }
     }

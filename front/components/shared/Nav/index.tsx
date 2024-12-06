@@ -1,8 +1,6 @@
 "use client";
 import { jost } from "@/components/shared/Font";
 import { usePathname } from "next/navigation";
-
-// "use client";
 import Link from "next/link";
 
 export function Nav() {
@@ -19,10 +17,6 @@ export function Nav() {
       name: "ABOUT",
       link: "/about",
     },
-    // {
-    //   name: "CONTACT",
-    //   link: "/contact",
-    // },
   ];
   const pathname = usePathname();
 
