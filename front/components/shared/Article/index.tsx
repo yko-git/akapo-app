@@ -1,43 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Post } from "@/types";
+import { fetchPostById, getMockUserToken } from "../FetchData";
 
 export default function ArticleMain({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
-  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        // トークンの取得
-        const getMockUserToken = async () => {
-          try {
-            const response = await axios.post("http://localhost:3001/mockurl");
-            const { token } = response.data;
-            setToken(token);
-            return token;
-          } catch (error) {
-            console.error("モックユーザーのトークン取得に失敗しました", error);
-            return null;
-          }
-        };
+      const token = await getMockUserToken();
+      if (!token) return;
 
-        const userToken = await getMockUserToken();
-        if (!userToken) return;
-
-        // 投稿データの取得
-        const res = await axios.get(`http://localhost:3001/posts/${id}`, {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        });
-
-        console.log(res.data);
-        setData(res.data.post); // サーバーからのデータ構造に合わせる
-      } catch (error) {
-        console.error("投稿の取得に失敗しました", error);
-      }
+      const post = await fetchPostById(id, token);
+      setData(post);
     }
 
     fetchData();
@@ -45,7 +20,7 @@ export default function ArticleMain({ id }: { id: number }) {
 
   // データが取得できていない場合の表示
   if (!data) {
-    return <p>読み込み中・・・</p>;
+    return <p className="text-center">読み込み中・・・</p>;
   }
 
   return (

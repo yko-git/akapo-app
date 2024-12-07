@@ -1,44 +1,28 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Link from "next/link";
 import { Post } from "@/types";
+import { fetchPost, getMockUserToken } from "../FetchData";
 
 export default function ArticleList() {
-  const [data, setData] = useState<Post[]>([]);
-  const [token, setToken] = useState<string | null>(null);
+  const [data, setData] = useState<Post[] | null>(null);
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        const getMockUserToken = async () => {
-          try {
-            const response = await axios.post("http://localhost:3001/mockurl");
-            const { token } = response.data;
-            setToken(token);
-            return token;
-          } catch (error) {
-            console.error("モックユーザーのトークン取得に失敗しました", error);
-            return null;
-          }
-        };
+      const token = await getMockUserToken();
+      if (!token) return;
 
-        const userToken = await getMockUserToken();
-        const res = await axios.get("http://localhost:3001/posts", {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        });
-
-        const items = res.data;
-        setData(items.posts);
-      } catch (error) {
-        console.log(error);
-      }
+      const post = await fetchPost(token);
+      setData(post);
     }
 
     fetchData();
   }, []);
+
+  // データが取得できていない場合の表示
+  if (!data) {
+    return <p className="text-center">読み込み中・・・</p>;
+  }
 
   return (
     <>

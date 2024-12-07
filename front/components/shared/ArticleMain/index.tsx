@@ -1,62 +1,28 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Link from "next/link";
 import { Post } from "@/types";
+import { getMockUserToken, fetchPost } from "../FetchData";
 
 export default function ArticleMain() {
   const [data, setData] = useState<Post[]>([]);
-  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        const getMockUserToken = async () => {
-          try {
-            const response = await axios.post("http://localhost:3001/mockurl");
-            const { token } = response.data;
-            setToken(token);
-            return token;
-          } catch (error) {
-            console.error("モックユーザーのトークン取得に失敗しました", error);
-            return null;
-          }
-        };
+      const token = await getMockUserToken();
+      if (!token) return;
 
-        const userToken = await getMockUserToken();
-        const res = await axios.get("http://localhost:3001/posts", {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        });
-
-        const items = res.data;
-        setData(items.posts);
-      } catch (error) {
-        console.log(error);
-      }
+      const post = await fetchPost(token);
+      setData(post);
     }
 
     fetchData();
   }, []);
 
-  const reSignedUrl = async (postId: number) => {
-    try {
-      const response = await axios.post(
-        `http://localhost:3001/posts/${postId}/re-signedurl`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data.signedUrl;
-    } catch (error) {
-      console.error("署名付きURLの再取得に失敗しました", error);
-      return null;
-    }
-  };
+  // データが取得できていない場合の表示
+  if (!data) {
+    return <p className="text-center">読み込み中・・・</p>;
+  }
 
   return (
     <div className="md:my-5 md:w-[395px] md:py-6 tracking-[.2rem]">
@@ -71,13 +37,6 @@ export default function ArticleMain() {
                     alt="Uploaded"
                     width={395}
                     height={500}
-                    onError={async (e) => {
-                      // 署名付きURLが期限切れの場合に新しいURLを取得して再設定
-                      const newUrl = await reSignedUrl(data[0].id);
-                      if (newUrl) {
-                        (e.target as HTMLImageElement).src = newUrl;
-                      }
-                    }}
                   />
                 </Link>
               </div>
