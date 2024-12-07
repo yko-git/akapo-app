@@ -40,24 +40,6 @@ export default function ArticleList() {
     fetchData();
   }, []);
 
-  const reSignedUrl = async (postId: number) => {
-    try {
-      const response = await axios.post(
-        `http://localhost:3001/posts/${postId}/re-signedurl`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data.signedUrl;
-    } catch (error) {
-      console.error("署名付きURLの再取得に失敗しました", error);
-      return null;
-    }
-  };
-
   return (
     <>
       <div className="wrapper">
@@ -75,13 +57,6 @@ export default function ArticleList() {
                   alt="Uploaded"
                   width={280}
                   height={280}
-                  onError={async (e) => {
-                    // 署名付きURLが期限切れの場合に新しいURLを取得して再設定
-                    const newUrl = await reSignedUrl(item.id);
-                    if (newUrl) {
-                      (e.target as HTMLImageElement).src = newUrl;
-                    }
-                  }}
                 />
               </Link>
             </div>

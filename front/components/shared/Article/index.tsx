@@ -43,29 +43,6 @@ export default function ArticleMain({ id }: { id: number }) {
     fetchData();
   }, [id]);
 
-  const reSignedUrl = async () => {
-    try {
-      if (!data || !token) return;
-
-      const response = await axios.post(
-        `http://localhost:3001/posts/${data.id}/re-signedurl`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      // 新しいURLを設定
-      setData((prevData) =>
-        prevData ? { ...prevData, signedUrl: response.data.signedUrl } : null
-      );
-    } catch (error) {
-      console.error("署名付きURLの再取得に失敗しました", error);
-    }
-  };
-
   // データが取得できていない場合の表示
   if (!data) {
     return <p>読み込み中・・・</p>;
@@ -78,13 +55,7 @@ export default function ArticleMain({ id }: { id: number }) {
       <div>{new Date(data.createdAt).toLocaleString()}</div>
       <div>{data.Categories.map((value) => value.name).join(", ")}</div>
       <div className="mt-4">
-        <img
-          src={data.signedUrl}
-          alt={data.title}
-          width={400}
-          height={300}
-          onError={() => reSignedUrl()} // URL期限切れ時の処理
-        />
+        <img src={data.signedUrl} alt={data.title} width={400} height={300} />
       </div>
       <div>{data.body}</div>
     </>

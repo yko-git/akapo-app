@@ -9,6 +9,7 @@ import { sequelize } from "./models";
 import Category from "./models/category";
 import configureAWS from "./aws";
 import cors from "cors";
+import { resolve } from "path";
 
 if (!process.env.MYPEPPER || !process.env.JWT_SECRET) {
   console.error("env vars are not set.");
@@ -205,6 +206,8 @@ app.get(
   async (req: any, res) => {
     try {
       const status = req.query;
+
+      // 投稿リストを取得
       const posts = await Post.findAll({
         where: status,
         include: {
@@ -213,13 +216,16 @@ app.get(
         },
       });
 
-      // 投稿ごとに署名付きURLを確認し、必要に応じて生成
       const now = new Date();
-      const post = await Promise.all(
+
+      // 投稿ごとに署名付きURLを確認し、必要に応じて更新
+      const updatedPosts = await Promise.all(
         posts.map(async (post) => {
-          let signedUrl = post.signedUrl;
-          // URLがない、または有効期限が切れている場合、新しい署名付きURLを生成
-          if (!signedUrl || (post.urlExpiresAt && post.urlExpiresAt < now)) {
+          if (
+            !post.signedUrl ||
+            !post.urlExpiresAt ||
+            post.urlExpiresAt < now
+          ) {
             const s3 = configureAWS();
             const params = {
               Bucket: process.env.AWS_S3_BUCKET_NAME,
@@ -227,51 +233,72 @@ app.get(
               Expires: 60 * 5, // 5分間の有効期限
             };
 
-            signedUrl = await new Promise<string>((resolve, reject) => {
+            // 新しい署名付きURLを生成
+            const signedUrl = await new Promise<string>((resolve, reject) => {
               s3.getSignedUrl("getObject", params, (err, url) => {
                 if (err) {
                   reject(err);
                 } else {
-                  resolve(url);
+                  const cloudflareUrl = url.replace(
+                    `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
+                    `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
+                  );
+                  resolve(cloudflareUrl);
                 }
               });
             });
 
-            // 新しい署名付きURLとその有効期限を保存
+            // 新しい署名付きURLと有効期限を更新
+            post.signedUrl = signedUrl;
             post.urlExpiresAt = new Date(Date.now() + 60 * 5 * 1000); // 5分後
             await post.save();
           }
 
           return {
             ...post.toJSON(),
-            signedUrl, // 新しい署名付きURL
+            signedUrl: post.signedUrl, // 最新の署名付きURLを返す
           };
         })
       );
 
-      return res.json({ posts: post });
+      return res.json({ posts: updatedPosts });
     } catch (err) {
-      console.log(err);
+      console.error("投稿の取得中にエラーが発生しました:", err);
       return res
-        .status(401)
-        .json({ errorMessage: "情報が取得できませんでした。" });
+        .status(500)
+        .json({ errorMessage: "投稿リストを取得できませんでした。" });
     }
   }
 );
 
-//有効期限が切れた場合に再生成するエンドポイント
-app.post(
-  "/posts/:id/re-signedurl",
+app.get(
+  "/posts/:id",
   passport.authenticate("jwt", { session: false }),
   async (req: any, res) => {
-    try {
-      const postId = req.params.id;
-      const post = await Post.findByPk(postId);
+    const { id } = req.params;
+    const post = await Post.findOne({
+      where: { id },
+      include: [
+        {
+          model: Category,
+          through: { attributes: [] },
+        },
+        {
+          model: User,
+          attributes: ["id", "name"],
+        },
+      ],
+    });
 
-      if (!post) {
-        return res.status(404).json({ errorMessage: "投稿が見つかりません。" });
-      }
+    if (!post) {
+      return res
+        .status(404)
+        .json({ errorMessage: "情報が取得できませんでした。" });
+    }
 
+    // URL有効期限を確認し、必要なら再生成
+    const now = new Date();
+    if (!post.urlExpiresAt || now > post.urlExpiresAt) {
       const s3 = configureAWS();
       const params = {
         Bucket: process.env.AWS_S3_BUCKET_NAME,
@@ -296,51 +323,14 @@ app.post(
       post.urlExpiresAt = new Date(Date.now() + 60 * 5 * 1000); // 新しい有効期限
       post.signedUrl = signedUrl;
       await post.save();
-
-      return res.json({ signedUrl });
-    } catch (err) {
-      console.log(err);
-      return res
-        .status(500)
-        .json({ errorMessage: "署名付きURLの更新に失敗しました。" });
     }
-  }
-);
 
-app.get(
-  "/posts/:id",
-  passport.authenticate("jwt", { session: false }),
-  async (req: any, res) => {
-    const user = req.user.user.name;
-    const requestParams = req.params;
-    const id = requestParams.id;
-    const post = await Post.findOne({
-      where: {
-        id,
+    return res.json({
+      post: {
+        ...post.toJSON(),
+        user: post.User,
       },
-      include: [
-        {
-          model: Category, // カテゴリを取得
-          through: { attributes: [] },
-        },
-        {
-          model: User, // 投稿者の情報を取得
-          attributes: ["id", "name"], // 必要な属性だけ取得
-        },
-      ],
     });
-    if (post) {
-      return res.json({
-        post: {
-          ...post.toJSON(), // Sequelize オブジェクトを通常のオブジェクトに変換
-          user: post, // 投稿者情報を `user` として追加
-        },
-      });
-    } else {
-      return res
-        .status(404)
-        .json({ errorMessage: "情報が取得できませんでした。" });
-    }
   }
 );
 
