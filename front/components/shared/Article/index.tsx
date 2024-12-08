@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Post } from "@/types";
 import { fetchPostById, getMockUserToken } from "../FetchData";
+import Image from "next/image";
 
 export default function ArticleMain({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
@@ -30,7 +31,7 @@ export default function ArticleMain({ id }: { id: number }) {
       <div>{new Date(data.createdAt).toLocaleString()}</div>
       <div>{data.Categories.map((value) => value.name).join(", ")}</div>
       <div className="mt-4">
-        <img src={data.signedUrl} alt={data.title} width={400} height={300} />
+        <Image src={data.signedUrl} alt={data.title} width={400} height={300} />
       </div>
       <div>{data.body}</div>
     </>

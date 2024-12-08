@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Image from "next/image";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
@@ -145,7 +146,7 @@ const CreatePost = () => {
       {imageUrl && (
         <div>
           <h3>アップロードされた画像:</h3>
-          <img src={imageUrl} alt="Uploaded" width={400} height={400} />
+          <Image src={imageUrl} alt="Uploaded" width={400} height={400} />
         </div>
       )}
     </div>

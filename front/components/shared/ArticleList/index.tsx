@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Post } from "@/types";
 import { fetchPost, getMockUserToken } from "../FetchData";
+import Image from "next/image";
 
 export default function ArticleList() {
   const [data, setData] = useState<Post[] | null>(null);
@@ -36,7 +37,7 @@ export default function ArticleList() {
             <div>{item.body}</div>
             <div className="mt-2">
               <Link href={`/posts/${item.id}`}>
-                <img
+                <Image
                   src={item.signedUrl}
                   alt="Uploaded"
                   width={280}
