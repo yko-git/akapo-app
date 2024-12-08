@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
+import { getMockUserToken } from "../FetchData";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
@@ -9,21 +10,18 @@ const CreatePost = () => {
   const [status, setStatus] = useState<string>("0");
   const [categoryIds, setCategoryIds] = useState<number[]>([]);
   const [file, setFile] = useState<File | null>(null);
-  const [token, setToken] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    // モックユーザーのJWTトークンを取得
-    const getMockUserToken = async () => {
-      try {
-        const response = await axios.post("http://localhost:3001/mockurl");
-        const { token } = response.data;
-        setToken(token);
-      } catch (error) {
-        console.error("モックユーザーのトークン取得に失敗しました", error);
+    async function fetchData() {
+      const fetchedToken = await getMockUserToken();
+      if (!fetchedToken) {
+        return;
       }
-    };
-    getMockUserToken();
+      setToken(fetchedToken);
+    }
+    fetchData();
   }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +56,7 @@ const CreatePost = () => {
 
       // 記事情報をサーバーに送信
       const postResponse = await axios.post(
-        "http://localhost:3001/posts",
+        "http://localhost:3001/posts/new",
         {
           post: {
             title,

@@ -11,7 +11,7 @@ export function Nav() {
     },
     {
       name: "GALLERY",
-      link: "/postlist",
+      link: "/posts",
     },
     {
       name: "ABOUT",

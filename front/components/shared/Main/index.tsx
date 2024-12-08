@@ -23,7 +23,7 @@ export default function Main() {
             </h2>
             <ul className="md:w-[395px] lg:mr-0 md:mr-16 mr-8 relative">
               <Link
-                href="/postlist/"
+                href="/posts/"
                 className="absolute bottom-16 -right-14 md:bottom-28 md:-right-24 md:hover:-right-28 transition-all"
               >
                 <Image
