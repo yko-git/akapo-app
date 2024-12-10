@@ -12,3 +12,10 @@ export interface Post {
   Categories: { id: number; name: string }[];
   User: User;
 }
+
+export interface NewPost {
+  title: string;
+  body: string;
+  status: string;
+  categoryIds: number[];
+}

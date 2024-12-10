@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Image from "next/image";
-import { getMockUserToken } from "../FetchData";
+import { getMockUserToken, PostImg } from "../FetchData";
+import { NewPost } from "@/types";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
@@ -33,52 +33,17 @@ const CreatePost = () => {
       alert("画像を選択してください");
       return;
     }
+    if (!token) {
+      alert("tokenが取得できません");
+      return;
+    }
 
-    try {
-      // S3の署名付きURLを取得
-      const signedUrlResponse = await axios.get(
-        "http://localhost:3001/postsimage",
-        {
-          params: { filename: file.name },
-          headers: {
-            Authorization: `Bearer ${token}`, // モックユーザーのトークンを指定
-          },
-        }
-      );
-      const { signedUrl, safeFilePath } = signedUrlResponse.data;
-
-      // S3に画像をアップロード
-      await axios.put(signedUrl, file, {
-        headers: {
-          "Content-Type": file.type,
-        },
-      });
-
-      // 記事情報をサーバーに送信
-      const postResponse = await axios.post(
-        "http://localhost:3001/posts/new",
-        {
-          post: {
-            title,
-            body,
-            status,
-            categoryIds,
-            imageKey: safeFilePath, // 画像のキーを指定
-          },
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      alert("記事が投稿されました！");
-      console.log("Post created:", postResponse.data.post);
-
-      setImageUrl(postResponse.data.post.signedUrl); // サーバーからの署名付きURLを使用
-    } catch (error) {
-      console.error("投稿中にエラーが発生しました", error);
+    const postData: NewPost = { title, body, status, categoryIds };
+    const postImg = await PostImg(file, token, postData);
+    if (postImg) {
+      setImageUrl(postImg);
+    } else {
+      console.error("画像のアップロードまたは投稿に失敗しました");
     }
   };
 
