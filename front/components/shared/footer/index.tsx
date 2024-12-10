@@ -1,4 +1,4 @@
-import { jost } from "@/components/shared/Font";
+import { jost } from "@/components/shared/font";
 
 export function Footer() {
   return (

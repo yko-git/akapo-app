@@ -1,5 +1,5 @@
 "use client";
-import { jost } from "@/components/shared/Font";
+import { jost } from "@/components/shared/font";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 

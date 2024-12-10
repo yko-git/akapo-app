@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Post } from "@/types";
-import { fetchPostById, getMockUserToken } from "../FetchData";
+import { fetchPostById, getMockUserToken } from "@/app/api/fetchData";
 import Image from "next/image";
 
 export default function ArticleMain({ id }: { id: number }) {
@@ -33,7 +33,11 @@ export default function ArticleMain({ id }: { id: number }) {
       <div className="mt-4">
         <Image src={data.signedUrl} alt={data.title} width={400} height={300} />
       </div>
-      <div>{data.body}</div>
+      <div>
+        {data.body.split("\n").map((item: string, index: number) => (
+          <p key={index}>{item}</p>
+        ))}
+      </div>
     </>
   );
 }

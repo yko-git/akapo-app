@@ -1,4 +1,4 @@
-import Main from "@/components/shared/Main";
+import Main from "@/components/shared/main";
 import Link from "next/link";
 
 export default function Page() {

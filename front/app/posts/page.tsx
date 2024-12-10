@@ -1,4 +1,4 @@
-import ArticleList from "@/components/shared/ArticleList";
+import ArticleList from "@/components/shared/articleList";
 
 export default function PostPage() {
   return (

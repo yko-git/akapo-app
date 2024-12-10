@@ -2,7 +2,7 @@ import Image from "next/image";
 import logo from "@/public/common/logo.svg";
 import bnrgallery from "@/public/home/bnr-gallery.svg";
 import Link from "next/link";
-import ArticleMain from "@/components/shared/ArticleMain";
+import ArticleMain from "@/components/shared/articleMain";
 
 export default function Main() {
   return (

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Post } from "@/types";
-import { fetchPost, getMockUserToken } from "../FetchData";
+import { fetchPost, getMockUserToken } from "@/app/api/fetchData";
 import Image from "next/image";
 
 export default function ArticleList() {
@@ -34,7 +34,6 @@ export default function ArticleList() {
         {data.map((item, index) => (
           <li key={index} className="border p-4 rounded">
             <div className="font-semibold">{item.title}</div>
-            <div>{item.body}</div>
             <div className="mt-2">
               <Link href={`/posts/${item.id}`}>
                 <Image
