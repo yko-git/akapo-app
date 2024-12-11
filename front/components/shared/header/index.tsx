@@ -31,7 +31,7 @@ export default function Header() {
               className="inline-flex items-center gap-2.5 text-3xl font-bold text-black md:text-3xl"
               aria-label="logo"
             >
-              <Image src={logo} loading="lazy" width={184} height={56} alt="" />
+              <Image src={logo} loading="lazy" width="184" height="56" alt="" />
             </Link>
 
             <nav

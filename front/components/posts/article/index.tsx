@@ -4,7 +4,7 @@ import { Post } from "@/types";
 import { fetchPostById, getMockUserToken } from "@/app/api/fetchData";
 import Image from "next/image";
 
-export default function ArticleMain({ id }: { id: number }) {
+export default function Article({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
 
   useEffect(() => {
