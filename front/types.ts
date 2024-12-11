@@ -1,3 +1,5 @@
+import { StreamOptions } from "stream";
+
 export interface User {
   id: number;
   name: string;
@@ -18,4 +20,9 @@ export interface NewPost {
   body: string;
   status: string;
   categoryIds: number[];
+}
+
+export interface Status {
+  value: string;
+  onChange: (value: string) => void;
 }

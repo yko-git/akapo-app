@@ -4,6 +4,7 @@ import Image from "next/image";
 import { getMockUserToken, PostImg } from "@/app/api/fetchData";
 import { NewPost } from "@/types";
 import CustomButton from "@/components/shared/customButton";
+import StatusSelect from "@/components/shared/statusSelect";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
@@ -69,14 +70,7 @@ const CreatePost = () => {
       </div>
       <div>
         <label>ステータス</label>
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="border rounded p-2 w-full"
-        >
-          <option value="0">下書き</option>
-          <option value="1">公開</option>
-        </select>
+        <StatusSelect value={status} onChange={setStatus} />
       </div>
       <div>
         <label>カテゴリ</label>
