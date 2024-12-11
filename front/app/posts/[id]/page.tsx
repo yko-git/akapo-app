@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import Article from "@/components/shared/article";
+import Article from "@/components/posts/article";
 
 export default function Page() {
   const { id } = useParams();

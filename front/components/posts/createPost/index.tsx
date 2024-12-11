@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { getMockUserToken, PostImg } from "@/app/api/fetchData";
 import { NewPost } from "@/types";
+import SelectStatus from "@/components/shared/selectStatus";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");

@@ -1,4 +1,4 @@
-import CreatePost from "@/components/shared/createPost";
+import CreatePost from "@/components/posts/createPost";
 import Link from "next/link";
 
 export default function PostPage() {
