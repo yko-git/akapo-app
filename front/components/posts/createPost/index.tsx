@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { getMockUserToken, PostImg } from "@/app/api/fetchData";
 import { NewPost } from "@/types";
-import SelectStatus from "@/components/shared/selectStatus";
+import CustomButton from "@/components/shared/customButton";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
@@ -101,12 +101,7 @@ const CreatePost = () => {
         <label>画像</label>
         <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
-      <button
-        onClick={handleSubmit}
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
-      >
-        投稿する
-      </button>
+      <CustomButton onClick={handleSubmit}>投稿する</CustomButton>
       {imageUrl && (
         <div>
           <h3>アップロードされた画像:</h3>

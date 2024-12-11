@@ -1,5 +1,6 @@
 import CreatePost from "@/components/posts/createPost";
 import Link from "next/link";
+import CustomButton from "@/components/shared/customButton";
 
 export default function PostPage() {
   return (
@@ -11,10 +12,8 @@ export default function PostPage() {
       <hr />
       <div className="wrapper">
         <div className="my-4">
-          <Link href="/">
-            <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
-              投稿一覧に戻る
-            </button>
+          <Link href="/posts">
+            <CustomButton>投稿一覧に戻る</CustomButton>
           </Link>
         </div>
       </div>
