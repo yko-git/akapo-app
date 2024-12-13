@@ -78,7 +78,7 @@ export async function PostImg(
 
     // 記事情報をサーバーに送信
     const postResponse = await axios.post(
-      "http://localhost:3001/posts/new",
+      "http://localhost:3001/posts",
       {
         post: {
           title,

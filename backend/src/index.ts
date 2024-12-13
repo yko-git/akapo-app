@@ -148,7 +148,7 @@ app.get(
 
 // posts
 app.post(
-  "/posts/new",
+  "/posts",
   passport.authenticate("jwt", { session: false }),
   async (req: any, res: Response) => {
     const { user } = req.user;
