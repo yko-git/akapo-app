@@ -1,6 +1,6 @@
 import CreatePost from "@/components/posts/createPost";
 import Link from "next/link";
-import CustomButton from "@/components/shared/customButton";
+import Button from "@/components/shared/button";
 
 export default function PostPage() {
   return (
@@ -13,7 +13,7 @@ export default function PostPage() {
       <div className="wrapper">
         <div className="my-4">
           <Link href="/posts">
-            <CustomButton>投稿一覧に戻る</CustomButton>
+            <Button>投稿一覧に戻る</Button>
           </Link>
         </div>
       </div>

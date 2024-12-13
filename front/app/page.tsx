@@ -1,6 +1,6 @@
 import Main from "@/components/posts/main";
 import Link from "next/link";
-import CustomButton from "@/components/shared/customButton";
+import Button from "@/components/shared/button";
 
 export default function Page() {
   return (
@@ -9,7 +9,7 @@ export default function Page() {
       <hr />
       <div className="m-4 wrapper text-right">
         <Link href="/posts/new">
-          <CustomButton>新しい投稿を作成</CustomButton>
+          <Button>新しい投稿を作成</Button>
         </Link>
       </div>
     </>

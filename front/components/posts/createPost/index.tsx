@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { getMockUserToken, createPost } from "@/app/api/fetchData";
 import { NewPost } from "@/types";
-import CustomButton from "@/components/shared/customButton";
+import Button from "@/components/shared/button";
 import StatusSelect from "@/components/shared/statusSelect";
 
 const CreatePost = () => {
@@ -95,7 +95,7 @@ const CreatePost = () => {
         <label>画像</label>
         <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
-      <CustomButton onClick={handleSubmit}>投稿する</CustomButton>
+      <Button onClick={handleSubmit}>投稿する</Button>
       {imageUrl && (
         <div>
           <h3>アップロードされた画像:</h3>

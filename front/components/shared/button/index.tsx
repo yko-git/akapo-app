@@ -1,4 +1,4 @@
-const customButton = ({ onClick, children }: any) => {
+const Button = ({ onClick, children }: any) => {
   return (
     <button
       onClick={onClick}
@@ -9,4 +9,4 @@ const customButton = ({ onClick, children }: any) => {
   );
 };
 
-export default customButton;
+export default Button;
