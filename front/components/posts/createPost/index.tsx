@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { getMockUserToken, PostImg } from "@/app/api/fetchData";
+import { getMockUserToken, createPost } from "@/app/api/fetchData";
 import { NewPost } from "@/types";
 import CustomButton from "@/components/shared/customButton";
 import StatusSelect from "@/components/shared/statusSelect";
@@ -41,7 +41,7 @@ const CreatePost = () => {
     }
 
     const postData: NewPost = { title, body, status, categoryIds };
-    const postImg = await PostImg(file, token, postData);
+    const postImg = await createPost(file, token, postData);
     if (postImg) {
       setImageUrl(postImg);
     } else {

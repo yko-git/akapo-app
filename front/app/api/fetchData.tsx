@@ -50,7 +50,7 @@ export async function fetchPost(token: string): Promise<Post[]> {
 }
 
 // 記事投稿関数
-export async function PostImg(
+export async function createPost(
   file: File,
   token: any,
   postData: NewPost
