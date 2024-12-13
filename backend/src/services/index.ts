@@ -36,7 +36,6 @@ async function updateSignedUrls(posts: any[]) {
 
       return {
         ...post.toJSON(),
-        signedUrl: post.signedUrl, // 最新の署名付きURLを返す
       };
     })
   );
