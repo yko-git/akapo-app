@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Post } from "@/types";
-import { fetchPost, getMockUserToken } from "@/app/api/fetchData";
+import { fetchPost, getMockUserToken } from "@/api/fetchData";
 import Image from "next/image";
 
 export default function ArticleList() {

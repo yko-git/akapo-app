@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Post } from "@/types";
-import { fetchPostById, getMockUserToken } from "@/app/api/fetchData";
+import { fetchPostById, getMockUserToken } from "@/api/fetchData";
 import Image from "next/image";
 
 export default function Article({ id }: { id: number }) {

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { getMockUserToken, createPost } from "@/app/api/fetchData";
+import { getMockUserToken, createPost } from "@/api/fetchData";
 import { NewPost } from "@/types";
 import Button from "@/components/shared/button";
 import StatusSelect from "@/components/shared/statusSelect";
