@@ -9,7 +9,6 @@ import { sequelize } from "./models";
 import Category from "./models/category";
 import configureAWS from "./aws";
 import cors from "cors";
-import { resolve } from "path";
 
 if (!process.env.MYPEPPER || !process.env.JWT_SECRET) {
   console.error("env vars are not set.");
