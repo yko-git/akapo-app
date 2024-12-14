@@ -6,14 +6,14 @@ import { getMockUserToken, fetchPost } from "@/api/fetchData";
 import Image from "next/image";
 
 export default function ArticleMain() {
-  const [data, setData] = useState<Post[]>([]);
+  const [data, setData] = useState<Post[] | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       const token = await getMockUserToken();
       if (!token) return;
 
-      const post = await fetchPost(token);
+      const post = await fetchPost({ token });
       setData(post);
     }
 

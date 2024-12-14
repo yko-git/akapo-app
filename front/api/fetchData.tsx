@@ -13,39 +13,29 @@ export async function getMockUserToken(): Promise<string | null> {
   }
 }
 
-// 投稿データ取得関数（個別）
-export async function fetchPostById(
-  id: number,
-  token: string
-): Promise<Post | null> {
+// 投稿データ取得関数
+export async function fetchPost({
+  id,
+  token,
+}: {
+  id?: number; // オプショナルにする
+  token: string;
+}): Promise<Post[] | null> {
   try {
-    const response = await axios.get(`http://localhost:3001/posts/${id}`, {
+    const url = id
+      ? `http://localhost:3001/posts/${id}` // 個別取得
+      : `http://localhost:3001/posts/`; // リスト取得
+
+    const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    return response.data.post;
+
+    return response.data.posts;
   } catch (error) {
     console.error("投稿の取得に失敗しました", error);
     return null;
-  }
-}
-
-// 投稿データ取得関数（リスト）
-export async function fetchPost(token: string): Promise<Post[]> {
-  try {
-    const response = await axios.get(`http://localhost:3001/posts/`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const posts = Array.isArray(response.data.posts)
-      ? response.data.posts
-      : [response.data.posts];
-    return posts; // 配列形式で返す
-  } catch (error) {
-    console.error("投稿の取得に失敗しました", error);
-    return [];
   }
 }
 

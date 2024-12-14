@@ -231,7 +231,7 @@ app.get(
     }
 
     const updatedPosts = await updateSignedUrls(posts);
-    return res.json({ post: updatedPosts[0] });
+    return res.json({ posts: updatedPosts });
   }
 );
 

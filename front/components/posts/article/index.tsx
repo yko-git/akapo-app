@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Post } from "@/types";
-import { fetchPostById, getMockUserToken } from "@/api/fetchData";
+import { fetchPost, getMockUserToken } from "@/api/fetchData";
 import Image from "next/image";
 
 export default function Article({ id }: { id: number }) {
@@ -12,8 +12,10 @@ export default function Article({ id }: { id: number }) {
       const token = await getMockUserToken();
       if (!token) return;
 
-      const post = await fetchPostById(id, token);
-      setData(post);
+      const post = await fetchPost({ id, token });
+      if (Array.isArray(post) && post.length > 0) {
+        setData(post[0]);
+      }
     }
 
     fetchData();

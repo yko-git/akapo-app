@@ -13,8 +13,8 @@ export default function ArticleList() {
       const token = await getMockUserToken();
       if (!token) return;
 
-      const post = await fetchPost(token);
-      setData(post);
+      const posts = await fetchPost({ token });
+      setData(posts);
     }
 
     fetchData();
