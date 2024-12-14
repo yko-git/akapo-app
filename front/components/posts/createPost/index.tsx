@@ -4,16 +4,16 @@ import Image from "next/image";
 import { getMockUserToken, createPost } from "@/api/fetchData";
 import { NewPost } from "@/types";
 import Button from "@/components/shared/button";
-import StatusSelect from "@/components/shared/statusSelect";
+import SelectBox from "@/components/shared/selectBox";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
   const [body, setBody] = useState<string>("");
-  const [status, setStatus] = useState<string>("0");
-  const [categoryIds, setCategoryIds] = useState<number[]>([]);
+  const [categoryIds, setCategoryIds] = useState<number[]>([1]);
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [status, setStatus] = useState<string>("0");
 
   useEffect(() => {
     async function fetchData() {
@@ -25,6 +25,18 @@ const CreatePost = () => {
     }
     fetchData();
   }, []);
+
+  const handleSelect = (value: string | string[]) => {
+    if (typeof value === "string") {
+      setStatus(value);
+    }
+  };
+
+  const handleMultipleSelect = (value: string | string[]) => {
+    if (Array.isArray(value)) {
+      setCategoryIds(value.map(Number));
+    }
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFile(event.target.files ? event.target.files[0] : null);
@@ -70,26 +82,27 @@ const CreatePost = () => {
       </div>
       <div>
         <label>ステータス</label>
-        <StatusSelect value={status} onChange={setStatus} />
+        <SelectBox
+          options={[
+            { value: "0", label: "下書き" },
+            { value: "1", label: "公開" },
+          ]}
+          value={status}
+          onChange={handleSelect}
+        />
       </div>
       <div>
         <label>カテゴリ</label>
-        <select
+        <SelectBox
+          options={[
+            { value: "1", label: "プログラミング" },
+            { value: "2", label: "キャリア" },
+            { value: "3", label: "趣味" },
+          ]}
           multiple
           value={categoryIds.map(String)}
-          onChange={(e) =>
-            setCategoryIds(
-              Array.from(e.target.selectedOptions).map((opt) =>
-                Number(opt.value)
-              )
-            )
-          }
-          className="border rounded p-2 w-full"
-        >
-          <option value="1">プログラミング</option>
-          <option value="2">キャリア</option>
-          <option value="3">趣味</option>
-        </select>
+          onChange={handleMultipleSelect}
+        />
       </div>
       <div>
         <label>画像</label>

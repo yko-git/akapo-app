@@ -1,5 +1,3 @@
-import { StreamOptions } from "stream";
-
 export interface User {
   id: number;
   name: string;
@@ -22,7 +20,9 @@ export interface NewPost {
   categoryIds: number[];
 }
 
-export interface Status {
-  value: string;
-  onChange: (value: string) => void;
+export interface SelectBoxProps {
+  options: { value: string; label: string }[];
+  value: string | string[];
+  onChange: (value: string | string[]) => void;
+  multiple?: boolean;
 }

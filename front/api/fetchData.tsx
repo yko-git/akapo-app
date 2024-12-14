@@ -42,7 +42,7 @@ export async function fetchPost({
 // 記事投稿関数
 export async function createPost(
   file: File,
-  token: any,
+  token: string,
   postData: NewPost
 ): Promise<string | undefined> {
   const { title, body, status, categoryIds } = postData;
