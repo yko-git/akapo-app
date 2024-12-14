@@ -126,7 +126,7 @@ app.get(
     if (!user) {
       return res
         .status(401)
-        .json({ errorMessage: "情報が取得できませんでした。" });
+        .json({ errorMessage: "ユーザー情報が取得できませんでした" });
     }
 
     try {
@@ -134,7 +134,7 @@ app.get(
       if (!instance) {
         return res
           .status(404)
-          .json({ errorMessage: "情報が取得できませんでした。" });
+          .json({ errorMessage: "ユーザーの投稿が取得できませんでした" });
       }
       const posts = await instance.posts(status);
       res.json({ posts });
@@ -142,7 +142,7 @@ app.get(
       console.log(err);
       return res
         .status(401)
-        .json({ errorMessage: "情報が取得できませんでした。" });
+        .json({ errorMessage: "投稿が取得できませんでした。" });
     }
   }
 );
@@ -156,7 +156,7 @@ app.post(
     if (!user) {
       return res
         .status(401)
-        .json({ errorMessage: "情報が取得できませんでした。" });
+        .json({ errorMessage: "ユーザー情報が取得できませんでした。" });
     }
     try {
       const { post: params } = req.body;
@@ -250,7 +250,7 @@ app.get(
     if (!post) {
       return res
         .status(404)
-        .json({ errorMessage: "情報が取得できませんでした。" });
+        .json({ errorMessage: "投稿が取得できませんでした" });
     }
 
     // URL有効期限を確認し、必要なら再生成
@@ -309,7 +309,7 @@ app.patch(
       if (!post) {
         return res
           .status(404)
-          .json({ errorMessage: "情報が取得できませんでした" });
+          .json({ errorMessage: "投稿が取得できませんでした" });
       }
       post.set({
         title: params.title,
@@ -341,7 +341,7 @@ app.delete(
       if (!post) {
         return res
           .status(404)
-          .json({ errorMessage: "情報が取得できませんでした" });
+          .json({ errorMessage: "投稿が取得できませんでした" });
       }
 
       await post.delete();
@@ -350,7 +350,7 @@ app.delete(
       console.log(err);
       return res
         .status(401)
-        .json({ errorMessage: "記事の削除ができませんでした。" });
+        .json({ errorMessage: "投稿の削除ができませんでした。" });
     }
   }
 );
@@ -374,7 +374,7 @@ app.get("/postsimage", (req, res) => {
       console.error(err);
       return res
         .status(500)
-        .json({ errorMessage: "署名付きURLの生成に失敗しました。" });
+        .json({ errorMessage: "署名付きURLの生成に失敗しました" });
     }
 
     res.status(200).json({ signedUrl: url, safeFilePath });
@@ -402,6 +402,6 @@ app.post("/mockurl", async (req: Request, res: Response) => {
   } catch (err) {
     return res
       .status(500)
-      .json({ errorMessage: "モックユーザーの作成に失敗しました。" });
+      .json({ errorMessage: "モックユーザーの作成に失敗しました" });
   }
 });
