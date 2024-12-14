@@ -1,10 +1,35 @@
 import configureAWS from "../aws";
+import Category from "../models/category";
+import { Post } from "../models/post";
+import { User } from "../models/user";
 
-// 投稿ごとに署名付きURLを確認し、必要に応じて更新
-async function updateSignedUrls(posts: any[]) {
+// 共通の投稿取得関数
+export async function fetchPosts(params: { id?: string; query?: any }) {
+  const { id, query } = params;
+
+  const where = id ? { id } : query || {};
+
+  const posts = await Post.findAll({
+    where,
+    include: [
+      {
+        model: Category,
+        through: { attributes: [] },
+      },
+      {
+        model: User,
+        attributes: ["id", "name"],
+      },
+    ],
+  });
+  return posts;
+}
+
+// 署名付きURLの更新ロジック
+export async function updateSignedUrls(posts: Post[]) {
   const now = new Date();
   return await Promise.all(
-    posts.map(async (post: any) => {
+    posts.map(async (post) => {
       if (!post.signedUrl || !post.urlExpiresAt || post.urlExpiresAt < now) {
         const s3 = configureAWS();
         const params = {
@@ -40,5 +65,3 @@ async function updateSignedUrls(posts: any[]) {
     })
   );
 }
-
-export default updateSignedUrls;

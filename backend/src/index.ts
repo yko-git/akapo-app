@@ -5,11 +5,9 @@ import bodyParser from "body-parser";
 import passport, { hash } from "./auth";
 import jwt from "jsonwebtoken";
 import { Post } from "./models/post";
-import { sequelize } from "./models";
-import Category from "./models/category";
 import configureAWS from "./aws";
 import cors from "cors";
-import updateSignedUrls from "./services/index";
+import { updateSignedUrls, fetchPosts } from "./services/index";
 
 if (!process.env.MYPEPPER || !process.env.JWT_SECRET) {
   console.error("env vars are not set.");
@@ -205,17 +203,8 @@ app.get(
   passport.authenticate("jwt", { session: false }),
   async (req: any, res) => {
     try {
-      const status = req.query;
-
-      // 投稿リストを取得
-      const posts = await Post.findAll({
-        where: status,
-        include: {
-          model: Category,
-          through: { attributes: [] },
-        },
-      });
-
+      const query = req.query;
+      const posts = await fetchPosts({ query });
       const updatedPosts = await updateSignedUrls(posts);
 
       return res.json({ posts: updatedPosts });
@@ -233,61 +222,16 @@ app.get(
   passport.authenticate("jwt", { session: false }),
   async (req: any, res) => {
     const { id } = req.params;
-    const post = await Post.findOne({
-      where: { id },
-      include: [
-        {
-          model: Category,
-          through: { attributes: [] },
-        },
-        {
-          model: User,
-          attributes: ["id", "name"],
-        },
-      ],
-    });
+    const posts = await fetchPosts({ id });
 
-    if (!post) {
+    if (!posts || posts.length === 0) {
       return res
         .status(404)
         .json({ errorMessage: "投稿が取得できませんでした" });
     }
 
-    // URL有効期限を確認し、必要なら再生成
-    const now = new Date();
-    if (!post.urlExpiresAt || now > post.urlExpiresAt) {
-      const s3 = configureAWS();
-      const params = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Key: post.imageKey,
-        Expires: 60 * 5, // 5分間の有効期限
-      };
-
-      const signedUrl = await new Promise<string>((resolve, reject) => {
-        s3.getSignedUrl("getObject", params, (err, url) => {
-          if (err) {
-            reject(err);
-          } else {
-            const cloudflareUrl = url.replace(
-              `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
-              `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
-            );
-            resolve(cloudflareUrl);
-          }
-        });
-      });
-
-      post.urlExpiresAt = new Date(Date.now() + 60 * 5 * 1000); // 新しい有効期限
-      post.signedUrl = signedUrl;
-      await post.save();
-    }
-
-    return res.json({
-      post: {
-        ...post.toJSON(),
-        user: post.User,
-      },
-    });
+    const updatedPosts = await updateSignedUrls(posts);
+    return res.json({ post: updatedPosts[0] });
   }
 );
 
