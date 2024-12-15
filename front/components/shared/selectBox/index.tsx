@@ -9,7 +9,7 @@ const SelectBox = ({
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (multiple) {
       const values = Array.from(e.target.selectedOptions).map(
-        (opt: any) => opt.value
+        (opt: HTMLOptionElement) => opt.value
       );
       onChange(values);
     } else {
