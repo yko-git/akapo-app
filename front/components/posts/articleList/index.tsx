@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Post } from "@/types";
 import { fetchPost, getMockUserToken } from "@/api/fetchData";
-import Image from "next/image";
+import Photo from "@/components/shared/photo";
 
 export default function ArticleList() {
   const [data, setData] = useState<Post[] | null>(null);
@@ -30,20 +30,20 @@ export default function ArticleList() {
       <div className="wrapper">
         <h1 className="font-bold my-2">投稿一覧</h1>
       </div>
-      <ul className="gap-2 flex flex-wrap max-w-[1024px] mx-auto">
+      <ul className="gap-5 flex flex-wrap max-w-[1024px] mx-auto">
         {data.map((item, index) => (
-          <li key={index} className="border p-4 rounded">
-            <div className="font-semibold">{item.title}</div>
-            <div className="mt-2">
+          <li key={index}>
+            <div className="mt-4">
               <Link href={`/posts/${item.id}`}>
-                <Image
+                <Photo
                   src={item.signedUrl}
-                  alt="Uploaded"
+                  alt={item.title}
                   width={280}
                   height={280}
                 />
               </Link>
             </div>
+            <div className="font-semibold mt-3">{item.title}</div>
           </li>
         ))}
       </ul>

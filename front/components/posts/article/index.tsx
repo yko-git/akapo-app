@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { Post } from "@/types";
 import { fetchPost, getMockUserToken } from "@/api/fetchData";
 import Image from "next/image";
+import userIcon from "@/public/common/usericon.png";
+import TagList from "@/components/shared/tagList";
+import Photo from "@/components/shared/photo";
 
 export default function Article({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
@@ -28,17 +31,46 @@ export default function Article({ id }: { id: number }) {
 
   return (
     <>
-      <div>{data.User.name}</div>
-      <h1 className="font-bold my-2">{data.title}</h1>
-      <div>{new Date(data.createdAt).toLocaleString()}</div>
-      <div>{data.Categories.map((value) => value.name).join(", ")}</div>
-      <div className="mt-4">
-        <Image src={data.signedUrl} alt={data.title} width={400} height={300} />
-      </div>
-      <div>
-        {data.body.split("\n").map((item: string, index: number) => (
-          <p key={index}>{item}</p>
-        ))}
+      <div className="md:mt-12">
+        <div className="md:flex justify-between">
+          <Photo
+            src={data.signedUrl}
+            alt={data.title}
+            width={400}
+            height={542}
+          />
+
+          <div className="md:w-full md:pl-10 tracking-[.2em] md:mt-0 mt-10 relative">
+            <div className="mt-4">
+              <div className="inline-block text-center md:absolute right-0 top-0">
+                <Image
+                  className="inline-block mr-2"
+                  src={userIcon}
+                  alt=""
+                  width={100}
+                  height={100}
+                  loading="lazy"
+                />
+                <p className="text-[12px] mt-1">{data.User.name}</p>
+              </div>
+            </div>
+            <p className="text-[#9F9F9F] text-[12px] mt-4">
+              {new Date(data.createdAt).toLocaleString()}
+            </p>
+            {/* category */}
+            <ul className="mt-2">
+              <TagList Categories={data.Categories} />
+            </ul>
+            <div className="mt-4 md:text-[27px] text-lg leading-9 font-bold">
+              {data.title}
+            </div>
+            <div className="mt-4 leading-8">
+              {data.body.split("\n").map((item: string, index: number) => (
+                <p key={index}>{item}</p>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

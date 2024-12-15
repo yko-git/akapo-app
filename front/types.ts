@@ -26,3 +26,12 @@ export interface SelectBoxProps {
   onChange: (value: string | string[]) => void;
   multiple?: boolean;
 }
+
+export interface TagListProps {
+  Categories?: Array<{ name: string }>;
+}
+
+export interface PhotoProps {
+  src: string;
+  alt: string;
+}
