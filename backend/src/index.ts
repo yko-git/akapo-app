@@ -5,10 +5,9 @@ import bodyParser from "body-parser";
 import passport, { hash } from "./auth";
 import jwt from "jsonwebtoken";
 import { Post } from "./models/post";
-import { sequelize } from "./models";
-import Category from "./models/category";
 import configureAWS from "./aws";
 import cors from "cors";
+import { updateSignedUrls, fetchPosts } from "./services/index";
 
 if (!process.env.MYPEPPER || !process.env.JWT_SECRET) {
   console.error("env vars are not set.");
@@ -125,7 +124,7 @@ app.get(
     if (!user) {
       return res
         .status(401)
-        .json({ errorMessage: "情報が取得できませんでした。" });
+        .json({ errorMessage: "ユーザー情報が取得できませんでした" });
     }
 
     try {
@@ -133,7 +132,7 @@ app.get(
       if (!instance) {
         return res
           .status(404)
-          .json({ errorMessage: "情報が取得できませんでした。" });
+          .json({ errorMessage: "ユーザーの投稿が取得できませんでした" });
       }
       const posts = await instance.posts(status);
       res.json({ posts });
@@ -141,7 +140,7 @@ app.get(
       console.log(err);
       return res
         .status(401)
-        .json({ errorMessage: "情報が取得できませんでした。" });
+        .json({ errorMessage: "投稿が取得できませんでした。" });
     }
   }
 );
@@ -155,7 +154,7 @@ app.post(
     if (!user) {
       return res
         .status(401)
-        .json({ errorMessage: "情報が取得できませんでした。" });
+        .json({ errorMessage: "ユーザー情報が取得できませんでした。" });
     }
     try {
       const { post: params } = req.body;
@@ -204,105 +203,16 @@ app.get(
   passport.authenticate("jwt", { session: false }),
   async (req: any, res) => {
     try {
-      const status = req.query;
-      const posts = await Post.findAll({
-        where: status,
-        include: {
-          model: Category,
-          through: { attributes: [] },
-        },
-      });
+      const query = req.query;
+      const posts = await fetchPosts({ query });
+      const updatedPosts = await updateSignedUrls(posts);
 
-      // 投稿ごとに署名付きURLを確認し、必要に応じて生成
-      const now = new Date();
-      const post = await Promise.all(
-        posts.map(async (post) => {
-          let signedUrl = post.signedUrl;
-          // URLがない、または有効期限が切れている場合、新しい署名付きURLを生成
-          if (!signedUrl || (post.urlExpiresAt && post.urlExpiresAt < now)) {
-            const s3 = configureAWS();
-            const params = {
-              Bucket: process.env.AWS_S3_BUCKET_NAME,
-              Key: post.imageKey,
-              Expires: 60 * 5, // 5分間の有効期限
-            };
-
-            signedUrl = await new Promise<string>((resolve, reject) => {
-              s3.getSignedUrl("getObject", params, (err, url) => {
-                if (err) {
-                  reject(err);
-                } else {
-                  resolve(url);
-                }
-              });
-            });
-
-            // 新しい署名付きURLとその有効期限を保存
-            post.urlExpiresAt = new Date(Date.now() + 60 * 5 * 1000); // 5分後
-            await post.save();
-          }
-
-          return {
-            ...post.toJSON(),
-            signedUrl, // 新しい署名付きURL
-          };
-        })
-      );
-
-      return res.json({ posts: post });
+      return res.json({ posts: updatedPosts });
     } catch (err) {
-      console.log(err);
-      return res
-        .status(401)
-        .json({ errorMessage: "情報が取得できませんでした。" });
-    }
-  }
-);
-
-//有効期限が切れた場合に再生成するエンドポイント
-app.post(
-  "/posts/:id/re-signedurl",
-  passport.authenticate("jwt", { session: false }),
-  async (req: any, res) => {
-    try {
-      const postId = req.params.id;
-      const post = await Post.findByPk(postId);
-
-      if (!post) {
-        return res.status(404).json({ errorMessage: "投稿が見つかりません。" });
-      }
-
-      const s3 = configureAWS();
-      const params = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Key: post.imageKey,
-        Expires: 60 * 5, // 5分間の有効期限
-      };
-
-      const signedUrl = await new Promise<string>((resolve, reject) => {
-        s3.getSignedUrl("getObject", params, (err, url) => {
-          if (err) {
-            reject(err);
-          } else {
-            const cloudflareUrl = url.replace(
-              `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
-              `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
-            );
-            resolve(cloudflareUrl);
-          }
-        });
-      });
-
-      post.urlExpiresAt = new Date(Date.now() + 60 * 5 * 1000); // 新しい有効期限
-      post.signedUrl = signedUrl;
-      await post.save();
-
-      return res.json({ signedUrl });
-    } catch (err) {
-      console.log(err);
+      console.error("投稿の取得中にエラーが発生しました:", err);
       return res
         .status(500)
-        .json({ errorMessage: "署名付きURLの更新に失敗しました。" });
+        .json({ errorMessage: "投稿リストを取得できませんでした。" });
     }
   }
 );
@@ -311,36 +221,17 @@ app.get(
   "/posts/:id",
   passport.authenticate("jwt", { session: false }),
   async (req: any, res) => {
-    const user = req.user.user.name;
-    const requestParams = req.params;
-    const id = requestParams.id;
-    const post = await Post.findOne({
-      where: {
-        id,
-      },
-      include: [
-        {
-          model: Category, // カテゴリを取得
-          through: { attributes: [] },
-        },
-        {
-          model: User, // 投稿者の情報を取得
-          attributes: ["id", "name"], // 必要な属性だけ取得
-        },
-      ],
-    });
-    if (post) {
-      return res.json({
-        post: {
-          ...post.toJSON(), // Sequelize オブジェクトを通常のオブジェクトに変換
-          user: post, // 投稿者情報を `user` として追加
-        },
-      });
-    } else {
+    const { id } = req.params;
+    const posts = await fetchPosts({ id });
+
+    if (!posts || posts.length === 0) {
       return res
         .status(404)
-        .json({ errorMessage: "情報が取得できませんでした。" });
+        .json({ errorMessage: "投稿が取得できませんでした" });
     }
+
+    const updatedPosts = await updateSignedUrls(posts);
+    return res.json({ posts: updatedPosts });
   }
 );
 
@@ -362,7 +253,7 @@ app.patch(
       if (!post) {
         return res
           .status(404)
-          .json({ errorMessage: "情報が取得できませんでした" });
+          .json({ errorMessage: "投稿が取得できませんでした" });
       }
       post.set({
         title: params.title,
@@ -394,7 +285,7 @@ app.delete(
       if (!post) {
         return res
           .status(404)
-          .json({ errorMessage: "情報が取得できませんでした" });
+          .json({ errorMessage: "投稿が取得できませんでした" });
       }
 
       await post.delete();
@@ -403,7 +294,7 @@ app.delete(
       console.log(err);
       return res
         .status(401)
-        .json({ errorMessage: "記事の削除ができませんでした。" });
+        .json({ errorMessage: "投稿の削除ができませんでした。" });
     }
   }
 );
@@ -427,7 +318,7 @@ app.get("/postsimage", (req, res) => {
       console.error(err);
       return res
         .status(500)
-        .json({ errorMessage: "署名付きURLの生成に失敗しました。" });
+        .json({ errorMessage: "署名付きURLの生成に失敗しました" });
     }
 
     res.status(200).json({ signedUrl: url, safeFilePath });
@@ -455,6 +346,6 @@ app.post("/mockurl", async (req: Request, res: Response) => {
   } catch (err) {
     return res
       .status(500)
-      .json({ errorMessage: "モックユーザーの作成に失敗しました。" });
+      .json({ errorMessage: "モックユーザーの作成に失敗しました" });
   }
 });

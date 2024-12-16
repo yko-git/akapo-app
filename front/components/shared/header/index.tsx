@@ -4,7 +4,7 @@ import Image from "next/image";
 import logo from "@/public/common/logo.svg";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import { Nav } from "../Nav";
+import { Nav } from "@/components/shared/nav";
 
 export default function Header() {
   // visibleの値を変えることでメニューを表示・非表示させる
@@ -31,7 +31,7 @@ export default function Header() {
               className="inline-flex items-center gap-2.5 text-3xl font-bold text-black md:text-3xl"
               aria-label="logo"
             >
-              <Image src={logo} loading="lazy" width={184} height={56} alt="" />
+              <Image src={logo} loading="lazy" width="184" height="56" alt="" />
             </Link>
 
             <nav
