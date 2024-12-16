@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import passport, { hash } from "./auth";
 import jwt from "jsonwebtoken";
 import { Post } from "./models/post";
-import configureAWS from "./aws";
+import configureAWS, { paramsBase } from "./aws";
 import cors from "cors";
 import { updateSignedUrls, fetchPosts } from "./services/index";
 
@@ -307,9 +307,8 @@ app.get("/postsimage", (req, res) => {
   const s3 = configureAWS();
 
   const params = {
-    Bucket: process.env.AWS_S3_BUCKET_NAME,
+    ...paramsBase,
     Key: safeFilePath,
-    Expires: 60 * 5,
     ContentType: "application/octet-stream",
   };
 
