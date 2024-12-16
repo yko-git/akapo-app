@@ -2,16 +2,16 @@
 
 const data = [
   {
-    key: "programming",
-    name: "プログラミング",
+    key: "illust",
+    name: "イラスト・絵画",
   },
   {
-    key: "career",
-    name: "キャリア",
+    key: "crafts",
+    name: "工作",
   },
   {
-    key: "hobby",
-    name: "趣味",
+    key: "other",
+    name: "その他",
   },
 ];
 

@@ -95,9 +95,9 @@ const CreatePost = () => {
         <label>カテゴリ</label>
         <SelectBox
           options={[
-            { value: "1", label: "プログラミング" },
-            { value: "2", label: "キャリア" },
-            { value: "3", label: "趣味" },
+            { value: "1", label: "イラスト・絵画" },
+            { value: "2", label: "工作" },
+            { value: "3", label: "その他" },
           ]}
           multiple
           value={categoryIds.map(String)}
