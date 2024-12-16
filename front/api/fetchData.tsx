@@ -13,20 +13,36 @@ export async function getMockUserToken(): Promise<string | null> {
   }
 }
 
-// 投稿データ取得関数
+// 個別投稿データ取得関数
 export async function fetchPost({
   id,
   token,
 }: {
   id?: number; // オプショナルにする
   token: string;
+}): Promise<Post | null> {
+  try {
+    const response = await axios.get(`http://localhost:3001/posts/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data.posts;
+  } catch (error) {
+    console.error("投稿の取得に失敗しました", error);
+    return null;
+  }
+}
+
+// 複数投稿データ取得関数
+export async function fetchPosts({
+  token,
+}: {
+  token: string;
 }): Promise<Post[] | null> {
   try {
-    const url = id
-      ? `http://localhost:3001/posts/${id}` // 個別取得
-      : `http://localhost:3001/posts/`; // リスト取得
-
-    const response = await axios.get(url, {
+    const response = await axios.get(`http://localhost:3001/posts/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
