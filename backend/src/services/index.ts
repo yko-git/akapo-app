@@ -54,7 +54,7 @@ export async function updateSignedUrls(posts: Post[]) {
 
         // 新しい署名付きURLと有効期限を更新
         post.signedUrl = signedUrl;
-        post.urlExpiresAt = new Date(Date.now() + 60 * 5 * 1000); // 5分後
+        post.urlExpiresAt = new Date(Date.now() + params.Expires * 1000);
         await post.save();
       }
 
