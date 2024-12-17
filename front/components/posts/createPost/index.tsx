@@ -5,6 +5,7 @@ import { getMockUserToken, createPost } from "@/api/fetchData";
 import { NewPost } from "@/types";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
+import { statusList, categories } from "@/components/shared/data";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
@@ -83,10 +84,7 @@ const CreatePost = () => {
       <div>
         <label>ステータス</label>
         <SelectBox
-          options={[
-            { value: "0", label: "下書き" },
-            { value: "1", label: "公開" },
-          ]}
+          options={statusList}
           value={status}
           onChange={handleSelect}
         />
@@ -94,11 +92,7 @@ const CreatePost = () => {
       <div>
         <label>カテゴリ</label>
         <SelectBox
-          options={[
-            { value: "1", label: "イラスト・絵画" },
-            { value: "2", label: "工作" },
-            { value: "3", label: "その他" },
-          ]}
+          options={categories}
           multiple
           value={categoryIds.map(String)}
           onChange={handleMultipleSelect}
