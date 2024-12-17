@@ -1,4 +1,4 @@
-import configureAWS, { paramsBase } from "../aws";
+import configureAWS, { singedURLConfig } from "../aws";
 import Category from "../models/category";
 import { Post } from "../models/post";
 import { User } from "../models/user";
@@ -33,7 +33,7 @@ export async function updateSignedUrls(posts: Post[]) {
       if (!post.signedUrl || !post.urlExpiresAt || post.urlExpiresAt < now) {
         const s3 = configureAWS();
         const params = {
-          ...paramsBase,
+          ...singedURLConfig,
           Key: post.imageKey,
         };
 
