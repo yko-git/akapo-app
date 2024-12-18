@@ -10,4 +10,9 @@ const configureAWS = () => {
   return new AWS.S3();
 };
 
+export const singedURLConfig = {
+  Bucket: process.env.AWS_S3_BUCKET_NAME,
+  Expires: 60 * 5,
+};
+
 export default configureAWS;

@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import passport, { hash } from "./auth";
 import jwt from "jsonwebtoken";
 import { Post } from "./models/post";
-import configureAWS from "./aws";
+import configureAWS, { singedURLConfig } from "./aws";
 import cors from "cors";
 import { updateSignedUrls, fetchPosts } from "./services/index";
 
@@ -162,11 +162,9 @@ app.post(
 
       // DBに保存用 画像ダウンロード用の署名付きURLを生成
       const s3 = configureAWS();
-      const expiresIn = 60 * 5;
       const paramsForS3 = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        ...singedURLConfig,
         Key: imageKey,
-        Expires: expiresIn,
       };
       const signedUrl = await new Promise<string>((resolve, reject) => {
         s3.getSignedUrl("getObject", paramsForS3, (err, url) => {
@@ -186,7 +184,7 @@ app.post(
         status,
         imageKey,
         signedUrl,
-        urlExpiresAt: new Date(Date.now() + expiresIn * 1000),
+        urlExpiresAt: new Date(Date.now() + paramsForS3.Expires * 1000),
       });
 
       await post.upsert(categoryIds);
@@ -307,9 +305,8 @@ app.get("/postsimage", (req, res) => {
   const s3 = configureAWS();
 
   const params = {
-    Bucket: process.env.AWS_S3_BUCKET_NAME,
+    ...singedURLConfig,
     Key: safeFilePath,
-    Expires: 60 * 5,
     ContentType: "application/octet-stream",
   };
 

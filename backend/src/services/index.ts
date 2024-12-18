@@ -1,4 +1,4 @@
-import configureAWS from "../aws";
+import configureAWS, { singedURLConfig } from "../aws";
 import Category from "../models/category";
 import { Post } from "../models/post";
 import { User } from "../models/user";
@@ -33,9 +33,8 @@ export async function updateSignedUrls(posts: Post[]) {
       if (!post.signedUrl || !post.urlExpiresAt || post.urlExpiresAt < now) {
         const s3 = configureAWS();
         const params = {
-          Bucket: process.env.AWS_S3_BUCKET_NAME,
+          ...singedURLConfig,
           Key: post.imageKey,
-          Expires: 60 * 5, // 5分間の有効期限
         };
 
         // 新しい署名付きURLを生成
@@ -55,7 +54,7 @@ export async function updateSignedUrls(posts: Post[]) {
 
         // 新しい署名付きURLと有効期限を更新
         post.signedUrl = signedUrl;
-        post.urlExpiresAt = new Date(Date.now() + 60 * 5 * 1000); // 5分後
+        post.urlExpiresAt = new Date(Date.now() + params.Expires * 1000);
         await post.save();
       }
 
