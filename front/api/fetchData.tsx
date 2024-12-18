@@ -1,10 +1,15 @@
 import axios from "axios";
 import { Post, NewPost } from "@/types";
 
+// axiosインスタンス
+const instance = axios.create({
+  baseURL: "http://localhost:3001/",
+});
+
 // トークン取得関数
 export async function getMockUserToken(): Promise<string | null> {
   try {
-    const response = await axios.post("http://localhost:3001/mockurl");
+    const response = await instance.post("mockurl");
     const { token } = response.data;
     return token;
   } catch (error) {
@@ -13,20 +18,36 @@ export async function getMockUserToken(): Promise<string | null> {
   }
 }
 
-// 投稿データ取得関数
+// 個別投稿データ取得関数
 export async function fetchPost({
   id,
   token,
 }: {
   id?: number; // オプショナルにする
   token: string;
+}): Promise<Post | null> {
+  try {
+    const response = await instance.get(`posts/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data.posts;
+  } catch (error) {
+    console.error("投稿の取得に失敗しました", error);
+    return null;
+  }
+}
+
+// 複数投稿データ取得関数
+export async function fetchPosts({
+  token,
+}: {
+  token: string;
 }): Promise<Post[] | null> {
   try {
-    const url = id
-      ? `http://localhost:3001/posts/${id}` // 個別取得
-      : `http://localhost:3001/posts/`; // リスト取得
-
-    const response = await axios.get(url, {
+    const response = await instance.get(`posts/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -48,15 +69,12 @@ export async function createPost(
   const { title, body, status, categoryIds } = postData;
   try {
     // S3の署名付きURLを取得
-    const signedUrlResponse = await axios.get(
-      "http://localhost:3001/postsimage",
-      {
-        params: { filename: file.name },
-        headers: {
-          Authorization: `Bearer ${token}`, // モックユーザーのトークンを指定
-        },
-      }
-    );
+    const signedUrlResponse = await instance.get("postsimage", {
+      params: { filename: file.name },
+      headers: {
+        Authorization: `Bearer ${token}`, // モックユーザーのトークンを指定
+      },
+    });
     const { signedUrl, safeFilePath } = signedUrlResponse.data;
 
     // S3に画像をアップロード
@@ -67,8 +85,8 @@ export async function createPost(
     });
 
     // 記事情報をサーバーに送信
-    const postResponse = await axios.post(
-      "http://localhost:3001/posts",
+    const postResponse = await instance.post(
+      "posts",
       {
         post: {
           title,
