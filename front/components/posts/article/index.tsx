@@ -1,9 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Post } from "@/types";
-import { fetchPost, getMockUserToken } from "@/api/fetchData";
+import { fetchPost } from "@/api/fetchData";
 import Image from "next/image";
-import userIcon from "@/public/common/usericon.png";
 import TagList from "@/components/shared/tagList";
 import Photo from "@/components/shared/photo";
 
@@ -12,10 +11,7 @@ export default function Article({ id }: { id: number }) {
 
   useEffect(() => {
     async function fetchData() {
-      const token = await getMockUserToken();
-      if (!token) return;
-
-      const post = await fetchPost({ id, token });
+      const post = await fetchPost({ id });
       if (Array.isArray(post) && post.length > 0) {
         setData(post[0]);
       }
@@ -43,15 +39,23 @@ export default function Article({ id }: { id: number }) {
           <div className="md:w-full md:pl-10 tracking-[.2em] md:mt-0 mt-10 relative">
             <div className="mt-4">
               <div className="inline-block text-center md:absolute right-0 top-0">
-                <Image
-                  className="inline-block mr-2"
-                  src={userIcon}
-                  alt=""
-                  width={100}
-                  height={100}
-                  loading="lazy"
-                />
-                <p className="text-[12px] mt-1">{data.User.name}</p>
+                {data ? (
+                  <>
+                    <div className="inline-block text-center">
+                      <Image
+                        className="inline-block mr-2"
+                        src={data.User.iconUrl}
+                        alt=""
+                        width={100}
+                        height={100}
+                        loading="lazy"
+                      />
+                      <p className="text-[12px] mt-1">{data.User.name}</p>
+                    </div>
+                  </>
+                ) : (
+                  <p>ユーザー情報を読み込んでいます...</p>
+                )}
               </div>
             </div>
             <p className="text-[#9F9F9F] text-[12px] mt-4">
