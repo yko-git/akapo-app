@@ -321,28 +321,3 @@ app.get("/postsimage", (req, res) => {
     res.status(200).json({ signedUrl: url, safeFilePath });
   });
 });
-
-// モックユーザー発行エンドポイント
-app.post("/mockurl", async (req: Request, res: Response) => {
-  try {
-    // モックのユーザー情報
-    const mockUser = {
-      id: 1,
-      loginId: "user1",
-      name: "hoge1",
-      iconUrl: "http://localhost",
-    };
-
-    // jwtのtokenを作成
-    const payload = { user: mockUser };
-    const token = jwt.sign(payload, `${process.env.JWT_SECRET}` as string, {
-      expiresIn: "30days",
-    });
-
-    res.json({ user: mockUser, token });
-  } catch (err) {
-    return res
-      .status(500)
-      .json({ errorMessage: "モックユーザーの作成に失敗しました" });
-  }
-});
