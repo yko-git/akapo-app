@@ -66,7 +66,7 @@ app.post("/auth/signup", async (req, res, next) => {
     }
 
     await User.create(user);
-    res.json({ errorMessage: "user情報の登録が完了しました" });
+    res.json({ user });
   } catch (error) {
     console.log(error);
     return res
