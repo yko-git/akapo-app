@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Post } from "@/types";
-import { fetchPosts, getMockUserToken } from "@/api/fetchData";
+import { fetchPosts } from "@/api/fetchData";
 import Photo from "@/components/shared/photo";
 
 export default function ArticleList() {
@@ -10,13 +10,9 @@ export default function ArticleList() {
 
   useEffect(() => {
     async function fetchData() {
-      const token = await getMockUserToken();
-      if (!token) return;
-
-      const posts = await fetchPosts({ token });
+      const posts = await fetchPosts();
       setData(posts);
     }
-
     fetchData();
   }, []);
 
@@ -43,7 +39,8 @@ export default function ArticleList() {
                 />
               </Link>
             </div>
-            <div className="font-semibold mt-3">{item.title}</div>
+            <div className="text-sm mt-3">{item.User.name}</div>
+            <div className="font-semibold mt-2">{item.title}</div>
           </li>
         ))}
       </ul>
