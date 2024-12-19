@@ -1,6 +1,7 @@
 export interface User {
   id: number;
   name: string;
+  iconUrl: string;
 }
 
 export interface Post {
@@ -34,4 +35,19 @@ export interface TagListProps {
 export interface PhotoProps {
   src: string;
   alt: string;
+}
+
+export interface NewUser {
+  loginId: string;
+  name: string;
+  password: string;
+}
+
+export interface NewLogin {
+  loginId: string;
+  password: string;
+}
+
+export interface UserArticleListProps {
+  data: Post[] | null;
 }
