@@ -7,14 +7,16 @@ import { fetchUserPosts } from "@/api/fetchData";
 import UserArticleList from "../userArticleList";
 
 const UserPage = () => {
-  const [userData, setUserData] = useState<any | null>(null);
+  const [userProfile, setUserProfile] = useState<any | null>(null);
   const [data, setData] = useState<Post[] | null>(null);
 
   useEffect(() => {
     async function fetchData() {
-      const data = await user();
-      setUserData(data);
+      const userData = await user();
+      console.log({ userData });
+      setUserProfile(userData);
       const posts = await fetchUserPosts();
+      console.log("posts: " + JSON.stringify(posts));
       setData(posts);
     }
 
@@ -22,19 +24,19 @@ const UserPage = () => {
   }, []);
   return (
     <div className="">
-      {data ? (
+      {userProfile ? (
         <>
           <div className="p-5">
             <div className="inline-block text-center">
               <Image
                 className="inline-block mr-2"
-                src={userData.iconUrl}
+                src={userProfile.signedUserUrl}
                 alt=""
                 width={100}
                 height={100}
                 loading="lazy"
               />
-              <p className="text-[12px] mt-1">{userData.name}</p>
+              <p className="text-[12px] mt-1">{userProfile.name}</p>
             </div>
           </div>
         </>
