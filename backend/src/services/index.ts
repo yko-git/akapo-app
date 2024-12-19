@@ -18,7 +18,7 @@ export async function fetchPosts(params: { id?: string; query?: any }) {
       },
       {
         model: User,
-        attributes: ["id", "name"],
+        attributes: ["id", "name", "iconUrl"],
       },
     ],
   });
