@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Post } from "@/types";
-import { getMockUserToken, fetchPosts } from "@/api/fetchData";
+import { fetchPosts } from "@/api/fetchData";
 import Photo from "@/components/shared/photo";
 
 export default function ArticleMain() {
@@ -10,10 +10,7 @@ export default function ArticleMain() {
 
   useEffect(() => {
     async function fetchData() {
-      const token = await getMockUserToken();
-      if (!token) return;
-
-      const post = await fetchPosts({ token });
+      const post = await fetchPosts();
       setData(post);
     }
 
