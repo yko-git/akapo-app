@@ -146,6 +146,7 @@ app.get(
           errorMessage: "ユーザーの投稿が取得できませんでした",
         });
       }
+
       res.json({ user });
     } catch (err) {
       console.log(err);

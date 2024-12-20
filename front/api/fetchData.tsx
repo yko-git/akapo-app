@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Post, NewPost, NewUser, NewLogin } from "@/types";
+import { Post, NewPost, NewUser, UserProfile, NewLogin } from "@/types";
 
 // axiosインスタンス
 const instance = axios.create({
@@ -139,19 +139,6 @@ export async function createLogin(
   }
 }
 
-// ユーザー情報取得関数
-export async function user(): Promise<any | null> {
-  try {
-    const response = await instance.get("user");
-
-    console.log("user():", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("ログインに失敗しました", error);
-    return null;
-  }
-}
-
 // ユーザー用トークン取得関数
 export async function getUserToken(): Promise<any | null> {
   try {
@@ -173,6 +160,18 @@ export async function fetchUserPosts(): Promise<Post[] | null> {
     return response.data.posts;
   } catch (error) {
     console.error("投稿の取得に失敗しました", error);
+    return null;
+  }
+}
+
+// ユーザー情報取得関数
+export async function fetchUserData(): Promise<UserProfile | null> {
+  try {
+    const response = await instance.get(`user`);
+    console.log(`APIレスポンス: ${JSON.stringify(response.data)}`); // レスポンス全体を確認
+    return response.data.user;
+  } catch (error) {
+    console.error("ユーザーデータ取得に失敗しました", error);
     return null;
   }
 }

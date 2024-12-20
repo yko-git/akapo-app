@@ -32,10 +32,16 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     }
     return this.getPosts({
       where,
-      include: {
-        model: Category,
-        through: { attributes: [] },
-      },
+      include: [
+        {
+          model: Category,
+          through: { attributes: [] },
+        },
+        {
+          model: User,
+          attributes: ["id", "name", "iconUrl", "signedUrl"],
+        },
+      ],
     });
   }
 }

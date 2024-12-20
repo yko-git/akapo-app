@@ -1,9 +1,8 @@
 "use client";
-import { user } from "@/api/fetchData";
 import { useEffect, useState } from "react";
 import { Post } from "@/types";
 import Image from "next/image";
-import { fetchUserPosts } from "@/api/fetchData";
+import { fetchUserPosts, fetchUserData } from "@/api/fetchData";
 import UserArticleList from "../userArticleList";
 
 const UserPage = () => {
@@ -13,7 +12,7 @@ const UserPage = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const userData = await user();
+        const userData = await fetchUserData();
         console.log("ユーザーデータ:", userData);
         setUserProfile(userData);
 
@@ -31,19 +30,19 @@ const UserPage = () => {
     <div className="">
       {userProfile ? (
         <>
-          {/* <div className="p-5">
+          <div className="p-5">
             <div className="inline-block text-center">
               <Image
-                className="inline-block mr-2"
-                src={data} // signedUrlをfallbackに利用
+                className="inline-block mr-2 rounded-full object-cover w-[90px] h-[90px] border-[#6C9FE0] border-4"
+                src={userProfile.signedUrl}
                 alt=""
                 width={100}
                 height={100}
                 loading="lazy"
               />
-              <p className="text-[12px] mt-1">{userProfile}</p>
+              <p className="text-[12px] mt-1">{userProfile.name}</p>
             </div>
-          </div> */}
+          </div>
         </>
       ) : (
         <p>ユーザー情報を読み込んでいます...</p>
