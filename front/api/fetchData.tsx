@@ -87,18 +87,18 @@ export async function createPost(
 // 新規ユーザー登録
 export async function createUser(
   file: File,
-  postData: NewUser
+  userData: NewUser
 ): Promise<string | undefined> {
-  const { loginId, name, password } = postData;
+  const { loginId, name, password } = userData;
   try {
     // S3の署名付きURLを取得
     const signedUrlResponse = await instance.get("postsimage", {
       params: { filename: file.name },
     });
-    const { signedUserUrl, safeFilePath } = signedUrlResponse.data;
+    const { signedUrl, safeFilePath } = signedUrlResponse.data;
 
     // S3に画像をアップロード
-    await axios.put(signedUserUrl, file, {
+    await axios.put(signedUrl, file, {
       headers: {
         "Content-Type": file.type,
       },
@@ -113,11 +113,9 @@ export async function createUser(
         iconUrl: safeFilePath, // 画像のキーを指定
       },
     });
-
-    alert("新規ユーザー登録が完了しました！");
     console.log("User created:", userResponse.data.user);
 
-    return userResponse.data.user.signedUserUrl; // サーバーからの署名付きURLを使用
+    return userResponse.data.user.signedUrl; // サーバーからの署名付きURLを使用
   } catch (error) {
     console.error("登録中にエラーが発生しました", error);
   }

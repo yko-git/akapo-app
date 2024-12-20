@@ -16,7 +16,6 @@ const UserPage = () => {
       console.log({ userData });
       setUserProfile(userData);
       const posts = await fetchUserPosts();
-      console.log("posts: " + JSON.stringify(posts));
       setData(posts);
     }
 

@@ -64,9 +64,41 @@ app.post("/auth/signup", async (req, res, next) => {
         .status(400)
         .json({ errorMessage: "user情報がすでに登録されています" });
     }
+    //
+    // DBに保存用 画像ダウンロード用の署名付きURLを生成
+    const s3 = configureAWS();
+    const paramsForS3 = {
+      ...singedURLConfig,
+      Key: iconUrl,
+    };
+    const signedUrl = await new Promise<string>((resolve, reject) => {
+      s3.getSignedUrl("getObject", paramsForS3, (err, url) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(url);
+        }
+      });
+    });
+    // 画像ダウンロード用の署名付きURLと有効期限も含めてDBに投稿
+    const userData = await User.create({
+      ...user,
+      signedUrl,
+      urlExpiresAt: new Date(Date.now() + paramsForS3.Expires * 1000),
+    });
+    //
 
-    await User.create(user);
-    res.json({ user });
+    // await User.create(user);
+    // res.json({ userData });
+    res.json({
+      user: {
+        id: userData.id,
+        loginId: userData.loginId,
+        name: userData.name,
+        iconUrl: userData.iconUrl,
+        signedUrl: userData.signedUrl, // 署名付きURLを明示的に返す
+      },
+    });
   } catch (error) {
     console.log(error);
     return res
