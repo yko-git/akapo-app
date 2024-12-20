@@ -43,7 +43,6 @@ app.get("/", (req: Request, res: Response) => {
   res.send({ message: "ok" });
 });
 
-// auth/signup
 app.post("/auth/signup", async (req, res, next) => {
   try {
     const hashedPassword = await hash(req);
@@ -55,7 +54,7 @@ app.post("/auth/signup", async (req, res, next) => {
 
     const searchUser = await User.findAll({
       where: {
-        loginId: req.body.user.loginId,
+        loginId: loginId,
       },
     });
 
@@ -64,13 +63,23 @@ app.post("/auth/signup", async (req, res, next) => {
         .status(400)
         .json({ errorMessage: "user情報がすでに登録されています" });
     }
-    //
-    // DBに保存用 画像ダウンロード用の署名付きURLを生成
-    const s3 = configureAWS();
+
+    let s3;
+    try {
+      s3 = configureAWS();
+    } catch (err) {
+      console.error("AWS設定エラー:", err);
+      return res
+        .status(500)
+        .json({ errorMessage: "AWS設定中にエラーが発生しました" });
+    }
+
     const paramsForS3 = {
-      ...singedURLConfig,
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: iconUrl,
+      Expires: 60 * 60, // 署名の有効期限（例：1時間）
     };
+
     const signedUrl = await new Promise<string>((resolve, reject) => {
       s3.getSignedUrl("getObject", paramsForS3, (err, url) => {
         if (err) {
@@ -80,23 +89,20 @@ app.post("/auth/signup", async (req, res, next) => {
         }
       });
     });
-    // 画像ダウンロード用の署名付きURLと有効期限も含めてDBに投稿
+
     const userData = await User.create({
       ...user,
       signedUrl,
       urlExpiresAt: new Date(Date.now() + paramsForS3.Expires * 1000),
     });
-    //
 
-    // await User.create(user);
-    // res.json({ userData });
     res.json({
       user: {
         id: userData.id,
         loginId: userData.loginId,
         name: userData.name,
         iconUrl: userData.iconUrl,
-        signedUrl: userData.signedUrl, // 署名付きURLを明示的に返す
+        signedUrl: userData.signedUrl,
       },
     });
   } catch (error) {
@@ -131,15 +137,21 @@ app.post(
 // user
 app.get(
   "/user",
-  passport.authenticate("jwt", {
-    session: false,
-  }),
+  passport.authenticate("jwt", { session: false }),
   async (req: any, res: Response) => {
-    const { user } = req.user;
-    if (!user) {
-      return res.status(500).json({ errorMessage: "認証ができませんでした。" });
-    } else {
-      return res.send(user);
+    try {
+      const { user } = req.user;
+      if (!user) {
+        return res.json({
+          errorMessage: "ユーザーの投稿が取得できませんでした",
+        });
+      }
+      res.json({ user });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(401)
+        .json({ errorMessage: "投稿が取得できませんでした。" });
     }
   }
 );

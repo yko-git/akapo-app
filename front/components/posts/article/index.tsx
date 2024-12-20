@@ -43,11 +43,11 @@ export default function Article({ id }: { id: number }) {
                   <>
                     <div className="inline-block text-center">
                       <Image
-                        className="inline-block mr-2"
-                        src={data.User.iconUrl}
+                        className="inline-block mr-2 rounded-full object-cover w-[90px] h-[90px] border-[#6C9FE0] border-4"
+                        src={data.User.signedUrl}
                         alt=""
-                        width={100}
-                        height={100}
+                        width={90}
+                        height={90}
                         loading="lazy"
                       />
                       <p className="text-[12px] mt-1">{data.User.name}</p>

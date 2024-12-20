@@ -113,7 +113,10 @@ export async function createUser(
         iconUrl: safeFilePath, // 画像のキーを指定
       },
     });
-    console.log("User created:", userResponse.data.user);
+    console.log(
+      "userResponse.data.user.signedUrl:",
+      userResponse.data.user.signedUrl
+    );
 
     return userResponse.data.user.signedUrl; // サーバーからの署名付きURLを使用
   } catch (error) {

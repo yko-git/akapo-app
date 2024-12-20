@@ -12,11 +12,17 @@ const UserPage = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const userData = await user();
-      console.log({ userData });
-      setUserProfile(userData);
-      const posts = await fetchUserPosts();
-      setData(posts);
+      try {
+        const userData = await user();
+        console.log("ユーザーデータ:", userData);
+        setUserProfile(userData);
+
+        const posts = await fetchUserPosts();
+        console.log("投稿データ:", posts);
+        setData(posts);
+      } catch (error) {
+        console.error("データ取得中にエラー:", error);
+      }
     }
 
     fetchData();
@@ -25,19 +31,19 @@ const UserPage = () => {
     <div className="">
       {userProfile ? (
         <>
-          <div className="p-5">
+          {/* <div className="p-5">
             <div className="inline-block text-center">
               <Image
                 className="inline-block mr-2"
-                src={userProfile.signedUserUrl}
+                src={data} // signedUrlをfallbackに利用
                 alt=""
                 width={100}
                 height={100}
                 loading="lazy"
               />
-              <p className="text-[12px] mt-1">{userProfile.name}</p>
+              <p className="text-[12px] mt-1">{userProfile}</p>
             </div>
-          </div>
+          </div> */}
         </>
       ) : (
         <p>ユーザー情報を読み込んでいます...</p>

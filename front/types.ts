@@ -2,6 +2,7 @@ export interface User {
   id: number;
   name: string;
   iconUrl: string;
+  signedUrl: string;
 }
 
 export interface Post {
@@ -50,4 +51,12 @@ export interface NewLogin {
 
 export interface UserArticleListProps {
   data: Post[] | null;
+}
+
+export interface UserProfile {
+  id: number;
+  name: string;
+  loginId: string;
+  iconUrl?: string;
+  signedUrl?: string;
 }
