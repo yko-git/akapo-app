@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Post } from "@/types";
 import { fetchPosts } from "@/api/fetchData";
 import Photo from "@/components/shared/photo";
+import Image from "next/image";
+import TagList from "@/components/shared/tagList";
 
 export default function ArticleList() {
   const [data, setData] = useState<Post[] | null>(null);
@@ -39,8 +41,26 @@ export default function ArticleList() {
                 />
               </Link>
             </div>
-            <div className="text-sm mt-3">{item.User.name}</div>
-            <div className="font-semibold mt-2">{item.title}</div>
+            <ul className="mt-4">
+              <TagList Categories={item.Categories} />
+            </ul>
+            <div className="font-semibold mt-4">{item.title}</div>
+            <div className="flex items-center justify-between mt-2 text-[#807f7f]">
+              <div className="flex items-center">
+                <Image
+                  className="inline-block mr-2 rounded-full object-cover w-[31px] h-[31px] "
+                  src={item.User.signedUrl}
+                  alt=""
+                  width={31}
+                  height={31}
+                  loading="lazy"
+                />
+                <p className="text-sm">{item.User.name}</p>
+              </div>
+              <p className="text-sm">
+                {new Date(item.createdAt).toLocaleDateString()}
+              </p>
+            </div>
           </li>
         ))}
       </ul>

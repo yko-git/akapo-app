@@ -58,8 +58,8 @@ export default function Article({ id }: { id: number }) {
                 )}
               </div>
             </div>
-            <p className="text-[#9F9F9F] text-[12px] mt-4">
-              {new Date(data.createdAt).toLocaleString()}
+            <p className="text-[#9F9F9F] text-[12px] mt-4 ">
+              {new Date(data.createdAt).toLocaleDateString()}
             </p>
             {/* category */}
             <ul className="mt-2">
@@ -68,7 +68,7 @@ export default function Article({ id }: { id: number }) {
             <div className="mt-4 md:text-[27px] text-lg leading-9 font-bold">
               {data.title}
             </div>
-            <div className="mt-4 leading-8">
+            <div className="mt-4 leading-8 text-slate-500">
               {data.body.split("\n").map((item: string, index: number) => (
                 <p key={index}>{item}</p>
               ))}
