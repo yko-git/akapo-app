@@ -49,7 +49,7 @@ export default function ArticleList() {
               <div className="flex items-center">
                 <Image
                   className="inline-block mr-2 rounded-full object-cover w-[31px] h-[31px] "
-                  src={item.User.signedUrl}
+                  src={item.User.iconSignedUrl}
                   alt=""
                   width={31}
                   height={31}

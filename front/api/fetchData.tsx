@@ -52,7 +52,7 @@ export async function createPost(
   const { title, body, status, categoryIds } = postData;
   try {
     // S3の署名付きURLを取得
-    const signedUrlResponse = await instance.get("postsimage", {
+    const signedUrlResponse = await instance.get("signedurl", {
       params: { filename: file.name },
     });
     const { signedUrl, safeFilePath } = signedUrlResponse.data;
@@ -92,13 +92,14 @@ export async function createUser(
   const { loginId, name, password } = userData;
   try {
     // S3の署名付きURLを取得
-    const signedUrlResponse = await instance.get("postsimage", {
-      params: { filename: file.name },
+    const signedUrlResponse = await instance.get("signedurl", {
+      params: { filename: file.name, type: "icon" },
     });
-    const { signedUrl, safeFilePath } = signedUrlResponse.data;
+    const { iconSignedUrl, safeFilePath } = signedUrlResponse.data;
+    console.log(signedUrlResponse.data);
 
     // S3に画像をアップロード
-    await axios.put(signedUrl, file, {
+    await axios.put(iconSignedUrl, file, {
       headers: {
         "Content-Type": file.type,
       },
@@ -114,7 +115,7 @@ export async function createUser(
       },
     });
 
-    return userResponse.data.user.signedUrl; // サーバーからの署名付きURLを使用
+    return userResponse.data.user.iconSignedUrl; // サーバーからの署名付きURLを使用
   } catch (error) {
     console.error("登録中にエラーが発生しました", error);
   }

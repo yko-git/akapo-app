@@ -44,7 +44,7 @@ export default function Article({ id }: { id: number }) {
                     <div className="inline-block text-center">
                       <Image
                         className="inline-block mr-2 rounded-full object-cover w-[90px] h-[90px] border-[#6C9FE0] border-4"
-                        src={data.User.signedUrl}
+                        src={data.User.iconSignedUrl}
                         alt=""
                         width={90}
                         height={90}

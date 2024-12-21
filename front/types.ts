@@ -2,7 +2,7 @@ export interface User {
   id: number;
   name: string;
   iconUrl: string;
-  signedUrl: string;
+  iconSignedUrl: string;
 }
 
 export interface Post {
@@ -58,5 +58,5 @@ export interface UserProfile {
   name: string;
   loginId: string;
   iconUrl?: string;
-  signedUrl?: string;
+  iconSignedUrl?: string;
 }

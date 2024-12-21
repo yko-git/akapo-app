@@ -70,7 +70,7 @@ app.post("/auth/signup", async (req, res, next) => {
       Key: iconUrl,
     };
 
-    const signedUrl = await new Promise<string>((resolve, reject) => {
+    const iconSignedUrl = await new Promise<string>((resolve, reject) => {
       s3.getSignedUrl("getObject", paramsForS3, (err, url) => {
         if (err) {
           reject(err);
@@ -82,8 +82,8 @@ app.post("/auth/signup", async (req, res, next) => {
 
     const userData = await User.create({
       ...user,
-      signedUrl,
-      urlExpiresAt: new Date(Date.now() + paramsForS3.Expires * 1000),
+      iconSignedUrl,
+      iconUrlExpiresAt: new Date(Date.now() + paramsForS3.Expires * 1000),
     });
 
     res.json({
@@ -92,7 +92,7 @@ app.post("/auth/signup", async (req, res, next) => {
         loginId: userData.loginId,
         name: userData.name,
         iconUrl: userData.iconUrl,
-        signedUrl: userData.signedUrl,
+        iconSignedUrl: userData.iconSignedUrl,
       },
     });
   } catch (error) {
@@ -333,10 +333,9 @@ app.delete(
 );
 
 // アップロード用署名付きURLを生成するエンドポイント
-app.get("/postsimage", (req, res) => {
-  const { filename } = req.query;
+app.get("/signedurl", (req, res) => {
+  const { filename, type } = req.query;
   const safeFilePath = `uploads/${Date.now()}-${filename}`;
-
   const s3 = configureAWS();
 
   const params = {
@@ -353,6 +352,10 @@ app.get("/postsimage", (req, res) => {
         .json({ errorMessage: "署名付きURLの生成に失敗しました" });
     }
 
-    res.status(200).json({ signedUrl: url, safeFilePath });
+    if (type === "icon") {
+      res.status(200).json({ iconSignedUrl: url, safeFilePath });
+    } else {
+      res.status(200).json({ signedUrl: url, safeFilePath });
+    }
   });
 });

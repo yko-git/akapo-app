@@ -54,7 +54,7 @@ passport.use(
             loginId,
             name,
             iconUrl,
-            signedUrl,
+            iconSignedUrl,
             createdAt,
             updatedAt,
           } = user;
@@ -65,7 +65,7 @@ passport.use(
               loginId,
               name,
               iconUrl,
-              signedUrl,
+              iconSignedUrl,
               createdAt,
               updatedAt,
             },
