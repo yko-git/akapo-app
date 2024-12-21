@@ -61,23 +61,13 @@ app.post("/auth/signup", async (req, res, next) => {
     if (searchUser.length) {
       return res
         .status(400)
-        .json({ errorMessage: "user情報がすでに登録されています" });
+        .json({ errorMessage: "ユーザー情報がすでに登録されています" });
     }
 
-    let s3;
-    try {
-      s3 = configureAWS();
-    } catch (err) {
-      console.error("AWS設定エラー:", err);
-      return res
-        .status(500)
-        .json({ errorMessage: "AWS設定中にエラーが発生しました" });
-    }
-
+    const s3 = configureAWS();
     const paramsForS3 = {
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      ...signedURLConfig,
       Key: iconUrl,
-      Expires: 60 * 60, // 署名の有効期限（例：1時間）
     };
 
     const signedUrl = await new Promise<string>((resolve, reject) => {
@@ -109,7 +99,7 @@ app.post("/auth/signup", async (req, res, next) => {
     console.log(error);
     return res
       .status(500)
-      .json({ errorMessage: "userが正しく登録できませんでした" });
+      .json({ errorMessage: "ユーザーが正しく登録できませんでした" });
   }
 });
 
@@ -129,7 +119,7 @@ app.post(
       });
       res.json({ user, token });
     } catch (err) {
-      return res.status(401).json({ errorMessage: "認証ができませんでした。" });
+      return res.status(401).json({ errorMessage: "認証ができませんでした" });
     }
   }
 );
@@ -152,7 +142,7 @@ app.get(
       console.log(err);
       return res
         .status(401)
-        .json({ errorMessage: "投稿が取得できませんでした。" });
+        .json({ errorMessage: "投稿が取得できませんでした" });
     }
   }
 );
@@ -185,7 +175,7 @@ app.get(
       console.log(err);
       return res
         .status(401)
-        .json({ errorMessage: "投稿が取得できませんでした。" });
+        .json({ errorMessage: "投稿が取得できませんでした" });
     }
   }
 );
@@ -199,7 +189,7 @@ app.post(
     if (!user) {
       return res
         .status(401)
-        .json({ errorMessage: "ユーザー情報が取得できませんでした。" });
+        .json({ errorMessage: "ユーザー情報が取得できませんでした" });
     }
     try {
       const { post: params } = req.body;
@@ -236,7 +226,7 @@ app.post(
       res.json({ post });
     } catch (err) {
       console.log(err);
-      return res.status(401).json({ errorMessage: "登録ができませんでした。" });
+      return res.status(401).json({ errorMessage: "登録ができませんでした" });
     }
   }
 );
@@ -255,7 +245,7 @@ app.get(
       console.error("投稿の取得中にエラーが発生しました:", err);
       return res
         .status(500)
-        .json({ errorMessage: "投稿リストを取得できませんでした。" });
+        .json({ errorMessage: "投稿リストを取得できませんでした" });
     }
   }
 );
@@ -307,7 +297,7 @@ app.patch(
       res.json({ post: post });
     } catch (err) {
       console.log(err);
-      return res.status(401).json({ errorMessage: "登録ができませんでした。" });
+      return res.status(401).json({ errorMessage: "登録ができませんでした" });
     }
   }
 );
@@ -337,7 +327,7 @@ app.delete(
       console.log(err);
       return res
         .status(401)
-        .json({ errorMessage: "投稿の削除ができませんでした。" });
+        .json({ errorMessage: "投稿の削除ができませんでした" });
     }
   }
 );
