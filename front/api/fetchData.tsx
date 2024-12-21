@@ -113,10 +113,6 @@ export async function createUser(
         iconUrl: safeFilePath, // 画像のキーを指定
       },
     });
-    console.log(
-      "userResponse.data.user.signedUrl:",
-      userResponse.data.user.signedUrl
-    );
 
     return userResponse.data.user.signedUrl; // サーバーからの署名付きURLを使用
   } catch (error) {
@@ -143,7 +139,6 @@ export async function createLogin(
 export async function getUserToken(): Promise<any | null> {
   try {
     const token = localStorage.getItem("token");
-    console.log(`localStorage:${token}`);
     return token;
   } catch (error) {
     console.error("ログインに失敗しました", error);
@@ -156,7 +151,6 @@ export async function fetchUserPosts(): Promise<Post[] | null> {
   try {
     const response = await instance.get(`user/posts`);
 
-    console.log(`fetchUserPosts:${response.data.posts}`);
     return response.data.posts;
   } catch (error) {
     console.error("投稿の取得に失敗しました", error);
@@ -168,7 +162,6 @@ export async function fetchUserPosts(): Promise<Post[] | null> {
 export async function fetchUserData(): Promise<UserProfile | null> {
   try {
     const response = await instance.get(`user`);
-    console.log(`APIレスポンス: ${JSON.stringify(response.data)}`); // レスポンス全体を確認
     return response.data.user;
   } catch (error) {
     console.error("ユーザーデータ取得に失敗しました", error);

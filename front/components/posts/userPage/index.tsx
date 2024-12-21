@@ -13,11 +13,9 @@ const UserPage = () => {
     async function fetchData() {
       try {
         const userData = await fetchUserData();
-        console.log("ユーザーデータ:", userData);
         setUserProfile(userData);
 
         const posts = await fetchUserPosts();
-        console.log("投稿データ:", posts);
         setData(posts);
       } catch (error) {
         console.error("データ取得中にエラー:", error);

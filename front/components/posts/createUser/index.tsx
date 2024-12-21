@@ -24,7 +24,6 @@ const CreateUser = () => {
 
     const userData: NewUser = { loginId, name, password };
     const postImg = await createUser(file, userData);
-    console.log("postImg", postImg);
     if (postImg) {
       setImageUrl(postImg);
     } else {
