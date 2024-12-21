@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import passport, { hash } from "./auth";
 import jwt from "jsonwebtoken";
 import { Post } from "./models/post";
-import configureAWS, { singedURLConfig } from "./aws";
+import configureAWS, { signedURLConfig } from "./aws";
 import cors from "cors";
 import { updateSignedUrls, fetchPosts } from "./services/index";
 
@@ -208,7 +208,7 @@ app.post(
       // DBに保存用 画像ダウンロード用の署名付きURLを生成
       const s3 = configureAWS();
       const paramsForS3 = {
-        ...singedURLConfig,
+        ...signedURLConfig,
         Key: imageKey,
       };
       const signedUrl = await new Promise<string>((resolve, reject) => {
@@ -350,7 +350,7 @@ app.get("/postsimage", (req, res) => {
   const s3 = configureAWS();
 
   const params = {
-    ...singedURLConfig,
+    ...signedURLConfig,
     Key: safeFilePath,
     ContentType: "application/octet-stream",
   };

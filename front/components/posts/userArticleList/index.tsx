@@ -12,6 +12,7 @@ export default function UserArticleList({ data }: UserArticleListProps) {
     <>
       <div className="wrapper">
         <h1 className="font-bold my-2">ユーザー投稿一覧</h1>
+        <p>{data.length} 件</p>
       </div>
       <ul className="gap-5 flex flex-wrap max-w-[1024px] mx-auto">
         {data ? (

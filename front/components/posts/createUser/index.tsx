@@ -27,7 +27,7 @@ const CreateUser = () => {
     if (postImg) {
       setImageUrl(postImg);
     } else {
-      console.error("画像のアップロードまたは投稿に失敗しました");
+      alert("画像のアップロードまたは投稿に失敗しました");
     }
   };
 
@@ -68,7 +68,7 @@ const CreateUser = () => {
       {imageUrl && (
         <div>
           <h3>アップロードされた画像:</h3>
-          <Image src={imageUrl} alt="Uploaded" width={400} height={400} />
+          <Image src={imageUrl} alt="Uploaded" width={100} height={100} />
         </div>
       )}
     </div>
