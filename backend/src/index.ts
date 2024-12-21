@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import passport, { hash } from "./auth";
 import jwt from "jsonwebtoken";
 import { Post } from "./models/post";
-import configureAWS, { singedURLConfig } from "./aws";
+import configureAWS, { signedURLConfig } from "./aws";
 import cors from "cors";
 import { updateSignedUrls, fetchPosts } from "./services/index";
 
@@ -43,7 +43,6 @@ app.get("/", (req: Request, res: Response) => {
   res.send({ message: "ok" });
 });
 
-// auth/signup
 app.post("/auth/signup", async (req, res, next) => {
   try {
     const hashedPassword = await hash(req);
@@ -55,23 +54,52 @@ app.post("/auth/signup", async (req, res, next) => {
 
     const searchUser = await User.findAll({
       where: {
-        loginId: req.body.user.loginId,
+        loginId: loginId,
       },
     });
 
     if (searchUser.length) {
       return res
         .status(400)
-        .json({ errorMessage: "user情報がすでに登録されています" });
+        .json({ errorMessage: "ユーザー情報がすでに登録されています" });
     }
 
-    await User.create(user);
-    res.json({ errorMessage: "user情報の登録が完了しました" });
+    const s3 = configureAWS();
+    const paramsForS3 = {
+      ...signedURLConfig,
+      Key: iconUrl,
+    };
+
+    const signedUrl = await new Promise<string>((resolve, reject) => {
+      s3.getSignedUrl("getObject", paramsForS3, (err, url) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(url);
+        }
+      });
+    });
+
+    const userData = await User.create({
+      ...user,
+      signedUrl,
+      urlExpiresAt: new Date(Date.now() + paramsForS3.Expires * 1000),
+    });
+
+    res.json({
+      user: {
+        id: userData.id,
+        loginId: userData.loginId,
+        name: userData.name,
+        iconUrl: userData.iconUrl,
+        signedUrl: userData.signedUrl,
+      },
+    });
   } catch (error) {
     console.log(error);
     return res
       .status(500)
-      .json({ errorMessage: "userが正しく登録できませんでした" });
+      .json({ errorMessage: "ユーザーが正しく登録できませんでした" });
   }
 });
 
@@ -91,7 +119,7 @@ app.post(
       });
       res.json({ user, token });
     } catch (err) {
-      return res.status(401).json({ errorMessage: "認証ができませんでした。" });
+      return res.status(401).json({ errorMessage: "認証ができませんでした" });
     }
   }
 );
@@ -99,15 +127,22 @@ app.post(
 // user
 app.get(
   "/user",
-  passport.authenticate("jwt", {
-    session: false,
-  }),
+  passport.authenticate("jwt", { session: false }),
   async (req: any, res: Response) => {
-    const { user } = req.user;
-    if (!user) {
-      return res.status(500).json({ errorMessage: "認証ができませんでした。" });
-    } else {
-      return res.send(user);
+    try {
+      const { user } = req.user;
+      if (!user) {
+        return res.json({
+          errorMessage: "ユーザーの投稿が取得できませんでした",
+        });
+      }
+
+      res.json({ user });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(401)
+        .json({ errorMessage: "投稿が取得できませんでした" });
     }
   }
 );
@@ -140,7 +175,7 @@ app.get(
       console.log(err);
       return res
         .status(401)
-        .json({ errorMessage: "投稿が取得できませんでした。" });
+        .json({ errorMessage: "投稿が取得できませんでした" });
     }
   }
 );
@@ -154,7 +189,7 @@ app.post(
     if (!user) {
       return res
         .status(401)
-        .json({ errorMessage: "ユーザー情報が取得できませんでした。" });
+        .json({ errorMessage: "ユーザー情報が取得できませんでした" });
     }
     try {
       const { post: params } = req.body;
@@ -163,7 +198,7 @@ app.post(
       // DBに保存用 画像ダウンロード用の署名付きURLを生成
       const s3 = configureAWS();
       const paramsForS3 = {
-        ...singedURLConfig,
+        ...signedURLConfig,
         Key: imageKey,
       };
       const signedUrl = await new Promise<string>((resolve, reject) => {
@@ -191,7 +226,7 @@ app.post(
       res.json({ post });
     } catch (err) {
       console.log(err);
-      return res.status(401).json({ errorMessage: "登録ができませんでした。" });
+      return res.status(401).json({ errorMessage: "登録ができませんでした" });
     }
   }
 );
@@ -210,7 +245,7 @@ app.get(
       console.error("投稿の取得中にエラーが発生しました:", err);
       return res
         .status(500)
-        .json({ errorMessage: "投稿リストを取得できませんでした。" });
+        .json({ errorMessage: "投稿リストを取得できませんでした" });
     }
   }
 );
@@ -262,7 +297,7 @@ app.patch(
       res.json({ post: post });
     } catch (err) {
       console.log(err);
-      return res.status(401).json({ errorMessage: "登録ができませんでした。" });
+      return res.status(401).json({ errorMessage: "登録ができませんでした" });
     }
   }
 );
@@ -292,7 +327,7 @@ app.delete(
       console.log(err);
       return res
         .status(401)
-        .json({ errorMessage: "投稿の削除ができませんでした。" });
+        .json({ errorMessage: "投稿の削除ができませんでした" });
     }
   }
 );
@@ -305,7 +340,7 @@ app.get("/postsimage", (req, res) => {
   const s3 = configureAWS();
 
   const params = {
-    ...singedURLConfig,
+    ...signedURLConfig,
     Key: safeFilePath,
     ContentType: "application/octet-stream",
   };
@@ -320,29 +355,4 @@ app.get("/postsimage", (req, res) => {
 
     res.status(200).json({ signedUrl: url, safeFilePath });
   });
-});
-
-// モックユーザー発行エンドポイント
-app.post("/mockurl", async (req: Request, res: Response) => {
-  try {
-    // モックのユーザー情報
-    const mockUser = {
-      id: 1,
-      loginId: "user1",
-      name: "hoge1",
-      iconUrl: "http://localhost",
-    };
-
-    // jwtのtokenを作成
-    const payload = { user: mockUser };
-    const token = jwt.sign(payload, `${process.env.JWT_SECRET}` as string, {
-      expiresIn: "30days",
-    });
-
-    res.json({ user: mockUser, token });
-  } catch (err) {
-    return res
-      .status(500)
-      .json({ errorMessage: "モックユーザーの作成に失敗しました" });
-  }
 });

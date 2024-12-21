@@ -23,6 +23,13 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
+      signedUrl: {
+        type: Sequelize.TEXT,
+      },
+      urlExpiresAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
+      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn("NOW"),

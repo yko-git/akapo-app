@@ -1,4 +1,4 @@
-import configureAWS, { singedURLConfig } from "../aws";
+import configureAWS, { signedURLConfig } from "../aws";
 import Category from "../models/category";
 import { Post } from "../models/post";
 import { User } from "../models/user";
@@ -18,7 +18,7 @@ export async function fetchPosts(params: { id?: string; query?: any }) {
       },
       {
         model: User,
-        attributes: ["id", "name"],
+        attributes: ["id", "name", "iconUrl", "signedUrl"],
       },
     ],
   });
@@ -33,7 +33,7 @@ export async function updateSignedUrls(posts: Post[]) {
       if (!post.signedUrl || !post.urlExpiresAt || post.urlExpiresAt < now) {
         const s3 = configureAWS();
         const params = {
-          ...singedURLConfig,
+          ...signedURLConfig,
           Key: post.imageKey,
         };
 

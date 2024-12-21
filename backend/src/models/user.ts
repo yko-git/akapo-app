@@ -17,6 +17,8 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare authorizeToken: string;
   declare name: string;
   declare iconUrl: string;
+  declare signedUrl: string;
+  declare urlExpiresAt: CreationOptional<Date>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare getPosts: HasManyGetAssociationsMixin<Post>;
@@ -30,10 +32,16 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     }
     return this.getPosts({
       where,
-      include: {
-        model: Category,
-        through: { attributes: [] },
-      },
+      include: [
+        {
+          model: Category,
+          through: { attributes: [] },
+        },
+        {
+          model: User,
+          attributes: ["id", "name", "iconUrl", "signedUrl"],
+        },
+      ],
     });
   }
 }
@@ -70,6 +78,13 @@ User.init(
           msg: "iconUrlは必ず入力してください",
         },
       },
+    },
+    signedUrl: {
+      allowNull: false,
+      type: DataTypes.TEXT,
+    },
+    urlExpiresAt: {
+      type: DataTypes.DATE,
     },
     createdAt: {
       type: DataTypes.DATE,

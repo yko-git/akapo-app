@@ -2,21 +2,19 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Post } from "@/types";
-import { fetchPosts, getMockUserToken } from "@/api/fetchData";
+import { fetchPosts } from "@/api/fetchData";
 import Photo from "@/components/shared/photo";
+import Image from "next/image";
+import TagList from "@/components/shared/tagList";
 
 export default function ArticleList() {
   const [data, setData] = useState<Post[] | null>(null);
 
   useEffect(() => {
     async function fetchData() {
-      const token = await getMockUserToken();
-      if (!token) return;
-
-      const posts = await fetchPosts({ token });
+      const posts = await fetchPosts();
       setData(posts);
     }
-
     fetchData();
   }, []);
 
@@ -30,7 +28,7 @@ export default function ArticleList() {
       <div className="wrapper">
         <h1 className="font-bold my-2">投稿一覧</h1>
       </div>
-      <ul className="gap-5 flex flex-wrap max-w-[1024px] mx-auto">
+      <ul className="gap-10 flex flex-wrap max-w-[1280px] mx-auto mt-10">
         {data.map((item, index) => (
           <li key={index}>
             <div className="mt-4">
@@ -43,7 +41,26 @@ export default function ArticleList() {
                 />
               </Link>
             </div>
-            <div className="font-semibold mt-3">{item.title}</div>
+            <ul className="mt-4">
+              <TagList Categories={item.Categories} />
+            </ul>
+            <div className="font-semibold mt-4">{item.title}</div>
+            <div className="flex items-center justify-between mt-2 text-[#807f7f]">
+              <div className="flex items-center">
+                <Image
+                  className="inline-block mr-2 rounded-full object-cover w-[31px] h-[31px] "
+                  src={item.User.signedUrl}
+                  alt=""
+                  width={31}
+                  height={31}
+                  loading="lazy"
+                />
+                <p className="text-sm">{item.User.name}</p>
+              </div>
+              <p className="text-sm">
+                {new Date(item.createdAt).toLocaleDateString()}
+              </p>
+            </div>
           </li>
         ))}
       </ul>

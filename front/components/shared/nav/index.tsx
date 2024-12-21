@@ -17,6 +17,18 @@ export function Nav() {
       name: "ABOUT",
       link: "/about",
     },
+    {
+      name: "SIGNUP",
+      link: "/signup",
+    },
+    {
+      name: "LOGIN",
+      link: "/login",
+    },
+    {
+      name: "MYPAGE",
+      link: "/mypage",
+    },
   ];
   const pathname = usePathname();
 
