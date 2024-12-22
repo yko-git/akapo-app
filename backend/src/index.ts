@@ -83,7 +83,7 @@ app.post("/auth/signup", async (req, res, next) => {
     const userData = await User.create({
       ...user,
       iconSignedUrl,
-      iconUrlsExpiresAt: new Date(Date.now() + paramsForS3.Expires * 1000),
+      iconUrlExpiresAt: new Date(Date.now() + paramsForS3.Expires * 1000),
     });
 
     res.json({

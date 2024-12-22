@@ -26,7 +26,7 @@ module.exports = {
       iconSignedUrl: {
         type: Sequelize.TEXT,
       },
-      iconUrlsExpiresAt: {
+      iconUrlExpiresAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn("NOW"),
       },
