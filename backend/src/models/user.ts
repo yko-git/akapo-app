@@ -18,7 +18,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare name: string;
   declare iconUrl: string;
   declare iconSignedUrl: string;
-  declare iconUrlExpiresAt: CreationOptional<Date>;
+  declare iconUrlsExpiresAt: CreationOptional<Date>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare getPosts: HasManyGetAssociationsMixin<Post>;
@@ -83,7 +83,7 @@ User.init(
       allowNull: false,
       type: DataTypes.TEXT,
     },
-    iconUrlExpiresAt: {
+    iconUrlsExpiresAt: {
       type: DataTypes.DATE,
     },
     createdAt: {
