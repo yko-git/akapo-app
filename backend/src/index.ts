@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import passport, { hash } from "./auth";
 import jwt from "jsonwebtoken";
 import { Post } from "./models/post";
-import configureAWS, { signedURLConfig } from "./aws";
+import configureAWS, { generateExpiresAt, signedURLConfig } from "./aws";
 import cors from "cors";
 import { updateSignedUrls, fetchPosts } from "./services/index";
 
@@ -83,7 +83,7 @@ app.post("/auth/signup", async (req, res, next) => {
     const userData = await User.create({
       ...user,
       iconSignedUrl,
-      iconUrlExpiresAt: new Date(Date.now() + paramsForS3.Expires * 1000),
+      iconUrlExpiresAt: generateExpiresAt(),
     });
 
     res.json({
@@ -219,7 +219,7 @@ app.post(
         status,
         imageKey,
         signedUrl,
-        urlExpiresAt: new Date(Date.now() + paramsForS3.Expires * 1000),
+        urlExpiresAt: generateExpiresAt(),
       });
 
       await post.upsert(categoryIds);

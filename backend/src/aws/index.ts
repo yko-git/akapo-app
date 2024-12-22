@@ -15,4 +15,8 @@ export const signedURLConfig = {
   Expires: 60 * 5,
 };
 
+export const generateExpiresAt = () => {
+  return new Date(Date.now() + signedURLConfig.Expires * 1000);
+};
+
 export default configureAWS;
