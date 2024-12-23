@@ -120,7 +120,7 @@ Post.init(
   { sequelize, modelName: "Post", tableName: "posts" }
 );
 
-Post.belongsToMany(Category, { through: "post_categories" });
+Post.belongsToMany(Category, { as: "categories", through: "post_categories" });
 Category.belongsToMany(Post, { through: "post_categories" });
 
 export { Post };

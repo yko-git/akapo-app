@@ -97,6 +97,6 @@ User.init(
 );
 
 User.hasMany(Post, { foreignKey: "userId" });
-Post.belongsTo(User, { foreignKey: "userId" });
+Post.belongsTo(User, { as: "user", foreignKey: "userId" });
 
 export { User };
