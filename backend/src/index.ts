@@ -91,7 +91,6 @@ app.post("/auth/signup", async (req, res, next) => {
         id: userData.id,
         loginId: userData.loginId,
         name: userData.name,
-        iconUrl: userData.iconUrl,
         signedUrl: userData.signedUrl,
       },
     });
