@@ -17,14 +17,10 @@ const CreatePost = () => {
   const [status, setStatus] = useState<string>("0");
 
   useEffect(() => {
-    async function fetchData() {
-      const fetchedToken = await getUserToken();
-      if (!fetchedToken) {
-        return;
-      }
+    const fetchedToken = getUserToken();
+    if (fetchedToken) {
       setToken(fetchedToken);
     }
-    fetchData();
   }, []);
 
   const handleSelect = (value: string | string[]) => {
