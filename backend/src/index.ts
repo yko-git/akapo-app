@@ -5,7 +5,12 @@ import bodyParser from "body-parser";
 import passport, { hash } from "./auth";
 import jwt from "jsonwebtoken";
 import { Post } from "./models/post";
-import configureAWS, { generateExpiresAt, signedURLConfig } from "./aws";
+import {
+  generateExpiresAt,
+  getSignedUrl,
+  signedURLConfig,
+  putSignedUrl,
+} from "./aws";
 import cors from "cors";
 import { updateSignedUrls, fetchPosts } from "./services/index";
 
@@ -64,20 +69,9 @@ app.post("/auth/signup", async (req, res, next) => {
         .json({ errorMessage: "ユーザー情報がすでに登録されています" });
     }
 
-    const s3 = configureAWS();
-    const paramsForS3 = {
+    const iconSignedUrl = await getSignedUrl({
       ...signedURLConfig,
       Key: iconUrl,
-    };
-
-    const iconSignedUrl = await new Promise<string>((resolve, reject) => {
-      s3.getSignedUrl("getObject", paramsForS3, (err, url) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(url);
-        }
-      });
     });
 
     const userData = await User.create({
@@ -196,19 +190,9 @@ app.post(
       const { title, body, status, categoryIds, imageKey } = params || {};
 
       // DBに保存用 画像ダウンロード用の署名付きURLを生成
-      const s3 = configureAWS();
-      const paramsForS3 = {
+      const signedUrl = await getSignedUrl({
         ...signedURLConfig,
         Key: imageKey,
-      };
-      const signedUrl = await new Promise<string>((resolve, reject) => {
-        s3.getSignedUrl("getObject", paramsForS3, (err, url) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(url);
-          }
-        });
       });
 
       // 画像ダウンロード用の署名付きURLと有効期限も含めてDBに投稿
@@ -336,26 +320,13 @@ app.delete(
 app.get("/signedurl", (req, res) => {
   const { filename, type } = req.query;
   const safeFilePath = `uploads/${Date.now()}-${filename}`;
-  const s3 = configureAWS();
-
-  const params = {
-    ...signedURLConfig,
-    Key: safeFilePath,
-    ContentType: "application/octet-stream",
-  };
-
-  s3.getSignedUrl("putObject", params, (err, url) => {
-    if (err) {
-      console.error(err);
-      return res
-        .status(500)
-        .json({ errorMessage: "署名付きURLの生成に失敗しました" });
-    }
-
-    if (type === "icon") {
-      res.status(200).json({ iconSignedUrl: url, safeFilePath });
-    } else {
-      res.status(200).json({ signedUrl: url, safeFilePath });
-    }
-  });
+  return putSignedUrl(
+    {
+      ...signedURLConfig,
+      Key: safeFilePath,
+      ContentType: "application/octet-stream",
+    },
+    type,
+    res
+  );
 });

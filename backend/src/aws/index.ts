@@ -19,4 +19,33 @@ export const generateExpiresAt = () => {
   return new Date(Date.now() + signedURLConfig.Expires * 1000);
 };
 
+export const getSignedUrl = (params: any) => {
+  return new Promise<string>((resolve, reject) => {
+    configureAWS().getSignedUrl("getObject", params, (err, url) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(url);
+      }
+    });
+  });
+};
+
+export const putSignedUrl = (params: any, type: any, res: any) => {
+  return configureAWS().getSignedUrl("putObject", params, (err, url) => {
+    if (err) {
+      console.error(err);
+      return res
+        .status(500)
+        .json({ errorMessage: "署名付きURLの生成に失敗しました" });
+    }
+
+    if (type === "icon") {
+      res.status(200).json({ iconSignedUrl: url, safeFilePath: params.Key });
+    } else {
+      res.status(200).json({ signedUrl: url, safeFilePath: params.Key });
+    }
+  });
+};
+
 export default configureAWS;
