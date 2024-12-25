@@ -46,7 +46,6 @@ export async function fetchPosts(): Promise<Post[] | null> {
 // 記事投稿関数
 export async function createPost(
   file: File,
-  token: string,
   postData: NewPost
 ): Promise<string | undefined> {
   const { title, body, status, categoryIds } = postData;
@@ -132,17 +131,6 @@ export async function createLogin(
     return token;
   } catch (error) {
     console.error("ログインに失敗しました", error);
-  }
-}
-
-// ユーザー用トークン取得関数
-export async function getUserToken(): Promise<any | null> {
-  try {
-    const token = localStorage.getItem("token");
-    return token;
-  } catch (error) {
-    console.error("ログインに失敗しました", error);
-    return null;
   }
 }
 
