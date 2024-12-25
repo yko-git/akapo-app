@@ -39,7 +39,7 @@ const LoginUser = () => {
       <div>
         <label>パスワード</label>
         <input
-          type="text"
+          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="border rounded p-2 w-full"
