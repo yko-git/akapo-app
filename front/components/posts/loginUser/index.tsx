@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Button from "@/components/shared/button";
 import { createLogin } from "@/api/fetchData";
-import { NewLogin } from "@/types";
+import { NewLogin } from "@/components/shared/types/auth/login";
 
 const LoginUser = () => {
   const [loginId, setLoginId] = useState<string>("");

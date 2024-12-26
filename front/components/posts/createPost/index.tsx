@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { getUserToken, createPost } from "@/api/fetchData";
-import { NewPost } from "@/types";
+import { NewPost } from "@/components/posts/models/post";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";

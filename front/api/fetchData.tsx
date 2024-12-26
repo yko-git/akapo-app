@@ -1,5 +1,7 @@
 import axios from "axios";
-import { Post, NewPost, NewUser, UserProfile, NewLogin } from "@/types";
+import { Post, NewPost } from "@/components/posts/models/post";
+import { NewUser, UserProfile } from "@/components/posts/models/user";
+import { NewLogin } from "@/components/shared/types/auth/login";
 
 // axiosインスタンス
 const instance = axios.create({

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Post } from "@/types";
+import { Post } from "@/components/posts/models/post";
 import { fetchPost } from "@/api/fetchData";
 import Image from "next/image";
 import TagList from "@/components/shared/tagList";

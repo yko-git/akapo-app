@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { createUser } from "@/api/fetchData";
-import { NewUser } from "@/types";
+import { NewUser } from "@/components/posts/models/user";
 import Button from "@/components/shared/button";
 
 const CreateUser = () => {
