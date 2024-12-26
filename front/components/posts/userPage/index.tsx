@@ -32,7 +32,7 @@ const UserPage = () => {
             <div className="inline-block text-center">
               <Image
                 className="inline-block mr-2 rounded-full object-cover w-[90px] h-[90px] border-[#6C9FE0] border-4"
-                src={userProfile.signedUrl}
+                src={userProfile.iconSignedUrl}
                 alt=""
                 width={100}
                 height={100}

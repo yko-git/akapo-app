@@ -58,5 +58,5 @@ export interface UserProfile {
   name: string;
   loginId: string;
   iconUrl?: string;
-  signedUrl?: string;
+  iconSignedUrl?: string;
 }
