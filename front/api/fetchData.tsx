@@ -136,7 +136,7 @@ export async function createLogin(
 }
 
 // ユーザー用トークン取得関数
-export async function getUserToken(): Promise<any | null> {
+export function getUserToken() {
   try {
     const token = localStorage.getItem("token");
     return token;
