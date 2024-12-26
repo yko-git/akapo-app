@@ -107,12 +107,6 @@ export async function createLogin(
   return token;
 }
 
-// ユーザー用トークン取得関数
-export async function getUserToken(): Promise<any | null> {
-  const token = localStorage.getItem("token");
-  return token;
-}
-
 // ユーザー投稿データ取得関数
 export async function fetchUserPosts(): Promise<Post[] | null> {
   const response = await instance.get(`user/posts`);

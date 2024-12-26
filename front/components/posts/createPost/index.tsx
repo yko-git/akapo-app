@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { getUserToken, createPost } from "@/api/fetchData";
+import { createPost } from "@/api/fetchData";
 import { NewPost } from "@/types";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
@@ -13,19 +13,7 @@ const CreatePost = () => {
   const [categoryIds, setCategoryIds] = useState<number[]>([1]);
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(null);
   const [status, setStatus] = useState<string>("0");
-
-  useEffect(() => {
-    async function fetchData() {
-      const fetchedToken = await getUserToken();
-      if (!fetchedToken) {
-        return;
-      }
-      setToken(fetchedToken);
-    }
-    fetchData();
-  }, []);
 
   const handleSelect = (value: string | string[]) => {
     if (typeof value === "string") {

@@ -54,7 +54,7 @@ app.post("/auth/signup", async (req, res, next) => {
 
     const searchUser = await User.findAll({
       where: {
-        loginId: loginId,
+        loginId,
       },
     });
 
@@ -91,7 +91,6 @@ app.post("/auth/signup", async (req, res, next) => {
         id: userData.id,
         loginId: userData.loginId,
         name: userData.name,
-        iconUrl: userData.iconUrl,
         signedUrl: userData.signedUrl,
       },
     });
