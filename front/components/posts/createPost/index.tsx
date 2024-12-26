@@ -48,17 +48,17 @@ const CreatePost = () => {
       alert("画像を選択してください");
       return;
     }
-    if (!token) {
-      alert("tokenが取得できません");
-      return;
-    }
 
     const postData: NewPost = { title, body, status, categoryIds };
-    const postImg = await createPost(file, token, postData);
-    if (postImg) {
-      setImageUrl(postImg);
-    } else {
-      console.error("画像のアップロードまたは投稿に失敗しました");
+    try {
+      const postImg = await createPost(file, postData);
+      if (postImg) {
+        setImageUrl(postImg);
+      } else {
+        console.error("画像のアップロードまたは投稿に失敗しました");
+      }
+    } catch (error) {
+      console.error("投稿処理中にエラーが発生しました:", error);
     }
   };
 
