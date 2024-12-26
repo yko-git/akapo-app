@@ -17,9 +17,6 @@ const LoginUser = () => {
 
       if (token) {
         alert("ログインに成功しました！");
-        console.log("取得したトークン:", token);
-
-        // window.location.href = "/mypage";
         router.push("/mypage");
       }
     } catch (error) {
