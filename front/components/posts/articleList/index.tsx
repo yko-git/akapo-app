@@ -46,20 +46,20 @@ export default function ArticleList() {
               </Link>
             </div>
             <ul className="mt-4">
-              <TagList Categories={item.Categories} />
+              <TagList Categories={item.categories} />
             </ul>
             <div className="font-semibold mt-4">{item.title}</div>
             <div className="flex items-center justify-between mt-2 text-[#807f7f]">
               <div className="flex items-center">
                 <Image
                   className="inline-block mr-2 rounded-full object-cover w-[31px] h-[31px] "
-                  src={item.User.iconSignedUrl}
+                  src={item.user.iconSignedUrl}
                   alt=""
                   width={31}
                   height={31}
                   loading="lazy"
                 />
-                <p className="text-sm">{item.User.name}</p>
+                <p className="text-sm">{item.user.name}</p>
               </div>
               <p className="text-sm">
                 {new Date(item.createdAt).toLocaleDateString()}
