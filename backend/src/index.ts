@@ -317,16 +317,21 @@ app.delete(
 );
 
 // アップロード用署名付きURLを生成するエンドポイント
-app.get("/signedurl", (req, res) => {
-  const { filename, type } = req.query;
+app.get("/signedurl", async (req, res) => {
+  const { filename } = req.query;
   const safeFilePath = `uploads/${Date.now()}-${filename}`;
-  return putSignedUrl(
-    {
+
+  try {
+    const url = await putSignedUrl({
       ...signedURLConfig,
       Key: safeFilePath,
       ContentType: "application/octet-stream",
-    },
-    type,
-    res
-  );
+    });
+    res.status(200).json({ signedUrl: url, safeFilePath });
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ errorMessage: "署名付きURLの生成に失敗しました" });
+  }
 });

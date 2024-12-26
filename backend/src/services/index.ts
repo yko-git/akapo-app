@@ -1,4 +1,4 @@
-import configureAWS, { generateExpiresAt, signedURLConfig } from "../aws";
+import s3Client, { generateExpiresAt, signedURLConfig } from "../aws";
 import Category from "../models/category";
 import { Post } from "../models/post";
 import { User } from "../models/user";
@@ -33,7 +33,7 @@ export async function updateSignedUrls(posts: Post[]) {
   return await Promise.all(
     posts.map(async (post) => {
       if (!post.signedUrl || !post.urlExpiresAt || post.urlExpiresAt < now) {
-        const s3 = configureAWS();
+        const s3 = s3Client;
         const params = {
           ...signedURLConfig,
           Key: post.imageKey,
