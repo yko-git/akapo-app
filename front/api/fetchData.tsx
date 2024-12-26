@@ -23,7 +23,7 @@ export async function fetchPost({
 }): Promise<Post | null> {
   try {
     const response = await instance.get(`posts/${id}`);
-    console.log(response.data.posts);
+
     return response.data.posts;
   } catch (error) {
     console.error("投稿の取得に失敗しました", error);
