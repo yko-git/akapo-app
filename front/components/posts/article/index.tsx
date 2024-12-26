@@ -11,9 +11,13 @@ export default function Article({ id }: { id: number }) {
 
   useEffect(() => {
     async function fetchData() {
-      const post = await fetchPost({ id });
-      if (Array.isArray(post) && post.length > 0) {
-        setData(post[0]);
+      try {
+        const post = await fetchPost({ id });
+        if (Array.isArray(post) && post.length > 0) {
+          setData(post[0]);
+        }
+      } catch (error) {
+        console.error("投稿の取得でエラーが発生しました:", error);
       }
     }
 
