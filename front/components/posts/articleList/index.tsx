@@ -12,8 +12,12 @@ export default function ArticleList() {
 
   useEffect(() => {
     async function fetchData() {
-      const posts = await fetchPosts();
-      setData(posts);
+      try {
+        const posts = await fetchPosts();
+        setData(posts);
+      } catch (error) {
+        console.error("投稿の取得でエラーが発生しました:", error);
+      }
     }
     fetchData();
   }, []);

@@ -23,11 +23,15 @@ const CreateUser = () => {
     }
 
     const userData: NewUser = { loginId, name, password };
-    const postImg = await createUser(file, userData);
-    if (postImg) {
-      setImageUrl(postImg);
-    } else {
-      alert("画像のアップロードまたは投稿に失敗しました");
+    try {
+      const postImg = await createUser(file, userData);
+      if (postImg) {
+        setImageUrl(postImg);
+      } else {
+        alert("画像のアップロードまたは投稿に失敗しました");
+      }
+    } catch (error) {
+      console.error("投稿処理中にエラーが発生しました:", error);
     }
   };
 
@@ -58,7 +62,7 @@ const CreateUser = () => {
       <div>
         <label>パスワード</label>
         <input
-          type="text"
+          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="border rounded p-2 w-full"
