@@ -14,11 +14,13 @@ export async function fetchPosts(params: { id?: string; query?: any }) {
     include: [
       {
         model: Category,
+        as: "categories",
         through: { attributes: [] },
       },
       {
         model: User,
-        attributes: ["id", "name", "iconUrl", "signedUrl"],
+        as: "user",
+        attributes: ["id", "name", "iconUrl", "iconSignedUrl"],
       },
     ],
   });

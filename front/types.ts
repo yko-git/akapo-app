@@ -2,7 +2,7 @@ export interface User {
   id: number;
   name: string;
   iconUrl: string;
-  signedUrl: string;
+  iconSignedUrl: string;
 }
 
 export interface Post {
@@ -11,8 +11,8 @@ export interface Post {
   body: string;
   signedUrl: string;
   createdAt: string;
-  Categories: { id: number; name: string }[];
-  User: User;
+  categories: { id: number; name: string }[];
+  user: User;
 }
 
 export interface NewPost {
