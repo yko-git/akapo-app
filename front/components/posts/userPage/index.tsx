@@ -11,15 +11,11 @@ const UserPage = () => {
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        const userData = await fetchUserData();
-        setUserProfile(userData);
+      const userData = await fetchUserData();
+      setUserProfile(userData);
 
-        const posts = await fetchUserPosts();
-        setData(posts);
-      } catch (error) {
-        console.error("データ取得中にエラー:", error);
-      }
+      const posts = await fetchUserPosts();
+      setData(posts);
     }
 
     fetchData();
