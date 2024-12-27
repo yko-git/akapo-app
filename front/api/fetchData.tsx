@@ -38,7 +38,7 @@ export async function createPost(
 ): Promise<string | undefined> {
   const { title, body, status, categoryIds } = postData;
   // S3の署名付きURLを取得
-  const signedUrlResponse = await instance.get("postsimage", {
+  const signedUrlResponse = await instance.get("signedurl", {
     params: { filename: file.name },
   });
   const { signedUrl, safeFilePath } = signedUrlResponse.data;
@@ -71,7 +71,7 @@ export async function createUser(
 ): Promise<string | undefined> {
   const { loginId, name, password } = userData;
   // S3の署名付きURLを取得
-  const signedUrlResponse = await instance.get("postsimage", {
+  const signedUrlResponse = await instance.get("signedurl", {
     params: { filename: file.name },
   });
   const { signedUrl, safeFilePath } = signedUrlResponse.data;
@@ -93,7 +93,7 @@ export async function createUser(
     },
   });
 
-  return userResponse.data.user.signedUrl; // サーバーからの署名付きURLを使用
+  return userResponse.data.user.iconSignedUrl; // サーバーからの署名付きURLを使用
 }
 
 // 新規ログイン用関数

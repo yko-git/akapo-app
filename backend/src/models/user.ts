@@ -35,10 +35,12 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
       include: [
         {
           model: Category,
+          as: "categories",
           through: { attributes: [] },
         },
         {
           model: User,
+          as: "user",
           attributes: ["id", "name", "iconUrl", "iconSignedUrl"],
         },
       ],

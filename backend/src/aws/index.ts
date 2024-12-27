@@ -1,6 +1,6 @@
 import AWS from "aws-sdk";
 
-const configureAWS = () => {
+const initS3Client = () => {
   AWS.config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -9,6 +9,8 @@ const configureAWS = () => {
 
   return new AWS.S3();
 };
+
+const s3Client = initS3Client();
 
 export const signedURLConfig = {
   Bucket: process.env.AWS_S3_BUCKET_NAME,
@@ -19,9 +21,9 @@ export const generateExpiresAt = () => {
   return new Date(Date.now() + signedURLConfig.Expires * 1000);
 };
 
-export const getSignedUrl = (params: any) => {
+const getUrlSigner = (kind: "getObject" | "putObject") => (params: any) => {
   return new Promise<string>((resolve, reject) => {
-    configureAWS().getSignedUrl("getObject", params, (err, url) => {
+    s3Client.getSignedUrl(kind, params, (err, url) => {
       if (err) {
         reject(err);
       } else {
@@ -31,21 +33,8 @@ export const getSignedUrl = (params: any) => {
   });
 };
 
-export const putSignedUrl = (params: any, type: any, res: any) => {
-  return configureAWS().getSignedUrl("putObject", params, (err, url) => {
-    if (err) {
-      console.error(err);
-      return res
-        .status(500)
-        .json({ errorMessage: "署名付きURLの生成に失敗しました" });
-    }
+export const getSignedUrl = getUrlSigner("getObject");
 
-    if (type === "icon") {
-      res.status(200).json({ iconSignedUrl: url, safeFilePath: params.Key });
-    } else {
-      res.status(200).json({ signedUrl: url, safeFilePath: params.Key });
-    }
-  });
-};
+export const putSignedUrl = getUrlSigner("putObject");
 
-export default configureAWS;
+export default s3Client;
