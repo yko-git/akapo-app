@@ -1,4 +1,4 @@
-import configureAWS, { signedURLConfig } from "../aws";
+import configureAWS, { generateExpiresAt, signedURLConfig } from "../aws";
 import Category from "../models/category";
 import { Post } from "../models/post";
 import { User } from "../models/user";
@@ -14,11 +14,13 @@ export async function fetchPosts(params: { id?: string; query?: any }) {
     include: [
       {
         model: Category,
+        as: "categories",
         through: { attributes: [] },
       },
       {
         model: User,
-        attributes: ["id", "name", "iconUrl", "signedUrl"],
+        as: "user",
+        attributes: ["id", "name", "iconUrl", "iconSignedUrl"],
       },
     ],
   });
@@ -54,7 +56,7 @@ export async function updateSignedUrls(posts: Post[]) {
 
         // 新しい署名付きURLと有効期限を更新
         post.signedUrl = signedUrl;
-        post.urlExpiresAt = new Date(Date.now() + params.Expires * 1000);
+        post.urlExpiresAt = generateExpiresAt();
         await post.save();
       }
 

@@ -5,7 +5,12 @@ import bodyParser from "body-parser";
 import passport, { hash } from "./auth";
 import jwt from "jsonwebtoken";
 import { Post } from "./models/post";
-import configureAWS, { signedURLConfig } from "./aws";
+import {
+  generateExpiresAt,
+  getSignedUrl,
+  signedURLConfig,
+  putSignedUrl,
+} from "./aws";
 import cors from "cors";
 import { updateSignedUrls, fetchPosts } from "./services/index";
 
@@ -54,7 +59,7 @@ app.post("/auth/signup", async (req, res, next) => {
 
     const searchUser = await User.findAll({
       where: {
-        loginId: loginId,
+        loginId,
       },
     });
 
@@ -64,26 +69,15 @@ app.post("/auth/signup", async (req, res, next) => {
         .json({ errorMessage: "ユーザー情報がすでに登録されています" });
     }
 
-    const s3 = configureAWS();
-    const paramsForS3 = {
+    const iconSignedUrl = await getSignedUrl({
       ...signedURLConfig,
       Key: iconUrl,
-    };
-
-    const signedUrl = await new Promise<string>((resolve, reject) => {
-      s3.getSignedUrl("getObject", paramsForS3, (err, url) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(url);
-        }
-      });
     });
 
     const userData = await User.create({
       ...user,
-      signedUrl,
-      urlExpiresAt: new Date(Date.now() + paramsForS3.Expires * 1000),
+      iconSignedUrl,
+      iconUrlExpiresAt: generateExpiresAt(),
     });
 
     res.json({
@@ -92,7 +86,7 @@ app.post("/auth/signup", async (req, res, next) => {
         loginId: userData.loginId,
         name: userData.name,
         iconUrl: userData.iconUrl,
-        signedUrl: userData.signedUrl,
+        iconSignedUrl: userData.iconSignedUrl,
       },
     });
   } catch (error) {
@@ -196,19 +190,9 @@ app.post(
       const { title, body, status, categoryIds, imageKey } = params || {};
 
       // DBに保存用 画像ダウンロード用の署名付きURLを生成
-      const s3 = configureAWS();
-      const paramsForS3 = {
+      const signedUrl = await getSignedUrl({
         ...signedURLConfig,
         Key: imageKey,
-      };
-      const signedUrl = await new Promise<string>((resolve, reject) => {
-        s3.getSignedUrl("getObject", paramsForS3, (err, url) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(url);
-          }
-        });
       });
 
       // 画像ダウンロード用の署名付きURLと有効期限も含めてDBに投稿
@@ -219,7 +203,7 @@ app.post(
         status,
         imageKey,
         signedUrl,
-        urlExpiresAt: new Date(Date.now() + paramsForS3.Expires * 1000),
+        urlExpiresAt: generateExpiresAt(),
       });
 
       await post.upsert(categoryIds);
@@ -333,26 +317,16 @@ app.delete(
 );
 
 // アップロード用署名付きURLを生成するエンドポイント
-app.get("/postsimage", (req, res) => {
-  const { filename } = req.query;
+app.get("/signedurl", (req, res) => {
+  const { filename, type } = req.query;
   const safeFilePath = `uploads/${Date.now()}-${filename}`;
-
-  const s3 = configureAWS();
-
-  const params = {
-    ...signedURLConfig,
-    Key: safeFilePath,
-    ContentType: "application/octet-stream",
-  };
-
-  s3.getSignedUrl("putObject", params, (err, url) => {
-    if (err) {
-      console.error(err);
-      return res
-        .status(500)
-        .json({ errorMessage: "署名付きURLの生成に失敗しました" });
-    }
-
-    res.status(200).json({ signedUrl: url, safeFilePath });
-  });
+  return putSignedUrl(
+    {
+      ...signedURLConfig,
+      Key: safeFilePath,
+      ContentType: "application/octet-stream",
+    },
+    type,
+    res
+  );
 });

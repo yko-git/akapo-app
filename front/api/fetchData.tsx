@@ -23,67 +23,47 @@ export async function fetchPost({
 }: {
   id?: number; // オプショナルにする
 }): Promise<Post | null> {
-  try {
-    const response = await instance.get(`posts/${id}`);
-    console.log(response.data.posts);
-    return response.data.posts;
-  } catch (error) {
-    console.error("投稿の取得に失敗しました", error);
-    return null;
-  }
+  const response = await instance.get(`posts/${id}`);
+  return response.data.posts;
 }
 
 // 複数投稿データ取得関数
 export async function fetchPosts(): Promise<Post[] | null> {
-  try {
-    const response = await instance.get(`posts/`);
-
-    return response.data.posts;
-  } catch (error) {
-    console.error("投稿の取得に失敗しました", error);
-    return null;
-  }
+  const response = await instance.get(`posts/`);
+  return response.data.posts;
 }
 
 // 記事投稿関数
 export async function createPost(
   file: File,
-  token: string,
   postData: NewPost
 ): Promise<string | undefined> {
   const { title, body, status, categoryIds } = postData;
-  try {
-    // S3の署名付きURLを取得
-    const signedUrlResponse = await instance.get("postsimage", {
-      params: { filename: file.name },
-    });
-    const { signedUrl, safeFilePath } = signedUrlResponse.data;
+  // S3の署名付きURLを取得
+  const signedUrlResponse = await instance.get("postsimage", {
+    params: { filename: file.name },
+  });
+  const { signedUrl, safeFilePath } = signedUrlResponse.data;
 
-    // S3に画像をアップロード
-    await axios.put(signedUrl, file, {
-      headers: {
-        "Content-Type": file.type,
-      },
-    });
+  // S3に画像をアップロード
+  await axios.put(signedUrl, file, {
+    headers: {
+      "Content-Type": file.type,
+    },
+  });
 
-    // 記事情報をサーバーに送信
-    const postResponse = await instance.post("posts", {
-      post: {
-        title,
-        body,
-        status,
-        categoryIds,
-        imageKey: safeFilePath, // 画像のキーを指定
-      },
-    });
+  // 記事情報をサーバーに送信
+  const postResponse = await instance.post("posts", {
+    post: {
+      title,
+      body,
+      status,
+      categoryIds,
+      imageKey: safeFilePath, // 画像のキーを指定
+    },
+  });
 
-    alert("記事が投稿されました！");
-    console.log("Post created:", postResponse.data.post);
-
-    return postResponse.data.post.signedUrl; // サーバーからの署名付きURLを使用
-  } catch (error) {
-    console.error("投稿中にエラーが発生しました", error);
-  }
+  return postResponse.data.post.signedUrl; // サーバーからの署名付きURLを使用
 }
 
 // 新規ユーザー登録
@@ -92,81 +72,51 @@ export async function createUser(
   userData: NewUser
 ): Promise<string | undefined> {
   const { loginId, name, password } = userData;
-  try {
-    // S3の署名付きURLを取得
-    const signedUrlResponse = await instance.get("postsimage", {
-      params: { filename: file.name },
-    });
-    const { signedUrl, safeFilePath } = signedUrlResponse.data;
+  // S3の署名付きURLを取得
+  const signedUrlResponse = await instance.get("postsimage", {
+    params: { filename: file.name },
+  });
+  const { signedUrl, safeFilePath } = signedUrlResponse.data;
 
-    // S3に画像をアップロード
-    await axios.put(signedUrl, file, {
-      headers: {
-        "Content-Type": file.type,
-      },
-    });
+  // S3に画像をアップロード
+  await axios.put(signedUrl, file, {
+    headers: {
+      "Content-Type": file.type,
+    },
+  });
 
-    // 記事情報をサーバーに送信
-    const userResponse = await instance.post("auth/signup", {
-      user: {
-        loginId,
-        name,
-        password,
-        iconUrl: safeFilePath, // 画像のキーを指定
-      },
-    });
+  // 記事情報をサーバーに送信
+  const userResponse = await instance.post("auth/signup", {
+    user: {
+      loginId,
+      name,
+      password,
+      iconUrl: safeFilePath, // 画像のキーを指定
+    },
+  });
 
-    return userResponse.data.user.signedUrl; // サーバーからの署名付きURLを使用
-  } catch (error) {
-    console.error("登録中にエラーが発生しました", error);
-  }
+  return userResponse.data.user.signedUrl; // サーバーからの署名付きURLを使用
 }
 
 // 新規ログイン用関数
 export async function createLogin(
   postData: NewLogin
 ): Promise<string | undefined> {
-  try {
-    const response = await instance.post("auth/login", postData);
-    const { token } = response.data;
-    // トークンをlocalStorageに保存
-    localStorage.setItem("token", token);
-    return token;
-  } catch (error) {
-    console.error("ログインに失敗しました", error);
-  }
-}
-
-// ユーザー用トークン取得関数
-export async function getUserToken(): Promise<any | null> {
-  try {
-    const token = localStorage.getItem("token");
-    return token;
-  } catch (error) {
-    console.error("ログインに失敗しました", error);
-    return null;
-  }
+  const response = await instance.post("auth/login", postData);
+  const { token } = response.data;
+  // トークンをlocalStorageに保存
+  localStorage.setItem("token", token);
+  return token;
 }
 
 // ユーザー投稿データ取得関数
 export async function fetchUserPosts(): Promise<Post[] | null> {
-  try {
-    const response = await instance.get(`user/posts`);
-
-    return response.data.posts;
-  } catch (error) {
-    console.error("投稿の取得に失敗しました", error);
-    return null;
-  }
+  const response = await instance.get(`user/posts`);
+  return response.data.posts;
 }
 
 // ユーザー情報取得関数
 export async function fetchUserData(): Promise<UserProfile | null> {
-  try {
-    const response = await instance.get(`user`);
-    return response.data.user;
-  } catch (error) {
-    console.error("ユーザーデータ取得に失敗しました", error);
-    return null;
-  }
+  const response = await instance.get(`user`);
+  return response.data.user;
 }

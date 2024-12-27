@@ -17,8 +17,8 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare authorizeToken: string;
   declare name: string;
   declare iconUrl: string;
-  declare signedUrl: string;
-  declare urlExpiresAt: CreationOptional<Date>;
+  declare iconSignedUrl: string;
+  declare iconUrlExpiresAt: CreationOptional<Date>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare getPosts: HasManyGetAssociationsMixin<Post>;
@@ -39,7 +39,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
         },
         {
           model: User,
-          attributes: ["id", "name", "iconUrl", "signedUrl"],
+          attributes: ["id", "name", "iconUrl", "iconSignedUrl"],
         },
       ],
     });
@@ -79,11 +79,11 @@ User.init(
         },
       },
     },
-    signedUrl: {
+    iconSignedUrl: {
       allowNull: false,
       type: DataTypes.TEXT,
     },
-    urlExpiresAt: {
+    iconUrlExpiresAt: {
       type: DataTypes.DATE,
     },
     createdAt: {
@@ -97,6 +97,6 @@ User.init(
 );
 
 User.hasMany(Post, { foreignKey: "userId" });
-Post.belongsTo(User, { foreignKey: "userId" });
+Post.belongsTo(User, { as: "user", foreignKey: "userId" });
 
 export { User };
