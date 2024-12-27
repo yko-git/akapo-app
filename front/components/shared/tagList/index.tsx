@@ -1,4 +1,4 @@
-import { TagListProps } from "@/types";
+import { TagListProps } from "@/api/fetchData";
 
 export default function TagList({ Categories = [] }: TagListProps) {
   return (

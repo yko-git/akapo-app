@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Post } from "@/types";
+import { Post } from "@/api/fetchData";
 import Image from "next/image";
 import { fetchUserPosts, fetchUserData } from "@/api/fetchData";
 import UserArticleList from "../userArticleList";

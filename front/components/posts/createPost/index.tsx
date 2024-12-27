@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { createPost } from "@/api/fetchData";
-import { NewPost } from "@/types";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
@@ -37,7 +36,7 @@ const CreatePost = () => {
       return;
     }
 
-    const postData: NewPost = { title, body, status, categoryIds };
+    const postData = { title, body, status, categoryIds };
     try {
       const postImg = await createPost(file, postData);
       if (postImg) {

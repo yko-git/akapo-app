@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { createUser } from "@/api/fetchData";
-import { NewUser } from "@/types";
 import Button from "@/components/shared/button";
 
 const CreateUser = () => {
@@ -22,7 +21,7 @@ const CreateUser = () => {
       return;
     }
 
-    const userData: NewUser = { loginId, name, password };
+    const userData = { loginId, name, password };
     try {
       const postImg = await createUser(file, userData);
       if (postImg) {
