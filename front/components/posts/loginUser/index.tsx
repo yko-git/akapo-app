@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import Button from "@/components/shared/button";
 import { createLogin } from "@/api/fetchData";
-import { NewLogin } from "@/types";
 import { useRouter } from "next/navigation";
 
 const LoginUser = () => {
@@ -11,7 +10,7 @@ const LoginUser = () => {
   const router = useRouter();
 
   const handleSubmit = async () => {
-    const postData: NewLogin = { loginId, password };
+    const postData = { loginId, password };
     try {
       const token = await createLogin(postData);
 

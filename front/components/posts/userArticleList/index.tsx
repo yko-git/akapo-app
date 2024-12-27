@@ -1,7 +1,11 @@
 "use client";
 import Link from "next/link";
 import Photo from "@/components/shared/photo";
-import { UserArticleListProps } from "@/components/posts/models/post";
+import { Post } from "@/api/fetchData";
+
+interface UserArticleListProps {
+  data: Post[] | null;
+}
 
 export default function UserArticleList({ data }: UserArticleListProps) {
   if (!data) {

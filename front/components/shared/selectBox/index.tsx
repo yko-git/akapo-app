@@ -1,4 +1,4 @@
-import { SelectBoxProps } from "@/types";
+import { SelectBoxProps } from "@/api/fetchData";
 
 const SelectBox = ({
   options,

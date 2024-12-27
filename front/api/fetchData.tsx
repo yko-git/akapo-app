@@ -1,7 +1,63 @@
 import axios from "axios";
-import { Post, NewPost } from "@/components/posts/models/post";
-import { NewUser, UserProfile } from "@/components/posts/models/user";
-import { NewLogin } from "@/components/shared/types/auth/login";
+
+export interface User {
+  id: number;
+  name: string;
+  iconUrl: string;
+  iconSignedUrl: string;
+}
+
+export interface NewUser {
+  loginId: string;
+  name: string;
+  password: string;
+}
+
+export interface UserProfile {
+  id: number;
+  name: string;
+  loginId: string;
+  iconUrl?: string;
+  signedUrl?: string;
+}
+
+export interface Post {
+  id: number;
+  title: string;
+  body: string;
+  signedUrl: string;
+  createdAt: string;
+  categories: { id: number; name: string }[];
+  user: User;
+}
+
+export interface NewPost {
+  title: string;
+  body: string;
+  status: string;
+  categoryIds: number[];
+}
+
+export interface TagListProps {
+  Categories?: Array<{ name: string }>;
+}
+
+export interface SelectBoxProps {
+  options: { value: string; label: string }[];
+  value: string | string[];
+  onChange: (value: string | string[]) => void;
+  multiple?: boolean;
+}
+
+export interface PhotoProps {
+  src: string;
+  alt: string;
+}
+
+interface NewLogin {
+  loginId: string;
+  password: string;
+}
 
 // axiosインスタンス
 const instance = axios.create({
