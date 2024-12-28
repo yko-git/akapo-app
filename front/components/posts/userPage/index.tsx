@@ -28,17 +28,17 @@ const UserPage = () => {
     <div className="">
       {userProfile ? (
         <>
-          <div className="p-5">
+          <div className="p-5 text-center">
             <div className="inline-block text-center">
               <Image
-                className="inline-block mr-2 rounded-full object-cover w-[90px] h-[90px] border-[#6C9FE0] border-4"
+                className="inline-block mr-2 rounded-full object-cover w-[140px] h-[140px] border-[#6C9FE0] border-4"
                 src={userProfile.iconSignedUrl}
                 alt=""
                 width={100}
                 height={100}
                 loading="lazy"
               />
-              <p className="text-[12px] mt-1">{userProfile.name}</p>
+              <p className="text-base font-bold mt-1">{userProfile.name}</p>
             </div>
           </div>
         </>
@@ -46,7 +46,7 @@ const UserPage = () => {
         <p>ユーザー情報を読み込んでいます...</p>
       )}
       <div className="mt-8">
-        <UserArticleList data={data} />
+        <UserArticleList data={data} setData={setData} />
       </div>
     </div>
   );
