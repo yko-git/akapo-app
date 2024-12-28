@@ -176,3 +176,8 @@ export async function fetchUserData(): Promise<UserProfile | null> {
   const response = await instance.get(`user`);
   return response.data.user;
 }
+
+// 個別投稿データ削除関数
+export async function deletePost({ id }: { id: number }): Promise<void> {
+  return await instance.delete(`posts/${id}`);
+}
