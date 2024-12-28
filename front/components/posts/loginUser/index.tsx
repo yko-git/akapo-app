@@ -44,7 +44,7 @@ const LoginUser = () => {
           className="border rounded p-2 w-full"
         />
       </div>
-      <Button onClick={handleSubmit}>投稿する</Button>
+      <Button onClick={handleSubmit}>ログインする</Button>
     </div>
   );
 };
