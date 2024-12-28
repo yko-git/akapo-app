@@ -89,7 +89,9 @@ const CreatePost = () => {
         <label>画像</label>
         <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
-      <Button onClick={handleSubmit}>投稿する</Button>
+      <Button mode="Success" onClick={handleSubmit}>
+        投稿する
+      </Button>
       {imageUrl && (
         <div>
           <h3>アップロードされた画像:</h3>
