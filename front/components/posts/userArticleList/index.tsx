@@ -109,7 +109,9 @@ export default function UserArticleList({
                   </ul>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500 text-center">
-                  {/* <Button onClick={() => handlePatch(item.id)}>編集</Button> */}
+                  <Link href={`/posts/new/${item.id}`}>
+                    <Button>編集</Button>
+                  </Link>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500 text-center">
                   <Button mode="Danger" onClick={() => handleDelete(item.id)}>

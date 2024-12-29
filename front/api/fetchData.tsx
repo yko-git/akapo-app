@@ -181,3 +181,43 @@ export async function fetchUserData(): Promise<UserProfile | null> {
 export async function deletePost({ id }: { id: number }): Promise<void> {
   return await instance.delete(`posts/${id}`);
 }
+
+// 記事編集関数
+export async function patchPost(
+  id: number,
+  file: File,
+  postData: NewPost
+): Promise<string | undefined> {
+  const { title, body, status, categoryIds } = postData;
+
+  let imageKey: string | undefined;
+
+  if (file) {
+    // S3の署名付きURLを取得
+    const signedUrlResponse = await instance.patch(`posts/${id}`, {
+      filename: file.name,
+    });
+    const { signedUrl, safeFilePath } = signedUrlResponse.data;
+
+    // S3に画像をアップロード
+    await axios.put(signedUrl, file, {
+      headers: {
+        "Content-Type": file.type,
+      },
+    });
+    imageKey = safeFilePath;
+  }
+
+  // 記事情報をサーバーに送信
+  const postResponse = await instance.patch("posts", {
+    post: {
+      title,
+      body,
+      status,
+      categoryIds,
+      imageKey, // 画像のキーを指定
+    },
+  });
+
+  return postResponse.data.post.signedUrl; // サーバーからの署名付きURLを使用
+}
