@@ -42,18 +42,6 @@ export interface TagListProps {
   Categories?: Array<{ name: string }>;
 }
 
-export interface SelectBoxProps {
-  options: { value: string; label: string }[];
-  value: string | string[];
-  onChange: (value: string | string[]) => void;
-  multiple?: boolean;
-}
-
-export interface PhotoProps {
-  src: string;
-  alt: string;
-}
-
 interface NewLogin {
   loginId: string;
   password: string;
