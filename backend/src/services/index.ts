@@ -27,7 +27,7 @@ export async function fetchPosts(params: { id?: string; query?: any }) {
   return posts;
 }
 
-// 署名付きURLの更新ロジック
+// 投稿用署名付きURLの更新ロジック
 export async function updateSignedUrls(posts: Post[]) {
   const now = new Date();
   return await Promise.all(
@@ -65,4 +65,42 @@ export async function updateSignedUrls(posts: Post[]) {
       };
     })
   );
+}
+
+// icon用署名付きURLの更新ロジック
+export async function updateIconSignedUrls(user: User) {
+  const now = new Date();
+  const item = user;
+
+  if (item.iconUrl && (!item.iconSignedUrl || item.iconUrlExpiresAt < now)) {
+    const s3 = s3Client;
+    const params = {
+      ...signedURLConfig,
+      Key: item.iconUrl,
+    };
+
+    // 新しい署名付きURLを生成
+    const signedUrl = await new Promise<string>((resolve, reject) => {
+      s3.getSignedUrl("getObject", params, (err, url) => {
+        if (err) {
+          reject(err);
+        } else {
+          const cloudflareUrl = url.replace(
+            `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
+            `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
+          );
+          resolve(cloudflareUrl);
+        }
+      });
+    });
+
+    // 新しい署名付きURLと有効期限を更新
+    item.iconSignedUrl = signedUrl;
+    item.iconUrlExpiresAt = generateExpiresAt();
+    await item.save();
+  }
+
+  return {
+    item,
+  };
 }
