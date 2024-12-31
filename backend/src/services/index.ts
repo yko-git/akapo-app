@@ -40,19 +40,7 @@ export async function updateSignedUrls(posts: Post[]) {
         };
 
         // 新しい署名付きURLを生成
-        const signedUrl = await new Promise<string>((resolve, reject) => {
-          s3.getSignedUrl("getObject", params, (err, url) => {
-            if (err) {
-              reject(err);
-            } else {
-              const cloudflareUrl = url.replace(
-                `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
-                `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
-              );
-              resolve(cloudflareUrl);
-            }
-          });
-        });
+        const signedUrl = await getUpdatedSignedUrl(params);
 
         // 新しい署名付きURLと有効期限を更新
         post.signedUrl = signedUrl;
@@ -90,19 +78,8 @@ export async function updateIconSignedUrls(item: any) {
       Expires: 300,
     };
 
-    const signedUrl = await new Promise<string>((resolve, reject) => {
-      s3.getSignedUrl("getObject", params, (err, url) => {
-        if (err) {
-          reject(err);
-        } else {
-          const cloudflareUrl = url.replace(
-            `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
-            `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
-          );
-          resolve(cloudflareUrl);
-        }
-      });
-    });
+    // 新しい署名付きURLを生成
+    const signedUrl = await getUpdatedSignedUrl(params);
 
     // 新しい署名付きURLと有効期限を更新
     user.iconSignedUrl = signedUrl;
@@ -111,4 +88,22 @@ export async function updateIconSignedUrls(item: any) {
   }
 
   return item;
+}
+
+// 共通処理化した署名付きURL更新関数
+async function getUpdatedSignedUrl(params: any) {
+  const s3 = s3Client;
+  return await new Promise<string>((resolve, reject) => {
+    s3.getSignedUrl("getObject", params, (err, url) => {
+      if (err) {
+        reject(err);
+      } else {
+        const cloudflareUrl = url.replace(
+          `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
+          `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
+        );
+        resolve(cloudflareUrl);
+      }
+    });
+  });
 }
