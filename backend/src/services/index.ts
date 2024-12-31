@@ -87,6 +87,38 @@ export async function updateIconSignedUrls(item: any) {
   return item;
 }
 
+// ユーザーページ用アイコン画像署名付きURLの更新ロジック
+export async function updateIconUserSignedUrls(item: any) {
+  const now = new Date();
+  const user = await User.findByPk(item.dataValues.id);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (
+    !user.iconSignedUrl ||
+    !user.iconUrlExpiresAt ||
+    new Date(user.iconUrlExpiresAt) < now
+  ) {
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME!,
+      Key: user.iconUrl,
+      Expires: 300,
+    };
+
+    // 新しい署名付きURLを生成
+    const signedUrl = await getUpdatedSignedUrl(params);
+
+    // 新しい署名付きURLと有効期限を更新
+    user.iconSignedUrl = signedUrl;
+    user.iconUrlExpiresAt = generateExpiresAt();
+    await user.save();
+  }
+
+  return item;
+}
+
 // 共通処理化した署名付きURL更新関数
 async function getUpdatedSignedUrl(params: any) {
   const s3 = s3Client;
