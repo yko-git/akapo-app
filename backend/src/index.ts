@@ -16,7 +16,6 @@ import {
   updateSignedUrls,
   fetchPosts,
   updateIconSignedUrls,
-  updateIconUserSignedUrls,
 } from "./services/index";
 
 if (!process.env.MYPEPPER || !process.env.JWT_SECRET) {
@@ -139,7 +138,7 @@ app.get(
       }
 
       // ユーザーのアイコン画像の署名付きURLを更新
-      const updatedUser = await updateIconUserSignedUrls(user);
+      const updatedUser = await updateIconSignedUrls(user, true);
 
       res.json({ user: updatedUser });
     } catch (err) {
