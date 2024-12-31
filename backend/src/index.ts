@@ -16,6 +16,7 @@ import {
   updateSignedUrls,
   fetchPosts,
   updateIconSignedUrls,
+  updateIconUserSignedUrls,
 } from "./services/index";
 
 if (!process.env.MYPEPPER || !process.env.JWT_SECRET) {
@@ -128,14 +129,19 @@ app.get(
   passport.authenticate("jwt", { session: false }),
   async (req: any, res: Response) => {
     try {
-      const { user } = req.user;
+      const userId = req.user.user.id;
+      const user = await User.findByPk(userId);
+
       if (!user) {
         return res.json({
-          errorMessage: "ユーザーの投稿が取得できませんでした",
+          errorMessage: "ユーザーが見つかりませんでした",
         });
       }
 
-      res.json({ user });
+      // ユーザーのアイコン画像の署名付きURLを更新
+      const updatedUser = await updateIconUserSignedUrls(user);
+
+      res.json({ user: updatedUser });
     } catch (err) {
       console.log(err);
       return res
