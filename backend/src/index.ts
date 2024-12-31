@@ -225,12 +225,11 @@ app.get(
   async (req: any, res) => {
     try {
       const query = req.query;
-      const users = req.user;
+      const user = req.user;
 
       const posts = await fetchPosts({ query });
       const updatedPosts = await updateSignedUrls(posts);
-      const updatedUsers = await updateIconSignedUrls(users);
-      console.log(updatedUsers);
+      const updatedUsers = await updateIconSignedUrls(user);
       return res.json({ posts: updatedPosts, user: updatedUsers });
     } catch (err) {
       console.error("投稿の取得中にエラーが発生しました:", err);
@@ -247,7 +246,7 @@ app.get(
   async (req: any, res) => {
     const { id } = req.params;
     const posts = await fetchPosts({ id });
-    const users = req.user;
+    const user = req.user;
 
     if (!posts || posts.length === 0) {
       return res
@@ -256,8 +255,8 @@ app.get(
     }
 
     const updatedPosts = await updateSignedUrls(posts);
-    const updatedUsers = await updateIconSignedUrls(users);
-    return res.json({ posts: updatedPosts, user: updatedUsers });
+    const updatedUser = await updateIconSignedUrls(user);
+    return res.json({ posts: updatedPosts, user: updatedUser });
   }
 );
 
