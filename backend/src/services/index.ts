@@ -33,7 +33,6 @@ export async function updateSignedUrls(posts: Post[]) {
   return await Promise.all(
     posts.map(async (post) => {
       if (!post.signedUrl || !post.urlExpiresAt || post.urlExpiresAt < now) {
-        const s3 = s3Client;
         const params = {
           ...signedURLConfig,
           Key: post.imageKey,
@@ -70,8 +69,6 @@ export async function updateIconSignedUrls(item: any) {
     !user.iconUrlExpiresAt ||
     new Date(user.iconUrlExpiresAt) < now
   ) {
-    const s3 = s3Client;
-
     const params = {
       Bucket: process.env.AWS_S3_BUCKET_NAME!,
       Key: user.iconUrl,
