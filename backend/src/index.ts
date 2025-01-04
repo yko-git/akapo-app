@@ -12,7 +12,11 @@ import {
   putSignedUrl,
 } from "./aws";
 import cors from "cors";
-import { updateSignedUrls, fetchPosts } from "./services/index";
+import {
+  updateSignedUrls,
+  fetchPosts,
+  updateIconSignedUrls,
+} from "./services/index";
 
 if (!process.env.MYPEPPER || !process.env.JWT_SECRET) {
   console.error("env vars are not set.");
@@ -124,14 +128,19 @@ app.get(
   passport.authenticate("jwt", { session: false }),
   async (req: any, res: Response) => {
     try {
-      const { user } = req.user;
+      const userId = req.user.user.id;
+      const user = await User.findByPk(userId);
+
       if (!user) {
         return res.json({
-          errorMessage: "ユーザーの投稿が取得できませんでした",
+          errorMessage: "ユーザーが見つかりませんでした",
         });
       }
 
-      res.json({ user });
+      // ユーザーのアイコン画像の署名付きURLを更新
+      const updatedUser = await updateIconSignedUrls(user, true);
+
+      res.json({ user: updatedUser });
     } catch (err) {
       console.log(err);
       return res
@@ -221,10 +230,12 @@ app.get(
   async (req: any, res) => {
     try {
       const query = req.query;
+      const user = req.user;
+
       const posts = await fetchPosts({ query });
       const updatedPosts = await updateSignedUrls(posts);
-
-      return res.json({ posts: updatedPosts });
+      const updatedUsers = await updateIconSignedUrls(user);
+      return res.json({ posts: updatedPosts, user: updatedUsers });
     } catch (err) {
       console.error("投稿の取得中にエラーが発生しました:", err);
       return res
@@ -240,6 +251,7 @@ app.get(
   async (req: any, res) => {
     const { id } = req.params;
     const posts = await fetchPosts({ id });
+    const user = req.user;
 
     if (!posts || posts.length === 0) {
       return res
@@ -248,7 +260,8 @@ app.get(
     }
 
     const updatedPosts = await updateSignedUrls(posts);
-    return res.json({ posts: updatedPosts });
+    const updatedUser = await updateIconSignedUrls(user);
+    return res.json({ posts: updatedPosts, user: updatedUser });
   }
 );
 
