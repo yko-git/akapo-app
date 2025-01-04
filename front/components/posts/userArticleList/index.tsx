@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import Photo from "@/components/shared/photo";
+import PhotoList from "@/components/shared/photoList";
 import { Post } from "@/api/fetchData";
 
 interface UserArticleListProps {
@@ -24,7 +24,7 @@ export default function UserArticleList({ data }: UserArticleListProps) {
             <li key={index}>
               <div className="mt-4">
                 <Link href={`/posts/${item.id}`}>
-                  <Photo
+                  <PhotoList
                     src={item.signedUrl}
                     alt={item.title}
                     width={280}
