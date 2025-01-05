@@ -44,7 +44,7 @@ export async function updateSignedUrls(posts: Post[]) {
 
         // 新しい署名付きURLを生成
         const signedUrl = await getSignedUrl(params);
-        const cloudflareUrl = await getUpdatedSignedUrl(signedUrl);
+        const cloudflareUrl = await toCDNUrl(signedUrl);
 
         // 新しい署名付きURLと有効期限を更新
         post.signedUrl = cloudflareUrl;
@@ -80,7 +80,7 @@ export async function updateIconSignedUrls(item: any) {
 
     // 新しい署名付きURLを生成
     const signedUrl = await getSignedUrl(params);
-    const cloudflareUrl = await getUpdatedSignedUrl(signedUrl);
+    const cloudflareUrl = await toCDNUrl(signedUrl);
 
     // 新しい署名付きURLと有効期限を更新
     user.iconSignedUrl = cloudflareUrl;
@@ -91,12 +91,9 @@ export async function updateIconSignedUrls(item: any) {
   return item;
 }
 
-async function getUpdatedSignedUrl(signedUrl: string): Promise<string> {
-  const baseUrl = `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`;
-  const cloudflareBaseUrl = `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`;
-
-  if (signedUrl.startsWith(cloudflareBaseUrl)) {
-    return signedUrl;
-  }
-  return signedUrl.replace(baseUrl, cloudflareBaseUrl);
+function toCDNUrl(signedUrl: string) {
+  return signedUrl.replace(
+    `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
+    `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
+  );
 }
