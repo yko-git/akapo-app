@@ -27,7 +27,15 @@ const getUrlSigner = (kind: "getObject" | "putObject") => (params: any) => {
       if (err) {
         reject(err);
       } else {
-        resolve(url);
+        if (kind === "getObject") {
+          const cloudflareUrl = url.replace(
+            `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
+            `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
+          );
+          resolve(cloudflareUrl);
+        } else {
+          resolve(url);
+        }
       }
     });
   });
