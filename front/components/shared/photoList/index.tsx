@@ -1,13 +1,14 @@
+import React from "react";
 import Image from "next/image";
 
-export interface PhotoProps {
+export interface PhotoListProps {
   src: string;
   alt: string;
   width: number;
   height: number;
 }
 
-export default function Photo({ src, alt, width, height }: PhotoProps) {
+export default function PhotoList({ src, alt, width, height }: PhotoListProps) {
   return (
     <div className="relative text-center">
       <div className="w-[50%] h-[35px] absolute top-[-20px] left-1/2 translate-x-[-50%] opacity-50 bg-orange-50 origin-[-3deg]"></div>
@@ -18,7 +19,7 @@ export default function Photo({ src, alt, width, height }: PhotoProps) {
           width={width}
           height={height}
           loading="lazy"
-          className="object-cover md:h-[auto]"
+          className="object-cover md:h-[300px]"
         />
       </div>
     </div>

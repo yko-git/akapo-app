@@ -7,8 +7,8 @@ import {
   HasManyGetAssociationsMixin,
 } from "sequelize";
 
-import { Post } from "./post";
 import { sequelize } from ".";
+import { Post } from "./post";
 import Category from "./category";
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {

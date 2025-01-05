@@ -138,7 +138,7 @@ app.get(
       }
 
       // ユーザーのアイコン画像の署名付きURLを更新
-      const updatedUser = await updateIconSignedUrls(user, true);
+      const updatedUser = await updateIconSignedUrls(user);
 
       res.json({ user: updatedUser });
     } catch (err) {
@@ -230,12 +230,16 @@ app.get(
   async (req: any, res) => {
     try {
       const query = req.query;
-      const user = req.user;
 
       const posts = await fetchPosts({ query });
+      const users = posts.map((post) => post.user!);
+
       const updatedPosts = await updateSignedUrls(posts);
-      const updatedUsers = await updateIconSignedUrls(user);
-      return res.json({ posts: updatedPosts, user: updatedUsers });
+      const updatedUsers = await Promise.all(
+        users.map((user) => updateIconSignedUrls(user))
+      );
+
+      return res.json({ posts: updatedPosts, users: updatedUsers });
     } catch (err) {
       console.error("投稿の取得中にエラーが発生しました:", err);
       return res
@@ -251,7 +255,7 @@ app.get(
   async (req: any, res) => {
     const { id } = req.params;
     const posts = await fetchPosts({ id });
-    const user = req.user;
+    const users = posts.map((post) => post.user!);
 
     if (!posts || posts.length === 0) {
       return res
@@ -260,7 +264,9 @@ app.get(
     }
 
     const updatedPosts = await updateSignedUrls(posts);
-    const updatedUser = await updateIconSignedUrls(user);
+    const updatedUser = await Promise.all(
+      users.map((user) => updateIconSignedUrls(user))
+    );
     return res.json({ posts: updatedPosts, user: updatedUser });
   }
 );

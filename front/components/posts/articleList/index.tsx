@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Post } from "@/api/fetchData";
 import { fetchPosts } from "@/api/fetchData";
-import Photo from "@/components/shared/photo";
+import PhotoList from "@/components/shared/photoList";
 import Image from "next/image";
 import TagList from "@/components/shared/tagList";
 
@@ -37,7 +37,7 @@ export default function ArticleList() {
           <li key={index}>
             <div className="mt-4">
               <Link href={`/posts/${item.id}`}>
-                <Photo
+                <PhotoList
                   src={item.signedUrl}
                   alt={item.title}
                   width={280}

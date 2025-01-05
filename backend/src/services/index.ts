@@ -59,14 +59,9 @@ export async function updateSignedUrls(posts: Post[]) {
 }
 
 // icon用署名付きURLの更新ロジック
-export async function updateIconSignedUrls(item: any, isUserPage = false) {
+export async function updateIconSignedUrls(item: any) {
   const now = new Date();
-
-  // ユーザー情報の取得方法を切り替える
-  const userId = isUserPage ? item.dataValues.id : item.user.id;
-
-  const user = await User.findByPk(userId);
-
+  const user = await User.findByPk(item.id);
   if (!user) {
     throw new Error("User not found");
   }
