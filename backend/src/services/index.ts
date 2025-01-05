@@ -44,9 +44,10 @@ export async function updateSignedUrls(posts: Post[]) {
 
         // 新しい署名付きURLを生成
         const signedUrl = await getSignedUrl(params);
+        const cloudflareUrl = await getUpdatedSignedUrl(signedUrl);
 
         // 新しい署名付きURLと有効期限を更新
-        post.signedUrl = signedUrl;
+        post.signedUrl = cloudflareUrl;
         post.urlExpiresAt = generateExpiresAt();
         await post.save();
       }
@@ -79,12 +80,20 @@ export async function updateIconSignedUrls(item: any) {
 
     // 新しい署名付きURLを生成
     const signedUrl = await getSignedUrl(params);
+    const cloudflareUrl = await getUpdatedSignedUrl(signedUrl);
 
     // 新しい署名付きURLと有効期限を更新
-    user.iconSignedUrl = signedUrl;
+    user.iconSignedUrl = cloudflareUrl;
     user.iconUrlExpiresAt = generateExpiresAt();
     await user.save();
   }
 
   return item;
+}
+
+async function getUpdatedSignedUrl(signedUrl: string): Promise<string> {
+  return signedUrl.replace(
+    `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
+    `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
+  );
 }
