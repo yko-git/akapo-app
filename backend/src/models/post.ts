@@ -25,7 +25,7 @@ class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare setCategories: BelongsToManySetAssociationsMixin<Category, number>;
-  declare User?: User;
+  declare user?: User;
 
   async upsert(categoryIds: number[]) {
     const result = await sequelize.transaction(async (t) => {
