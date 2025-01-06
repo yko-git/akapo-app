@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { createPost } from "@/api/fetchData";
 import Button from "@/components/shared/button";
@@ -37,10 +37,12 @@ const CreatePost = () => {
     }
 
     const postData = { title, body, status, categoryIds };
+    console.log(postData);
     try {
       const postImg = await createPost(file, postData);
       if (postImg) {
         setImageUrl(postImg);
+        alert("投稿が完了しました");
       } else {
         console.error("画像のアップロードまたは投稿に失敗しました");
       }
