@@ -173,7 +173,8 @@ app.get(
           .json({ errorMessage: "ユーザーの投稿が取得できませんでした" });
       }
       const posts = await instance.posts(status);
-      res.json({ posts });
+      const updatedPosts = await updateSignedUrls(posts);
+      res.json({ posts: updatedPosts });
     } catch (err) {
       console.log(err);
       return res
