@@ -61,7 +61,6 @@ const PatchPost = ({ id }: { id: number }) => {
 
     try {
       const postImg = await patchPost(id, file, postData);
-      console.log(postImg);
       if (postImg) {
         setImageUrl(postImg);
       } else {

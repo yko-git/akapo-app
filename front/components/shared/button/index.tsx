@@ -1,7 +1,7 @@
 interface ButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
   children: React.ReactNode;
-  mode: keyof typeof buttonColors;
+  mode?: keyof typeof buttonColors;
 }
 
 const buttonColors = {
@@ -11,7 +11,11 @@ const buttonColors = {
   Info: "bg-[#17a2b8]",
 };
 
-const Button: React.FC<ButtonProps> = ({ onClick, children, mode }) => {
+const Button: React.FC<ButtonProps> = ({
+  onClick,
+  children,
+  mode = "Info",
+}) => {
   const buttonColor = buttonColors[mode] || "bg-[#6C9FE0]";
   return (
     <button
