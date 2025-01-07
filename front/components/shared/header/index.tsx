@@ -22,7 +22,7 @@ export default function Header() {
     else setVisible("visible");
   }, [isDesktopOrLaptop]);
   return (
-    <header className="sticky top-0 md:bg-transparent bg-white bg-opacity-90 z-10">
+    <header className="sticky top-0 bg-white bg-opacity-90 z-10">
       <div className="wrapper lg:pb-10 !pb-0 !pt-0">
         <div className="mx-auto max-w-screen-2xl">
           <header className="flex items-center justify-between py-2 md:py-8 relative md:gap-0 gap-4">

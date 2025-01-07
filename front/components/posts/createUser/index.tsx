@@ -1,15 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
 import { createUser } from "@/api/fetchData";
 import Button from "@/components/shared/button";
+import { useRouter } from "next/navigation";
 
 const CreateUser = () => {
   const [loginId, setLoginId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFile(event.target.files ? event.target.files[0] : null);
@@ -24,13 +24,13 @@ const CreateUser = () => {
     const userData = { loginId, name, password };
     try {
       const postImg = await createUser(file, userData);
-      if (postImg) {
-        setImageUrl(postImg);
-      } else {
+      if (!postImg) {
         alert("画像のアップロードまたは投稿に失敗しました");
       }
+      alert("ユーザー登録が完了しました。ログインしてください。");
+      router.push("/login");
     } catch (error) {
-      console.error("投稿処理中にエラーが発生しました:", error);
+      console.error("登録処理中にエラーが発生しました:", error);
     }
   };
 
@@ -68,12 +68,6 @@ const CreateUser = () => {
         />
       </div>
       <Button onClick={handleSubmit}>登録する</Button>
-      {imageUrl && (
-        <div>
-          <h3>アップロードされた画像:</h3>
-          <Image src={imageUrl} alt="Uploaded" width={100} height={100} />
-        </div>
-      )}
     </div>
   );
 };

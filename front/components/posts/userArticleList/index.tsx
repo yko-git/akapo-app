@@ -37,42 +37,43 @@ export default function UserArticleList({
         <h1 className="font-bold my-2">ユーザー投稿一覧</h1>
         <p>{data.length} 件</p>
       </div>
-      <table className="min-w-full divide-y divide-gray-200 mt-5">
+     <div className="overflow-x-auto md:overflow-hidden">
+      <table className="min-w-[900px] divide-y divide-gray-200 mt-5 md:w-full">
         <thead className="bg-gray-50">
           <tr>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
             >
               タイトル
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
             >
               本文
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-sm text-center font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-sm text-center font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
             >
               画像
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
             >
               カテゴリー
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
             >
               編集
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
             >
               削除
             </th>
@@ -125,6 +126,7 @@ export default function UserArticleList({
           )}
         </tbody>
       </table>
+     </div>
     </>
   );
 }

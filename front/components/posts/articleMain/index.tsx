@@ -23,7 +23,9 @@ export default function ArticleMain() {
 
   // データが取得できていない場合の表示
   if (!data) {
-    return <p className="text-center">読み込み中・・・</p>;
+    return (
+      <Photo src="/home/dummyimg.png" alt="dummy" width={280} height={280} />
+    );
   }
 
   return (
