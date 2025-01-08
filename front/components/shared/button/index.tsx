@@ -8,7 +8,7 @@ const buttonColors = {
   Danger: "bg-[#bb2d3b]",
   Success: "bg-[#FC7840]",
   Warning: "bg-[#ffc107]",
-  Info: "bg-[#17a2b8]",
+  Info: "bg-[#6C9FE0]",
 };
 
 const Button: React.FC<ButtonProps> = ({
