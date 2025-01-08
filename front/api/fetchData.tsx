@@ -178,32 +178,28 @@ export async function patchPost(
 ): Promise<string | undefined> {
   const { title, body, status, categoryIds } = postData;
 
-  let imageKey: string | undefined;
+  // S3の署名付きURLを取得
+  const signedUrlResponse = await instance.get("signedurl", {
+    params: { filename: file.name },
+  });
 
-  if (file) {
-    // S3の署名付きURLを取得
-    const signedUrlResponse = await instance.patch(`posts/${id}`, {
-      filename: file.name,
-    });
-    const { signedUrl, safeFilePath } = signedUrlResponse.data;
+  const { signedUrl, safeFilePath } = signedUrlResponse.data;
 
-    // S3に画像をアップロード
-    await axios.put(signedUrl, file, {
-      headers: {
-        "Content-Type": file.type,
-      },
-    });
-    imageKey = safeFilePath;
-  }
+  // S3に画像をアップロード
+  await axios.put(signedUrl, file, {
+    headers: {
+      "Content-Type": file.type,
+    },
+  });
 
   // 記事情報をサーバーに送信
-  const postResponse = await instance.patch("posts", {
+  const postResponse = await instance.patch(`posts/${id}`, {
     post: {
       title,
       body,
       status,
       categoryIds,
-      imageKey, // 画像のキーを指定
+      imageKey: safeFilePath, // 画像キーを指定
     },
   });
 

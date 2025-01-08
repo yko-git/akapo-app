@@ -20,12 +20,15 @@ const PatchPost = ({ id }: { id: number }) => {
       try {
         const post = await fetchPost({ id });
         if (Array.isArray(post) && post.length > 0) {
-          setData(post[0]);
-          setTitle(post[0].title);
-          setBody(post[0].body);
-          setStatus(post[0].status);
-          setCategoryIds(post[0].categories.map((cat: any) => cat.id));
-          setImageUrl(post[0].signedUrl || null);
+          const data = post[0];
+          setData(data);
+          setTitle(data.title);
+          setBody(data.body);
+          setStatus(data.status.toString());
+          setCategoryIds(data.categories.map((cat: any) => cat.id));
+          setImageUrl(data.signedUrl || null);
+        } else {
+          console.error("データが見つかりませんでした");
         }
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
@@ -63,6 +66,7 @@ const PatchPost = ({ id }: { id: number }) => {
       const postImg = await patchPost(id, file, postData);
       if (postImg) {
         setImageUrl(postImg);
+        alert("編集が完了しました");
       } else {
         console.error("画像のアップロードまたは投稿に失敗しました");
       }

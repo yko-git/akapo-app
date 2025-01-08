@@ -281,6 +281,7 @@ app.patch(
       const id = requestParams.id;
 
       const { post: params } = req.body;
+      const { title, body, status, categoryIds, imageKey } = params || {};
 
       const post = await Post.findOne({
         where: {
@@ -292,13 +293,33 @@ app.patch(
           .status(404)
           .json({ errorMessage: "投稿が取得できませんでした" });
       }
+
+      let signedUrl = post.signedUrl;
+      let urlExpiresAt = post.urlExpiresAt;
+
+      if (imageKey && imageKey !== post.imageKey) {
+        signedUrl = await getSignedUrl({
+          ...signedURLConfig,
+          Key: imageKey,
+        });
+        urlExpiresAt = generateExpiresAt();
+      }
+
       post.set({
-        title: params.title,
-        body: params.body,
-        status: params.status,
+        title,
+        body,
+        status,
+        imageKey,
+        signedUrl,
+        urlExpiresAt,
       });
-      await post.upsert(params.categoryIds);
-      res.json({ post: post });
+      if (categoryIds) {
+        await post.setCategories(categoryIds);
+      }
+
+      await post.save();
+
+      res.json({ post: { ...post.toJSON(), imageUrl: signedUrl } });
     } catch (err) {
       console.log(err);
       return res.status(401).json({ errorMessage: "登録ができませんでした" });
