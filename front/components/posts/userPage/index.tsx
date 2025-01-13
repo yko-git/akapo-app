@@ -4,6 +4,8 @@ import { Post } from "@/api/fetchData";
 import Image from "next/image";
 import { fetchUserPosts, fetchUserData } from "@/api/fetchData";
 import UserArticleList from "../userArticleList";
+import Link from "next/link";
+import Button from "@/components/shared/button";
 
 const UserPage = () => {
   const [userProfile, setUserProfile] = useState<any | null>(null);
@@ -47,6 +49,11 @@ const UserPage = () => {
       )}
       <div className="mt-8">
         <UserArticleList data={data} setData={setData} />
+      </div>
+      <div className="mt-10 text-right">
+        <Link href="/posts/new">
+          <Button>新しい投稿を作成</Button>
+        </Link>
       </div>
     </div>
   );
