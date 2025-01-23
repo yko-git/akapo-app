@@ -6,6 +6,7 @@ import { fetchPosts } from "@/api/fetchData";
 import PhotoList from "@/components/shared/photoList";
 import Image from "next/image";
 import TagList from "@/components/shared/tagList";
+import TagFilterNav from "@/components/shared/tagFilterNav";
 
 export default function ArticleList() {
   const [data, setData] = useState<Post[] | null>(null);
@@ -27,11 +28,16 @@ export default function ArticleList() {
     return <p className="text-center">読み込み中・・・</p>;
   }
 
+  const categories = Array.from(
+    new Set(data?.flatMap((post) => post.categories.map((cat) => cat.name)))
+  );
+
   return (
     <>
       <div className="wrapper">
         <h1 className="font-bold my-2">投稿一覧</h1>
       </div>
+      <TagFilterNav categories={categories} />
       <ul className="gap-10 flex flex-wrap max-w-[1280px] mx-auto mt-10">
         {data.map((item, index) => (
           <li key={index}>

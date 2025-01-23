@@ -42,6 +42,10 @@ export interface TagListProps {
   Categories?: Array<{ name: string }>;
 }
 
+export interface TagFilterNavProps {
+  categories: string[];
+}
+
 interface NewLogin {
   loginId: string;
   password: string;
