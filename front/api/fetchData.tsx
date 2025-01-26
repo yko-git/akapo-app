@@ -173,14 +173,14 @@ export async function deletePost({ id }: { id: number }): Promise<void> {
 // 記事編集関数
 export async function patchPost(
   id: number,
-  file: File,
-  postData: NewPost
+  postData: NewPost,
+  file?: File
 ): Promise<string | undefined> {
   const { title, body, status, categoryIds } = postData;
 
   // S3の署名付きURLを取得
   const signedUrlResponse = await instance.get("signedurl", {
-    params: { filename: file.name },
+    params: { filename: file?.name },
   });
 
   const { signedUrl, safeFilePath } = signedUrlResponse.data;
@@ -188,7 +188,7 @@ export async function patchPost(
   // S3に画像をアップロード
   await axios.put(signedUrl, file, {
     headers: {
-      "Content-Type": file.type,
+      "Content-Type": file?.type,
     },
   });
 

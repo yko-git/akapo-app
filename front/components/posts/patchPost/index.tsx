@@ -24,6 +24,7 @@ const PatchPost = ({ id }: { id: number }) => {
           setData(data);
           setTitle(data.title);
           setBody(data.body);
+          setFile(data.imageKey ?? null);
           setStatus(data.status.toString());
           setCategoryIds(data.categories.map((cat: any) => cat.id));
           setImageUrl(data.signedUrl || null);
@@ -55,7 +56,7 @@ const PatchPost = ({ id }: { id: number }) => {
   };
 
   const handleSubmit = async () => {
-    if (!file) {
+    if (!file && !imageUrl) {
       alert("画像を選択してください");
       return;
     }
@@ -63,7 +64,7 @@ const PatchPost = ({ id }: { id: number }) => {
     const postData = { title, body, status, categoryIds };
 
     try {
-      const postImg = await patchPost(id, file, postData);
+      const postImg = await patchPost(id, postData, file ?? undefined);
       if (postImg) {
         setImageUrl(postImg);
         alert("編集が完了しました");
@@ -122,7 +123,13 @@ const PatchPost = ({ id }: { id: number }) => {
       {imageUrl && (
         <div>
           <h3>アップロードされた画像:</h3>
-          <Image src={imageUrl} alt="Uploaded" width={100} height={100} />
+          <Image
+            src={imageUrl}
+            alt="Uploaded"
+            width={100}
+            height={100}
+            unoptimized
+          />
         </div>
       )}
     </div>
