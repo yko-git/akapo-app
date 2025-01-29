@@ -1,10 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { patchPost, fetchPost, Post } from "@/api/fetchData";
+import { patchPost, fetchPost, Post, NewPost } from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
+import axios from "axios";
 
 const PatchPost = ({ id }: { id: number }) => {
   const [title, setTitle] = useState<string>("");
@@ -15,6 +16,9 @@ const PatchPost = ({ id }: { id: number }) => {
   const [status, setStatus] = useState<string>("0");
   const [data, setData] = useState<Post | null>(null);
 
+  const instance = axios.create({
+    baseURL: "http://localhost:3001/",
+  });
   useEffect(() => {
     async function fetchData() {
       try {
@@ -52,7 +56,8 @@ const PatchPost = ({ id }: { id: number }) => {
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(event.target.files ? event.target.files[0] : null);
+    const selectedFile = event.target.files ? event.target.files[0] : null;
+    setFile(selectedFile);
   };
 
   const handleSubmit = async () => {
@@ -61,16 +66,38 @@ const PatchPost = ({ id }: { id: number }) => {
       return;
     }
 
-    const postData = { title, body, status, categoryIds };
+    const postData: NewPost = {
+      title,
+      body,
+      status,
+      categoryIds,
+      imageKey: data?.imageKey,
+    };
 
     try {
-      const postImg = await patchPost(id, postData, file ?? undefined);
-      if (postImg) {
-        setImageUrl(postImg);
-        alert("編集が完了しました");
-      } else {
-        console.error("画像のアップロードまたは投稿に失敗しました");
+      if (file) {
+        // 新しい画像が選択されている場合のみ、S3にアップロード
+        const signedUrlResponse = await instance.get("signedurl", {
+          params: { filename: file.name },
+        });
+        const { signedUrl, safeFilePath } = signedUrlResponse.data;
+
+        if (file && file.name) {
+          // ファイルが存在し、名前が正しい場合のみアップロードを実行
+          await axios.put(signedUrl, file, {
+            headers: { "Content-Type": file.type },
+          });
+
+          // 新しい画像の `imageKey` を設定
+          postData.imageKey = safeFilePath;
+        }
+      } else if (imageUrl && data?.imageKey) {
+        // 既存の画像URLがあり、imageKeyがあればそれを使用
+        postData.imageKey = data.imageKey;
       }
+
+      await patchPost(id, postData);
+      alert("編集が完了しました");
     } catch (error) {
       console.error("投稿処理中にエラーが発生しました:", error);
     }

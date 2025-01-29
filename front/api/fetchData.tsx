@@ -29,6 +29,7 @@ export interface Post {
   createdAt: string;
   categories: { id: number; name: string }[];
   user: User;
+  imageKey: string;
 }
 
 export interface NewPost {
@@ -36,6 +37,7 @@ export interface NewPost {
   body: string;
   status: string;
   categoryIds: number[];
+  imageKey?: string;
 }
 
 export interface TagListProps {
@@ -171,36 +173,30 @@ export async function deletePost({ id }: { id: number }): Promise<void> {
 }
 
 // 記事編集関数
-export async function patchPost(
-  id: number,
-  postData: NewPost,
-  file?: File
-): Promise<string | undefined> {
+export async function patchPost(id: number, postData: NewPost, file?: File) {
   const { title, body, status, categoryIds } = postData;
 
-  // S3の署名付きURLを取得
-  const signedUrlResponse = await instance.get("signedurl", {
-    params: { filename: file?.name },
-  });
+  if (file) {
+    // S3の署名付きURLを取得
+    const signedUrlResponse = await instance.get("signedurl", {
+      params: { filename: file.name },
+    });
 
-  const { signedUrl, safeFilePath } = signedUrlResponse.data;
+    const { signedUrl, safeFilePath } = signedUrlResponse.data;
 
-  // S3に画像をアップロード
-  await axios.put(signedUrl, file, {
-    headers: {
-      "Content-Type": file?.type,
-    },
-  });
+    // S3に画像をアップロード
+    await axios.put(signedUrl, file, {
+      headers: {
+        "Content-Type": file.type,
+      },
+    });
+
+    postData.imageKey = safeFilePath;
+  }
 
   // 記事情報をサーバーに送信
   const postResponse = await instance.patch(`posts/${id}`, {
-    post: {
-      title,
-      body,
-      status,
-      categoryIds,
-      imageKey: safeFilePath, // 画像キーを指定
-    },
+    post: postData,
   });
 
   return postResponse.data.post.signedUrl; // サーバーからの署名付きURLを使用
