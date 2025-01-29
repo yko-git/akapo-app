@@ -1,11 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { patchPost, fetchPost, Post, NewPost } from "@/api/fetchData";
+import {
+  patchPost,
+  fetchPost,
+  Post,
+  NewPost,
+  patchImagePost,
+} from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
-import axios from "axios";
 
 const PatchPost = ({ id }: { id: number }) => {
   const [title, setTitle] = useState<string>("");
@@ -16,9 +21,6 @@ const PatchPost = ({ id }: { id: number }) => {
   const [status, setStatus] = useState<string>("0");
   const [data, setData] = useState<Post | null>(null);
 
-  const instance = axios.create({
-    baseURL: "http://localhost:3001/",
-  });
   useEffect(() => {
     async function fetchData() {
       try {
@@ -76,27 +78,16 @@ const PatchPost = ({ id }: { id: number }) => {
 
     try {
       if (file) {
-        // 新しい画像が選択されている場合のみ、S3にアップロード
-        const signedUrlResponse = await instance.get("signedurl", {
-          params: { filename: file.name },
-        });
-        const { signedUrl, safeFilePath } = signedUrlResponse.data;
-
-        if (file && file.name) {
-          // ファイルが存在し、名前が正しい場合のみアップロードを実行
-          await axios.put(signedUrl, file, {
-            headers: { "Content-Type": file.type },
-          });
-
-          // 新しい画像の `imageKey` を設定
-          postData.imageKey = safeFilePath;
-        }
+        // 新しい画像が選択されている場合のみ
+        const newImageUrl = await patchImagePost(postData, file);
+        setImageUrl(newImageUrl);
       } else if (imageUrl && data?.imageKey) {
         // 既存の画像URLがあり、imageKeyがあればそれを使用
         postData.imageKey = data.imageKey;
       }
 
-      await patchPost(id, postData);
+      const existingImageUrl = await patchPost(id, postData);
+      setImageUrl(existingImageUrl);
       alert("編集が完了しました");
     } catch (error) {
       console.error("投稿処理中にエラーが発生しました:", error);

@@ -175,29 +175,28 @@ export async function deletePost({ id }: { id: number }): Promise<void> {
 // 記事編集関数
 export async function patchPost(id: number, postData: NewPost, file?: File) {
   const { title, body, status, categoryIds } = postData;
-
-  if (file) {
-    // S3の署名付きURLを取得
-    const signedUrlResponse = await instance.get("signedurl", {
-      params: { filename: file.name },
-    });
-
-    const { signedUrl, safeFilePath } = signedUrlResponse.data;
-
-    // S3に画像をアップロード
-    await axios.put(signedUrl, file, {
-      headers: {
-        "Content-Type": file.type,
-      },
-    });
-
-    postData.imageKey = safeFilePath;
-  }
-
   // 記事情報をサーバーに送信
   const postResponse = await instance.patch(`posts/${id}`, {
     post: postData,
   });
 
   return postResponse.data.post.signedUrl; // サーバーからの署名付きURLを使用
+}
+
+// 記事編集関数（画像）
+export async function patchImagePost(postData: NewPost, file: File) {
+  const signedUrlResponse = await instance.get("signedurl", {
+    params: { filename: file.name },
+  });
+  const { signedUrl, safeFilePath } = signedUrlResponse.data;
+
+  if (file && file.name) {
+    await axios.put(signedUrl, file, {
+      headers: { "Content-Type": file.type },
+    });
+
+    // 新しい画像の `imageKey` を設定
+    postData.imageKey = safeFilePath;
+    return signedUrl;
+  }
 }
