@@ -30,7 +30,6 @@ const PatchPost = ({ id }: { id: number }) => {
           setData(data);
           setTitle(data.title);
           setBody(data.body);
-          setFile(data.imageKey ?? null);
           setStatus(data.status.toString());
           setCategoryIds(data.categories.map((cat: any) => cat.id));
           setImageUrl(data.signedUrl || null);
