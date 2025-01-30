@@ -173,7 +173,7 @@ export async function deletePost({ id }: { id: number }): Promise<void> {
 }
 
 // 記事編集関数
-export async function patchPost(id: number, postData: NewPost, file?: File) {
+export async function patchPost(id: number, postData: NewPost) {
   const { title, body, status, categoryIds } = postData;
   // 記事情報をサーバーに送信
   const postResponse = await instance.patch(`posts/${id}`, {
@@ -184,7 +184,7 @@ export async function patchPost(id: number, postData: NewPost, file?: File) {
 }
 
 // 記事編集関数（画像）
-export async function patchImagePost(postData: NewPost, file: File) {
+export async function uploadImage(file: File) {
   const signedUrlResponse = await instance.get("signedurl", {
     params: { filename: file.name },
   });
@@ -195,8 +195,6 @@ export async function patchImagePost(postData: NewPost, file: File) {
       headers: { "Content-Type": file.type },
     });
 
-    // 新しい画像の `imageKey` を設定
-    postData.imageKey = safeFilePath;
-    return signedUrl;
+    return { signedUrl, safeFilePath };
   }
 }

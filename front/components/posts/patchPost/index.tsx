@@ -6,7 +6,7 @@ import {
   fetchPost,
   Post,
   NewPost,
-  patchImagePost,
+  uploadImage,
 } from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
@@ -73,17 +73,14 @@ const PatchPost = ({ id }: { id: number }) => {
       body,
       status,
       categoryIds,
-      imageKey: data?.imageKey,
     };
 
     try {
       if (file) {
         // 新しい画像が選択されている場合のみ
-        const newImageUrl = await patchImagePost(postData, file);
-        setImageUrl(newImageUrl);
-      } else if (imageUrl && data?.imageKey) {
-        // 既存の画像URLがあり、imageKeyがあればそれを使用
-        postData.imageKey = data.imageKey;
+        const newImageUrl = await uploadImage(file);
+        // 新しい画像の `imageKey` を設定
+        postData.imageKey = newImageUrl?.safeFilePath;
       }
 
       const existingImageUrl = await patchPost(id, postData);
