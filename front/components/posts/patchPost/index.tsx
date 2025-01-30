@@ -73,7 +73,6 @@ const PatchPost = ({ id }: { id: number }) => {
       body,
       status,
       categoryIds,
-      imageKey: data?.imageKey,
     };
 
     try {
