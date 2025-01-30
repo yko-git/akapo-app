@@ -1,7 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { patchPost, fetchPost, Post } from "@/api/fetchData";
+import {
+  patchPost,
+  fetchPost,
+  Post,
+  NewPost,
+  patchImagePost,
+} from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
@@ -24,6 +30,7 @@ const PatchPost = ({ id }: { id: number }) => {
           setData(data);
           setTitle(data.title);
           setBody(data.body);
+          setFile(data.imageKey ?? null);
           setStatus(data.status.toString());
           setCategoryIds(data.categories.map((cat: any) => cat.id));
           setImageUrl(data.signedUrl || null);
@@ -51,25 +58,37 @@ const PatchPost = ({ id }: { id: number }) => {
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(event.target.files ? event.target.files[0] : null);
+    const selectedFile = event.target.files ? event.target.files[0] : null;
+    setFile(selectedFile);
   };
 
   const handleSubmit = async () => {
-    if (!file) {
+    if (!file && !imageUrl) {
       alert("画像を選択してください");
       return;
     }
 
-    const postData = { title, body, status, categoryIds };
+    const postData: NewPost = {
+      title,
+      body,
+      status,
+      categoryIds,
+      imageKey: data?.imageKey,
+    };
 
     try {
-      const postImg = await patchPost(id, file, postData);
-      if (postImg) {
-        setImageUrl(postImg);
-        alert("編集が完了しました");
-      } else {
-        console.error("画像のアップロードまたは投稿に失敗しました");
+      if (file) {
+        // 新しい画像が選択されている場合のみ
+        const newImageUrl = await patchImagePost(postData, file);
+        setImageUrl(newImageUrl);
+      } else if (imageUrl && data?.imageKey) {
+        // 既存の画像URLがあり、imageKeyがあればそれを使用
+        postData.imageKey = data.imageKey;
       }
+
+      const existingImageUrl = await patchPost(id, postData);
+      setImageUrl(existingImageUrl);
+      alert("編集が完了しました");
     } catch (error) {
       console.error("投稿処理中にエラーが発生しました:", error);
     }
@@ -122,7 +141,13 @@ const PatchPost = ({ id }: { id: number }) => {
       {imageUrl && (
         <div>
           <h3>アップロードされた画像:</h3>
-          <Image src={imageUrl} alt="Uploaded" width={100} height={100} />
+          <Image
+            src={imageUrl}
+            alt="Uploaded"
+            width={100}
+            height={100}
+            unoptimized
+          />
         </div>
       )}
     </div>

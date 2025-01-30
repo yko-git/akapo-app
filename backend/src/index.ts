@@ -297,10 +297,12 @@ app.patch(
       let signedUrl = post.signedUrl;
       let urlExpiresAt = post.urlExpiresAt;
 
-      if (imageKey && imageKey !== post.imageKey) {
+      // `imageKey` が undefined の場合、既存の `post.imageKey` を使用
+      const newImageKey = imageKey || post.imageKey;
+      if (newImageKey !== post.imageKey) {
         signedUrl = await getSignedUrl({
           ...signedURLConfig,
-          Key: imageKey,
+          Key: newImageKey,
         });
         urlExpiresAt = generateExpiresAt();
       }
@@ -309,7 +311,7 @@ app.patch(
         title,
         body,
         status,
-        imageKey,
+        imageKey: newImageKey,
         signedUrl,
         urlExpiresAt,
       });
