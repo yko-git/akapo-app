@@ -294,26 +294,23 @@ app.patch(
           .json({ errorMessage: "投稿が取得できませんでした" });
       }
 
-      let signedUrl = post.signedUrl;
-      let urlExpiresAt = post.urlExpiresAt;
-
-      // `imageKey` が undefined の場合、既存の `post.imageKey` を使用
-      const newImageKey = imageKey || post.imageKey;
-      if (newImageKey !== post.imageKey) {
-        signedUrl = await getSignedUrl({
+      if (params.imageKey) {
+        const signedUrl = await getSignedUrl({
           ...signedURLConfig,
-          Key: newImageKey,
+          Key: imageKey,
         });
-        urlExpiresAt = generateExpiresAt();
+        const urlExpiresAt = generateExpiresAt();
+        post.set({
+          imageKey: params.imageKey,
+          signedUrl,
+          urlExpiresAt,
+        });
       }
 
       post.set({
         title,
         body,
         status,
-        imageKey: newImageKey,
-        signedUrl,
-        urlExpiresAt,
       });
       if (categoryIds) {
         await post.setCategories(categoryIds);
@@ -321,7 +318,7 @@ app.patch(
 
       await post.save();
 
-      res.json({ post: { ...post.toJSON(), imageUrl: signedUrl } });
+      res.json({ post: { ...post.toJSON(), imageUrl: post.signedUrl } });
     } catch (err) {
       console.log(err);
       return res.status(401).json({ errorMessage: "登録ができませんでした" });
