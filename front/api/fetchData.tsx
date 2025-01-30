@@ -184,7 +184,7 @@ export async function patchPost(id: number, postData: NewPost) {
 }
 
 // 記事編集関数（画像）
-export async function uploadImage(postData: NewPost, file: File) {
+export async function uploadImage(file: File) {
   const signedUrlResponse = await instance.get("signedurl", {
     params: { filename: file.name },
   });
@@ -195,8 +195,6 @@ export async function uploadImage(postData: NewPost, file: File) {
       headers: { "Content-Type": file.type },
     });
 
-    // 新しい画像の `imageKey` を設定
-    postData.imageKey = safeFilePath;
-    return signedUrl;
+    return { signedUrl, safeFilePath };
   }
 }

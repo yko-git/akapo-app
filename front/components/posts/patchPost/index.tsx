@@ -79,8 +79,10 @@ const PatchPost = ({ id }: { id: number }) => {
     try {
       if (file) {
         // 新しい画像が選択されている場合のみ
-        const newImageUrl = await uploadImage(postData, file);
-        setImageUrl(newImageUrl);
+        const newImageUrl = await uploadImage(file);
+        // 新しい画像の `imageKey` を設定
+        postData.imageKey = newImageUrl?.safeFilePath;
+        setImageUrl(newImageUrl?.safeFilePath);
       } else if (imageUrl && data?.imageKey) {
         // 既存の画像URLがあり、imageKeyがあればそれを使用
         postData.imageKey = data.imageKey;
