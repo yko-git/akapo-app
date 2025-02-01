@@ -49,6 +49,19 @@ interface NewLogin {
   password: string;
 }
 
+export type CommentProps = {
+  id: number;
+  postId: number;
+  userId: number;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  user: {
+    name: string;
+    iconSignedUrl: string;
+  };
+};
+
 // axiosインスタンス
 const instance = axios.create({
   baseURL: "http://localhost:3001/",
@@ -197,4 +210,14 @@ export async function uploadImage(file: File) {
 
     return { signedUrl, safeFilePath };
   }
+}
+
+// コメントデータ取得関数
+export async function fetchComments({
+  postId,
+}: {
+  postId: number;
+}): Promise<CommentProps[]> {
+  const response = await instance.get(`posts/${postId}/comments`);
+  return response.data;
 }
