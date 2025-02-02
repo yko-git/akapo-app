@@ -17,7 +17,7 @@ export default function CreateComment({ postId }: { postId: number }) {
   };
 
   return (
-    <div className="flex flex-col p-5 space-y-4 text-left">
+    <div className="mt-20">
       <div>
         <div>コメント内容</div>
         <textarea
@@ -26,9 +26,11 @@ export default function CreateComment({ postId }: { postId: number }) {
           className="border rounded p-2 w-full"
         />
       </div>
-      <Button mode="Success" onClick={handleSubmit}>
-        投稿する
-      </Button>
+      <div className="text-right mt-4">
+        <Button mode="Success" onClick={handleSubmit}>
+          投稿する
+        </Button>
+      </div>
     </div>
   );
 }

@@ -18,8 +18,10 @@ export default function Comment({ comments, postId }: CommentsProps) {
           >
             COMMENTS
           </h2>
-          <CommentList comments={comments} />
-          <CreateComment postId={postId} />
+          <div className="text-left">
+            <CommentList comments={comments} />
+            <CreateComment postId={postId} />
+          </div>
         </div>
       </div>
     </>
