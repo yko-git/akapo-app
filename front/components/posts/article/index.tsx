@@ -20,9 +20,7 @@ export default function Article({ id }: { id: number }) {
         }
 
         const commentList = await fetchComments({ postId: id });
-        if (Array.isArray(commentList)) {
-          setComments(commentList);
-        }
+        setComments(commentList);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
       }
@@ -89,7 +87,7 @@ export default function Article({ id }: { id: number }) {
           </div>
         </div>
       </div>
-      <Comment comments={comments} />
+      <Comment comments={comments} postId={id} />
     </>
   );
 }
