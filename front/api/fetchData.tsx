@@ -40,6 +40,10 @@ export interface NewPost {
   imageKey?: string;
 }
 
+export interface NewComment {
+  body: string;
+}
+
 export interface TagListProps {
   Categories?: Array<{ name: string }>;
 }
@@ -53,7 +57,7 @@ export type CommentProps = {
   id: number;
   postId: number;
   userId: number;
-  content: string;
+  body: string;
   createdAt: string;
   updatedAt: string;
   user: {
@@ -219,5 +223,14 @@ export async function fetchComments({
   postId: number;
 }): Promise<CommentProps[]> {
   const response = await instance.get(`posts/${postId}/comments`);
-  return response.data;
+  return response.data.comments;
+}
+
+// コメント投稿関数
+export async function createComment(
+  postId: number,
+  postData: NewComment
+): Promise<CommentProps> {
+  const response = await instance.post(`posts/${postId}/comments`, postData);
+  return response.data.comments;
 }
