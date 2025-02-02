@@ -18,7 +18,7 @@ class Comment extends Model<
   declare id: CreationOptional<number>;
   declare userId: ForeignKey<User["id"]>;
   declare postId: ForeignKey<Post["id"]>;
-  declare content: string;
+  declare body: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -30,9 +30,15 @@ Comment.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    userId: DataTypes.INTEGER,
-    postId: DataTypes.INTEGER,
-    content: {
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    postId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    body: {
       allowNull: false,
       type: DataTypes.TEXT,
       validate: {
@@ -48,10 +54,13 @@ Comment.init(
       type: DataTypes.DATE,
     },
   },
-  { sequelize, modelName: "Comment", tableName: "comment" }
+  { sequelize, modelName: "Comment", tableName: "comments" }
 );
 
-Post.hasMany(Comment, { foreignKey: "postId" });
+Post.hasMany(Comment, { foreignKey: "postId", onDelete: "CASCADE" });
 Comment.belongsTo(Post, { foreignKey: "postId" });
+
+User.hasMany(Comment, { foreignKey: "userId", onDelete: "CASCADE" }); // 追加
+Comment.belongsTo(User, { foreignKey: "userId" }); // 追加
 
 export { Comment };
