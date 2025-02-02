@@ -8,7 +8,10 @@ export default function CommentList({ comments }: CommentListProps) {
   return (
     <ul>
       {comments.map((comment) => (
-        <li key={comment.id}>{comment.content}</li>
+        <li key={comment.id}>
+          <h3>{comment.userId}</h3>
+          {comment.body}
+        </li>
       ))}
     </ul>
   );
