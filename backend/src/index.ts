@@ -1,6 +1,7 @@
 require("dotenv").config();
 import express, { Request, Response } from "express";
 import { User } from "./models/user";
+import { Comment } from "./models/comment";
 import bodyParser from "body-parser";
 import passport, { hash } from "./auth";
 import jwt from "jsonwebtoken";
@@ -373,5 +374,68 @@ app.get("/signedurl", async (req, res) => {
     return res
       .status(500)
       .json({ errorMessage: "署名付きURLの生成に失敗しました" });
+  }
+});
+
+// comments
+app.post(
+  "/posts/:id/comments",
+  passport.authenticate("jwt", { session: false }),
+  async (req: any, res: Response) => {
+    const user = req.user?.user;
+    console.log("User:", user); // ← ここで `req.user` が正しく取得できているか確認
+    console.log("User ID:", user?.id); // ← `id` もログに出す
+
+    if (!user) {
+      return res
+        .status(401)
+        .json({ errorMessage: "ユーザー情報が取得できませんでした" });
+    }
+
+    try {
+      const { body } = req.body;
+      if (!body) {
+        return res.status(400).json({ errorMessage: "コメント内容が空です" });
+      }
+
+      const comment = await Comment.create({
+        body,
+        userId: user.id, // ここが undefined になっている
+        postId: req.params.id,
+      });
+
+      res.json({ comment });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ errorMessage: "登録ができませんでした" });
+    }
+  }
+);
+
+// get comments
+app.get("/posts/:id/comments", async (req: any, res: Response) => {
+  try {
+    const postId = req.params.id;
+
+    const comments = await Comment.findAll({
+      where: { postId },
+      include: [
+        {
+          model: User,
+          attributes: ["id", "name"],
+        },
+      ],
+    });
+
+    if (comments.length === 0) {
+      return res.status(404).json({ errorMessage: "コメントが見つかりません" });
+    }
+
+    res.json({ comments });
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ errorMessage: "コメントの取得に失敗しました" });
   }
 });
