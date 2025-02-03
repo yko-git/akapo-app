@@ -21,6 +21,7 @@ class Comment extends Model<
   declare body: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+  declare user?: User;
 }
 
 Comment.init(
@@ -60,7 +61,11 @@ Comment.init(
 Post.hasMany(Comment, { foreignKey: "postId", onDelete: "CASCADE" });
 Comment.belongsTo(Post, { foreignKey: "postId" });
 
-User.hasMany(Comment, { foreignKey: "userId", onDelete: "CASCADE" }); // 追加
-Comment.belongsTo(User, { foreignKey: "userId" }); // 追加
+User.hasMany(Comment, {
+  foreignKey: "userId",
+  onDelete: "CASCADE",
+  as: "comments",
+});
+Comment.belongsTo(User, { as: "user", foreignKey: "userId" });
 
 export { Comment };
