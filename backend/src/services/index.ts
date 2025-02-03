@@ -6,6 +6,7 @@ import s3Client, {
 import Category from "../models/category";
 import { Post } from "../models/post";
 import { User } from "../models/user";
+import { Comment } from "../models/comment";
 
 // 共通の投稿取得関数
 export async function fetchPosts(params: { id?: string; query?: any }) {
@@ -96,4 +97,19 @@ function toCDNUrl(signedUrl: string) {
     `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
     `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
   );
+}
+
+// コメントの取得関数
+export async function fetchComments(postId: string) {
+  const comments = await Comment.findAll({
+    where: { postId },
+    include: [
+      {
+        model: User,
+        as: "user",
+        attributes: ["id", "name", "iconUrl", "iconSignedUrl"],
+      },
+    ],
+  });
+  return comments;
 }
