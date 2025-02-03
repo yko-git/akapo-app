@@ -17,6 +17,7 @@ import {
   updateSignedUrls,
   fetchPosts,
   updateIconSignedUrls,
+  fetchComments,
 } from "./services/index";
 
 if (!process.env.MYPEPPER || !process.env.JWT_SECRET) {
@@ -383,8 +384,6 @@ app.post(
   passport.authenticate("jwt", { session: false }),
   async (req: any, res: Response) => {
     const user = req.user?.user;
-    console.log("User:", user); // ← ここで `req.user` が正しく取得できているか確認
-    console.log("User ID:", user?.id); // ← `id` もログに出す
 
     if (!user) {
       return res
@@ -400,7 +399,7 @@ app.post(
 
       const comment = await Comment.create({
         body,
-        userId: user.id, // ここが undefined になっている
+        userId: user.id,
         postId: req.params.id,
       });
 
@@ -416,22 +415,17 @@ app.post(
 app.get("/posts/:id/comments", async (req: any, res: Response) => {
   try {
     const postId = req.params.id;
+    const comments = await fetchComments(postId);
+    const users = comments
+      .map((comment) => comment.user)
+      .filter((user) => user);
 
-    const comments = await Comment.findAll({
-      where: { postId },
-      include: [
-        {
-          model: User,
-          attributes: ["id", "name"],
-        },
-      ],
-    });
+    // ユーザーの署名付きURLを更新
+    const updatedUsers = await Promise.all(
+      users.map((user) => updateIconSignedUrls(user))
+    );
 
-    if (comments.length === 0) {
-      return res.status(404).json({ errorMessage: "コメントが見つかりません" });
-    }
-
-    res.json({ comments });
+    return res.json({ comments, users: updatedUsers });
   } catch (err) {
     console.error(err);
     return res
