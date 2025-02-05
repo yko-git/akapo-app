@@ -20,13 +20,13 @@ export default function CommentList({ comments, id }: CommentListProps) {
                 isOwn ? "flex-row" : "flex-row-reverse"
               }`}
             >
-              <div className="inline-block text-center mt-2">
+              <div className="inline-block text-center">
                 <Image
-                  className="inline-block mr-2 rounded-full object-cover w-[50px] h-[50px] border-[#6C9FE0] border-4"
+                  className="inline-block mr-2 rounded-full object-cover w-[65px] h-[65px] border-[#6C9FE0] border-2"
                   src={comment.user.iconSignedUrl}
                   alt={comment.user.name}
-                  width={50}
-                  height={50}
+                  width={65}
+                  height={65}
                   loading="lazy"
                 />
                 <p className="text-[12px] mt-1">{comment.user.name}</p>
