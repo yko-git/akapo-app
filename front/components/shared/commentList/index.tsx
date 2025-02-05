@@ -22,7 +22,7 @@ export default function CommentList({ comments, id }: CommentListProps) {
             >
               <div className="inline-block text-center mt-2">
                 <Image
-                  className="inline-block rounded-full object-cover w-[50px] h-[50px] border-[#6C9FE0] border-[4px]"
+                  className="inline-block mr-2 rounded-full object-cover w-[50px] h-[50px] border-[#6C9FE0] border-4"
                   src={comment.user.iconSignedUrl}
                   alt={comment.user.name}
                   width={50}
