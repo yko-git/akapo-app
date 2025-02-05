@@ -40,6 +40,10 @@ export interface NewPost {
   imageKey?: string;
 }
 
+export interface NewComment {
+  body: string;
+}
+
 export interface TagListProps {
   Categories?: Array<{ name: string }>;
 }
@@ -48,6 +52,20 @@ interface NewLogin {
   loginId: string;
   password: string;
 }
+
+export type CommentProps = {
+  id: number;
+  postId: number;
+  userId: number;
+  body: string;
+  createdAt: string;
+  updatedAt: string;
+  user: {
+    name: string;
+    iconSignedUrl: string;
+    id: number;
+  };
+};
 
 // axiosインスタンス
 const instance = axios.create({
@@ -197,4 +215,23 @@ export async function uploadImage(file: File) {
 
     return { signedUrl, safeFilePath };
   }
+}
+
+// コメントデータ取得関数
+export async function fetchComments({
+  postId,
+}: {
+  postId: number;
+}): Promise<CommentProps[]> {
+  const response = await instance.get(`posts/${postId}/comments`);
+  return response.data.comments;
+}
+
+// コメント投稿関数
+export async function createComment(
+  postId: number,
+  postData: NewComment
+): Promise<CommentProps> {
+  const response = await instance.post(`posts/${postId}/comments`, postData);
+  return response.data.comments;
 }

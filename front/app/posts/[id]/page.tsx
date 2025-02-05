@@ -7,9 +7,7 @@ export default function Page() {
   const postId = Number(id);
   return (
     <div className="m-4">
-      <div className="wrapper">
-        <Article id={postId} />
-      </div>
+      <Article id={postId} />
     </div>
   );
 }
