@@ -6,10 +6,10 @@ import CreateComment from "../createComment";
 interface CommentsProps {
   comments: CommentProps[];
   postId: number;
-  isOwn: boolean;
+  id: number;
 }
 
-export default function Comment({ comments, postId, isOwn }: CommentsProps) {
+export default function Comment({ comments, postId, id }: CommentsProps) {
   return (
     <>
       <div className="py-20 text-center bg-[#F5F8FD] -mt-8">
@@ -20,7 +20,7 @@ export default function Comment({ comments, postId, isOwn }: CommentsProps) {
             COMMENTS
           </h2>
           <div className="text-left">
-            <CommentList comments={comments} isOwn={isOwn} />
+            <CommentList comments={comments} id={id} />
             <CreateComment postId={postId} />
           </div>
         </div>

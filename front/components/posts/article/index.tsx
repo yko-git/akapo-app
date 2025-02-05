@@ -1,12 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Post } from "@/api/fetchData";
-import {
-  fetchPost,
-  fetchComments,
-  CommentProps,
-  fetchUserData,
-} from "@/api/fetchData";
+import { fetchPost, fetchComments, CommentProps } from "@/api/fetchData";
 import Image from "next/image";
 import TagList from "@/components/shared/tagList";
 import Photo from "@/components/shared/photo";
@@ -15,21 +10,14 @@ import Comment from "@/components/shared/comment";
 export default function Article({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
   const [comments, setComments] = useState<CommentProps[]>([]);
-  const [isOwn, setIsOwn] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const userData = await fetchUserData();
-        if (id === userData?.id) {
-          console.log(`${userData?.name}ユーザーが投稿した記事です`);
-          setIsOwn(true);
-        }
         const post = await fetchPost({ id });
         if (Array.isArray(post) && post.length > 0) {
           setData(post[0]);
         }
-
         const commentList = await fetchComments({ postId: id });
         setComments(commentList);
       } catch (error) {
@@ -98,7 +86,7 @@ export default function Article({ id }: { id: number }) {
           </div>
         </div>
       </div>
-      <Comment comments={comments} postId={id} isOwn={isOwn} />
+      <Comment comments={comments} postId={id} id={id} />
     </>
   );
 }

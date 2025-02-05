@@ -63,6 +63,7 @@ export type CommentProps = {
   user: {
     name: string;
     iconSignedUrl: string;
+    id: number;
   };
 };
 
