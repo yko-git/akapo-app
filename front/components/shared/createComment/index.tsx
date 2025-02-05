@@ -19,11 +19,11 @@ export default function CreateComment({ postId }: { postId: number }) {
   return (
     <div className="mt-20">
       <div>
-        <div>コメント内容</div>
+        <div className="font-bold">コメントをいれる</div>
         <textarea
           value={body}
           onChange={(e) => setBody(e.target.value)}
-          className="border rounded p-2 w-full"
+          className="border rounded p-2 w-full mt-2"
         />
       </div>
       <div className="text-right mt-4">
