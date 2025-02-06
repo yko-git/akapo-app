@@ -422,6 +422,13 @@ app.post(
 app.get("/posts/:id/comments", async (req: any, res: Response) => {
   try {
     const postId = req.params.id;
+    const post = await Post.findOne({ where: { id: postId } });
+    if (!post) {
+      return res
+        .status(404)
+        .json({ errorMessage: "指定された投稿が存在しません" });
+    }
+
     const comments = await fetchComments(postId);
     const users = comments
       .map((comment) => comment.user)
