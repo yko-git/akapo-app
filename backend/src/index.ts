@@ -397,6 +397,13 @@ app.post(
         return res.status(400).json({ errorMessage: "コメント内容が空です" });
       }
 
+      const post = await Post.findOne({ where: { id: req.params.id } });
+      if (!post) {
+        return res
+          .status(404)
+          .json({ errorMessage: "指定された投稿が存在しません" });
+      }
+
       const comment = await Comment.create({
         body,
         userId: user.id,
