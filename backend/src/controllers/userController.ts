@@ -19,7 +19,9 @@ export const getUser = async (req: any, res: Response) => {
     res.json({ user: updatedUser });
   } catch (err) {
     console.log(err);
-    return res.status(401).json({ errorMessage: "投稿が取得できませんでした" });
+    return res
+      .status(500)
+      .json({ errorMessage: "ユーザー情報の取得に失敗しました" });
   }
 };
 
@@ -37,13 +39,13 @@ export const userPosts = async (req: any, res: Response) => {
     if (!instance) {
       return res
         .status(404)
-        .json({ errorMessage: "ユーザーの投稿が取得できませんでした" });
+        .json({ errorMessage: "ユーザーが見つかりませんでした" });
     }
     const posts = await instance.posts(status);
     const updatedPosts = await updateSignedUrls(posts);
     res.json({ posts: updatedPosts });
   } catch (err) {
     console.log(err);
-    return res.status(401).json({ errorMessage: "投稿が取得できませんでした" });
+    return res.status(500).json({ errorMessage: "投稿の取得に失敗しました" });
   }
 };
