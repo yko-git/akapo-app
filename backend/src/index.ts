@@ -1,25 +1,14 @@
 require("dotenv").config();
 import express, { Request, Response } from "express";
 import { User } from "./models/user";
-import { Comment } from "./models/comment";
 import bodyParser from "body-parser";
 import passport, { hash } from "./auth";
-import { Post } from "./models/post";
-import {
-  generateExpiresAt,
-  getSignedUrl,
-  signedURLConfig,
-  putSignedUrl,
-} from "./aws";
+import { signedURLConfig, putSignedUrl } from "./aws";
 import cors from "cors";
-import {
-  updateSignedUrls,
-  fetchPosts,
-  updateIconSignedUrls,
-  fetchComments,
-} from "./services/index";
+import { updateSignedUrls, updateIconSignedUrls } from "./services/index";
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/user";
+import postsRoutes from "./routes/posts";
 
 if (!process.env.MYPEPPER || !process.env.JWT_SECRET) {
   console.error("env vars are not set.");
@@ -52,180 +41,71 @@ app.use(bodyParser.json());
 
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+app.use("/posts", postsRoutes);
 
 // index
 app.get("/", (req: Request, res: Response) => {
   res.send({ message: "ok" });
 });
 
-// posts
-app.post(
-  "/posts",
+// user
+app.get(
+  "/user",
   passport.authenticate("jwt", { session: false }),
   async (req: any, res: Response) => {
+    try {
+      const userId = req.user.user.id;
+      const user = await User.findByPk(userId);
+
+      if (!user) {
+        return res.json({
+          errorMessage: "ユーザーが見つかりませんでした",
+        });
+      }
+
+      // ユーザーのアイコン画像の署名付きURLを更新
+      const updatedUser = await updateIconSignedUrls(user);
+
+      res.json({ user: updatedUser });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(401)
+        .json({ errorMessage: "投稿が取得できませんでした" });
+    }
+  }
+);
+
+// /user/posts
+app.get(
+  "/user/posts",
+  passport.authenticate("jwt", {
+    session: false,
+  }),
+  async (req: any, res: Response) => {
     const { user } = req.user;
+    const status = req.query.status;
     if (!user) {
       return res
         .status(401)
         .json({ errorMessage: "ユーザー情報が取得できませんでした" });
     }
+
     try {
-      const { post: params } = req.body;
-      const { title, body, status, categoryIds, imageKey } = params || {};
-
-      // DBに保存用 画像ダウンロード用の署名付きURLを生成
-      const signedUrl = await getSignedUrl({
-        ...signedURLConfig,
-        Key: imageKey,
-      });
-
-      // 画像ダウンロード用の署名付きURLと有効期限も含めてDBに投稿
-      const post = Post.build({
-        userId: user.id,
-        title,
-        body,
-        status,
-        imageKey,
-        signedUrl,
-        urlExpiresAt: generateExpiresAt(),
-      });
-
-      await post.upsert(categoryIds);
-      res.json({ post });
-    } catch (err) {
-      console.log(err);
-      return res.status(401).json({ errorMessage: "登録ができませんでした" });
-    }
-  }
-);
-
-app.get(
-  "/posts",
-  passport.authenticate("jwt", { session: false }),
-  async (req: any, res) => {
-    try {
-      const query = req.query;
-
-      const posts = await fetchPosts({ query });
-      const users = posts.map((post) => post.user!);
-
+      const instance = await User.findByPk(user.id);
+      if (!instance) {
+        return res
+          .status(404)
+          .json({ errorMessage: "ユーザーの投稿が取得できませんでした" });
+      }
+      const posts = await instance.posts(status);
       const updatedPosts = await updateSignedUrls(posts);
-      const updatedUsers = await Promise.all(
-        users.map((user) => updateIconSignedUrls(user))
-      );
-
-      return res.json({ posts: updatedPosts, users: updatedUsers });
-    } catch (err) {
-      console.error("投稿の取得中にエラーが発生しました:", err);
-      return res
-        .status(500)
-        .json({ errorMessage: "投稿リストを取得できませんでした" });
-    }
-  }
-);
-
-app.get(
-  "/posts/:id",
-  passport.authenticate("jwt", { session: false }),
-  async (req: any, res) => {
-    const { id } = req.params;
-    const posts = await fetchPosts({ id });
-    const users = posts.map((post) => post.user!);
-
-    if (!posts || posts.length === 0) {
-      return res
-        .status(404)
-        .json({ errorMessage: "投稿が取得できませんでした" });
-    }
-
-    const updatedPosts = await updateSignedUrls(posts);
-    const updatedUser = await Promise.all(
-      users.map((user) => updateIconSignedUrls(user))
-    );
-    return res.json({ posts: updatedPosts, user: updatedUser });
-  }
-);
-
-app.patch(
-  "/posts/:id",
-  passport.authenticate("jwt", { session: false }),
-  async (req: any, res) => {
-    try {
-      const requestParams = req.params;
-      const id = requestParams.id;
-
-      const { post: params } = req.body;
-      const { title, body, status, categoryIds, imageKey } = params || {};
-
-      const post = await Post.findOne({
-        where: {
-          id,
-        },
-      });
-      if (!post) {
-        return res
-          .status(404)
-          .json({ errorMessage: "投稿が取得できませんでした" });
-      }
-
-      if (params.imageKey) {
-        const signedUrl = await getSignedUrl({
-          ...signedURLConfig,
-          Key: imageKey,
-        });
-        const urlExpiresAt = generateExpiresAt();
-        post.set({
-          imageKey: params.imageKey,
-          signedUrl,
-          urlExpiresAt,
-        });
-      }
-
-      post.set({
-        title,
-        body,
-        status,
-      });
-      if (categoryIds) {
-        await post.setCategories(categoryIds);
-      }
-
-      await post.save();
-
-      res.json({ post: { ...post.toJSON(), imageUrl: post.signedUrl } });
-    } catch (err) {
-      console.log(err);
-      return res.status(401).json({ errorMessage: "登録ができませんでした" });
-    }
-  }
-);
-
-app.delete(
-  "/posts/:id",
-  passport.authenticate("jwt", { session: false }),
-  async (req: any, res) => {
-    try {
-      const requestParams = req.params;
-      const id = requestParams.id;
-
-      const post = await Post.findOne({
-        where: {
-          id,
-        },
-      });
-      if (!post) {
-        return res
-          .status(404)
-          .json({ errorMessage: "投稿が取得できませんでした" });
-      }
-
-      await post.delete();
-      res.json({ post });
+      res.json({ posts: updatedPosts });
     } catch (err) {
       console.log(err);
       return res
         .status(401)
-        .json({ errorMessage: "投稿の削除ができませんでした" });
+        .json({ errorMessage: "投稿が取得できませんでした" });
     }
   }
 );
@@ -247,75 +127,5 @@ app.get("/signedurl", async (req, res) => {
     return res
       .status(500)
       .json({ errorMessage: "署名付きURLの生成に失敗しました" });
-  }
-});
-
-// comments
-app.post(
-  "/posts/:id/comments",
-  passport.authenticate("jwt", { session: false }),
-  async (req: any, res: Response) => {
-    const user = req.user?.user;
-
-    if (!user) {
-      return res
-        .status(401)
-        .json({ errorMessage: "ユーザー情報が取得できませんでした" });
-    }
-
-    try {
-      const { body } = req.body;
-      if (!body) {
-        return res.status(400).json({ errorMessage: "コメント内容が空です" });
-      }
-
-      const post = await Post.findOne({ where: { id: req.params.id } });
-      if (!post) {
-        return res
-          .status(404)
-          .json({ errorMessage: "指定された投稿が存在しません" });
-      }
-
-      const comment = await Comment.create({
-        body,
-        userId: user.id,
-        postId: req.params.id,
-      });
-
-      res.json({ comment });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({ errorMessage: "登録ができませんでした" });
-    }
-  }
-);
-
-// get comments
-app.get("/posts/:id/comments", async (req: any, res: Response) => {
-  try {
-    const postId = req.params.id;
-    const post = await Post.findOne({ where: { id: postId } });
-    if (!post) {
-      return res
-        .status(404)
-        .json({ errorMessage: "指定された投稿が存在しません" });
-    }
-
-    const comments = await fetchComments(postId);
-    const users = comments
-      .map((comment) => comment.user)
-      .filter((user) => user);
-
-    // ユーザーの署名付きURLを更新
-    const updatedUsers = await Promise.all(
-      users.map((user) => updateIconSignedUrls(user))
-    );
-
-    return res.json({ comments, users: updatedUsers });
-  } catch (err) {
-    console.error(err);
-    return res
-      .status(500)
-      .json({ errorMessage: "コメントの取得に失敗しました" });
   }
 });
