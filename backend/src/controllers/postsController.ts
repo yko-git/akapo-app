@@ -1,0 +1,250 @@
+import express, { Response } from "express";
+import { Post } from "../models/post";
+import { User } from "../models/user";
+import { Comment } from "../models/comment";
+import {
+  updateIconSignedUrls,
+  updateSignedUrls,
+  fetchPosts,
+  fetchComments,
+} from "../services";
+import { getSignedUrl, signedURLConfig, generateExpiresAt } from "../aws";
+
+export const createPosts = async (req: any, res: Response) => {
+  const { user } = req.user;
+  if (!user) {
+    return res
+      .status(401)
+      .json({ errorMessage: "ユーザー情報が取得できませんでした" });
+  }
+  try {
+    const { post: params } = req.body;
+    const { title, body, status, categoryIds, imageKey } = params || {};
+
+    // DBに保存用 画像ダウンロード用の署名付きURLを生成
+    const signedUrl = await getSignedUrl({
+      ...signedURLConfig,
+      Key: imageKey,
+    });
+
+    // 画像ダウンロード用の署名付きURLと有効期限も含めてDBに投稿
+    const post = Post.build({
+      userId: user.id,
+      title,
+      body,
+      status,
+      imageKey,
+      signedUrl,
+      urlExpiresAt: generateExpiresAt(),
+    });
+
+    await post.upsert(categoryIds);
+    res.json({ post });
+  } catch (err) {
+    console.log(err);
+    return res.status(401).json({ errorMessage: "登録ができませんでした" });
+  }
+};
+
+export const userPosts = async (req: any, res: Response) => {
+  const { user } = req.user;
+  const status = req.query.status;
+  if (!user) {
+    return res
+      .status(401)
+      .json({ errorMessage: "ユーザー情報が取得できませんでした" });
+  }
+
+  try {
+    const instance = await User.findByPk(user.id);
+    if (!instance) {
+      return res
+        .status(404)
+        .json({ errorMessage: "ユーザーの投稿が取得できませんでした" });
+    }
+    const posts = await instance.posts(status);
+    const updatedPosts = await updateSignedUrls(posts);
+    res.json({ posts: updatedPosts });
+  } catch (err) {
+    console.log(err);
+    return res.status(401).json({ errorMessage: "投稿が取得できませんでした" });
+  }
+};
+
+export const getPostsList = async (req: any, res: Response) => {
+  try {
+    const query = req.query;
+
+    const posts = await fetchPosts({ query });
+    const users = posts.map((post) => post.user!);
+
+    const updatedPosts = await updateSignedUrls(posts);
+    const updatedUsers = await Promise.all(
+      users.map((user) => updateIconSignedUrls(user))
+    );
+
+    return res.json({ posts: updatedPosts, users: updatedUsers });
+  } catch (err) {
+    console.error("投稿の取得中にエラーが発生しました:", err);
+    return res
+      .status(500)
+      .json({ errorMessage: "投稿リストを取得できませんでした" });
+  }
+};
+
+export const getPost = async (req: any, res: Response) => {
+  const { id } = req.params;
+  const posts = await fetchPosts({ id });
+  const users = posts.map((post) => post.user!);
+
+  if (!posts || posts.length === 0) {
+    return res.status(404).json({ errorMessage: "投稿が取得できませんでした" });
+  }
+
+  const updatedPosts = await updateSignedUrls(posts);
+  const updatedUser = await Promise.all(
+    users.map((user) => updateIconSignedUrls(user))
+  );
+  return res.json({ posts: updatedPosts, user: updatedUser });
+};
+
+export const patchPost = async (req: any, res: Response) => {
+  try {
+    const requestParams = req.params;
+    const id = requestParams.id;
+
+    const { post: params } = req.body;
+    const { title, body, status, categoryIds, imageKey } = params || {};
+
+    const post = await Post.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!post) {
+      return res
+        .status(404)
+        .json({ errorMessage: "投稿が取得できませんでした" });
+    }
+
+    if (params.imageKey) {
+      const signedUrl = await getSignedUrl({
+        ...signedURLConfig,
+        Key: imageKey,
+      });
+      const urlExpiresAt = generateExpiresAt();
+      post.set({
+        imageKey: params.imageKey,
+        signedUrl,
+        urlExpiresAt,
+      });
+    }
+
+    post.set({
+      title,
+      body,
+      status,
+    });
+    if (categoryIds) {
+      await post.setCategories(categoryIds);
+    }
+
+    await post.save();
+
+    res.json({ post: { ...post.toJSON(), imageUrl: post.signedUrl } });
+  } catch (err) {
+    console.log(err);
+    return res.status(401).json({ errorMessage: "登録ができませんでした" });
+  }
+};
+
+export const deletePost = async (req: any, res: Response) => {
+  try {
+    const requestParams = req.params;
+    const id = requestParams.id;
+
+    const post = await Post.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!post) {
+      return res
+        .status(404)
+        .json({ errorMessage: "投稿が取得できませんでした" });
+    }
+
+    await post.delete();
+    res.json({ post });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(401)
+      .json({ errorMessage: "投稿の削除ができませんでした" });
+  }
+};
+
+export const createComment = async (req: any, res: Response) => {
+  const user = req.user?.user;
+
+  if (!user) {
+    return res
+      .status(401)
+      .json({ errorMessage: "ユーザー情報が取得できませんでした" });
+  }
+
+  try {
+    const { body } = req.body;
+    if (!body) {
+      return res.status(400).json({ errorMessage: "コメント内容が空です" });
+    }
+
+    const post = await Post.findOne({ where: { id: req.params.id } });
+    if (!post) {
+      return res
+        .status(404)
+        .json({ errorMessage: "指定された投稿が存在しません" });
+    }
+
+    const comment = await Comment.create({
+      body,
+      userId: user.id,
+      postId: req.params.id,
+    });
+
+    res.json({ comment });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ errorMessage: "登録ができませんでした" });
+  }
+};
+
+// get comments
+export const getComment = async (req: any, res: Response) => {
+  try {
+    const postId = req.params.id;
+    const post = await Post.findOne({ where: { id: postId } });
+    if (!post) {
+      return res
+        .status(404)
+        .json({ errorMessage: "指定された投稿が存在しません" });
+    }
+
+    const comments = await fetchComments(postId);
+    const users = comments
+      .map((comment) => comment.user)
+      .filter((user) => user);
+
+    // ユーザーの署名付きURLを更新
+    const updatedUsers = await Promise.all(
+      users.map((user) => updateIconSignedUrls(user))
+    );
+
+    return res.json({ comments, users: updatedUsers });
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ errorMessage: "コメントの取得に失敗しました" });
+  }
+};
