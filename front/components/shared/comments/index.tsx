@@ -1,15 +1,15 @@
 import { jost } from "@/components/shared/font";
 import CommentList from "../commentList";
-import { CommentProps } from "@/api/fetchData";
+import { Comment } from "@/api/fetchData";
 import CreateComment from "../createComment";
 
 interface CommentsProps {
-  comments: CommentProps[];
+  comments: Comment[];
   postId: number;
   id: number;
 }
 
-export default function Comment({ comments, postId, id }: CommentsProps) {
+export default function Comments({ comments, postId, id }: CommentsProps) {
   return (
     <>
       <div className="py-20 text-center bg-[#F5F8FD] -mt-8">
