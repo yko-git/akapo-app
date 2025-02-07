@@ -1,15 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Post } from "@/api/fetchData";
-import { fetchPost, fetchComments, CommentProps } from "@/api/fetchData";
+import { fetchPost, fetchComments, Comment } from "@/api/fetchData";
 import Image from "next/image";
 import TagList from "@/components/shared/tagList";
 import Photo from "@/components/shared/photo";
-import Comment from "@/components/shared/comment";
+import Comments from "@/components/shared/comments";
 
 export default function Article({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
-  const [comments, setComments] = useState<CommentProps[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -86,7 +86,7 @@ export default function Article({ id }: { id: number }) {
           </div>
         </div>
       </div>
-      <Comment comments={comments} postId={id} id={id} />
+      <Comments comments={comments} postId={id} id={id} />
     </>
   );
 }

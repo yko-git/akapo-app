@@ -53,7 +53,7 @@ interface NewLogin {
   password: string;
 }
 
-export type CommentProps = {
+export type Comment = {
   id: number;
   postId: number;
   userId: number;
@@ -222,7 +222,7 @@ export async function fetchComments({
   postId,
 }: {
   postId: number;
-}): Promise<CommentProps[]> {
+}): Promise<Comment[]> {
   const response = await instance.get(`posts/${postId}/comments`);
   return response.data.comments;
 }
@@ -231,7 +231,7 @@ export async function fetchComments({
 export async function createComment(
   postId: number,
   postData: NewComment
-): Promise<CommentProps> {
+): Promise<Comment> {
   const response = await instance.post(`posts/${postId}/comments`, postData);
   return response.data.comments;
 }

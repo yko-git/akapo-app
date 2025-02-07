@@ -1,8 +1,8 @@
-import { CommentProps } from "@/api/fetchData";
+import { Comment } from "@/api/fetchData";
 import Image from "next/image";
 
 interface CommentListProps {
-  comments: CommentProps[];
+  comments: Comment[];
   id: number;
 }
 
