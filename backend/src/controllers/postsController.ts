@@ -42,7 +42,7 @@ export const createPosts = async (req: any, res: Response) => {
     res.json({ post });
   } catch (err) {
     console.log(err);
-    return res.status(401).json({ errorMessage: "登録ができませんでした" });
+    return res.status(500).json({ errorMessage: "投稿の作成に失敗しました" });
   }
 };
 
@@ -67,7 +67,7 @@ export const userPosts = async (req: any, res: Response) => {
     res.json({ posts: updatedPosts });
   } catch (err) {
     console.log(err);
-    return res.status(401).json({ errorMessage: "投稿が取得できませんでした" });
+    return res.status(500).json({ errorMessage: "投稿が取得できませんでした" });
   }
 };
 
@@ -154,7 +154,7 @@ export const patchPost = async (req: any, res: Response) => {
     res.json({ post: { ...post.toJSON(), imageUrl: post.signedUrl } });
   } catch (err) {
     console.log(err);
-    return res.status(401).json({ errorMessage: "登録ができませんでした" });
+    return res.status(500).json({ errorMessage: "投稿の更新に失敗しました" });
   }
 };
 
@@ -179,7 +179,7 @@ export const deletePost = async (req: any, res: Response) => {
   } catch (err) {
     console.log(err);
     return res
-      .status(401)
+      .status(500)
       .json({ errorMessage: "投稿の削除ができませんでした" });
   }
 };
@@ -203,7 +203,7 @@ export const createComment = async (req: any, res: Response) => {
     if (!post) {
       return res
         .status(404)
-        .json({ errorMessage: "指定された投稿が存在しません" });
+        .json({ errorMessage: "該当する投稿が見つかりませんでした" });
     }
 
     const comment = await Comment.create({
@@ -215,7 +215,9 @@ export const createComment = async (req: any, res: Response) => {
     res.json({ comment });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ errorMessage: "登録ができませんでした" });
+    return res
+      .status(500)
+      .json({ errorMessage: "コメントの投稿に失敗しました" });
   }
 };
 
@@ -227,7 +229,7 @@ export const getComment = async (req: any, res: Response) => {
     if (!post) {
       return res
         .status(404)
-        .json({ errorMessage: "指定された投稿が存在しません" });
+        .json({ errorMessage: "該当する投稿が見つかりませんでした" });
     }
 
     const comments = await fetchComments(postId);
