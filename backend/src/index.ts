@@ -1,11 +1,9 @@
 require("dotenv").config();
 import express, { Request, Response } from "express";
-import { User } from "./models/user";
 import bodyParser from "body-parser";
 import passport, { hash } from "./auth";
 import { signedURLConfig, putSignedUrl } from "./aws";
 import cors from "cors";
-import { updateSignedUrls, updateIconSignedUrls } from "./services/index";
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/user";
 import postsRoutes from "./routes/posts";
