@@ -6,12 +6,6 @@ export default function Page() {
   return (
     <>
       <Main />
-      <hr />
-      <div className="m-4 wrapper text-right">
-        <Link href="/posts/new">
-          <Button>新しい投稿を作成</Button>
-        </Link>
-      </div>
     </>
   );
 }
