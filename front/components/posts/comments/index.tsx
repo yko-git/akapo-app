@@ -1,7 +1,7 @@
 import { jost } from "@/components/shared/font";
-import CommentList from "../commentList";
+import CommentList from "@/components/posts/commentList";
 import { Comment } from "@/api/fetchData";
-import CreateComment from "../createComment";
+import CreateComment from "@/components/posts/createComment";
 
 interface CommentsProps {
   comments: Comment[];

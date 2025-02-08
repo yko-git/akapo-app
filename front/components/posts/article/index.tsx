@@ -5,7 +5,7 @@ import { fetchPost, fetchComments, Comment } from "@/api/fetchData";
 import Image from "next/image";
 import TagList from "@/components/shared/tagList";
 import Photo from "@/components/shared/photo";
-import Comments from "@/components/shared/comments";
+import Comments from "@/components/posts/comments";
 
 export default function Article({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
