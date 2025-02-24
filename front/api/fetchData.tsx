@@ -1,4 +1,5 @@
 import axios from "axios";
+require("dotenv").config();
 
 export interface User {
   id: number;
@@ -69,7 +70,7 @@ export type Comment = {
 
 // axiosインスタンス
 const instance = axios.create({
-  baseURL: "http://localhost:3001/",
+  baseURL: `${process.env.REACT_APP_API_URL}`,
 });
 
 // トークンの設定
