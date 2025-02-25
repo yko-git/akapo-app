@@ -70,8 +70,9 @@ export type Comment = {
 
 // axiosインスタンス
 const instance = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}`,
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
 });
+console.log("API Base URL:", process.env.NEXT_PUBLIC_API_URL);
 
 // トークンの設定
 instance.interceptors.request.use((config) => {
