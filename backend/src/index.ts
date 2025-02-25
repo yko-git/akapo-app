@@ -23,7 +23,7 @@ app.listen(3001);
 
 app.use(
   cors({
-    origin: `${process.env.REACT_APP_API_URL}`,
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );
