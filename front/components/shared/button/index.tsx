@@ -20,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className={`text-white focus:ring-4 font-semibold tracking-widest rounded-lg text-sm px-5 py-2.5 me-2 mb-2 whitespace-nowrap ${buttonColor}`}
+      className={`text-white focus:ring-4 font-semibold tracking-widest rounded-lg text-sm px-5 py-2.5 mb-2 whitespace-nowrap ${buttonColor}`}
     >
       {children}
     </button>

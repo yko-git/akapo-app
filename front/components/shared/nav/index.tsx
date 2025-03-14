@@ -3,7 +3,11 @@ import { jost } from "@/components/shared/font";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-export function Nav() {
+export interface NavProps {
+  login: boolean;
+}
+
+export const Nav = ({ login }: NavProps) => {
   const navs = [
     {
       name: "HOME",
@@ -12,18 +16,6 @@ export function Nav() {
     {
       name: "GALLERY",
       link: "/posts",
-    },
-    {
-      name: "ABOUT",
-      link: "/about",
-    },
-    {
-      name: "SIGNUP",
-      link: "/signup",
-    },
-    {
-      name: "LOGIN",
-      link: "/login",
     },
     {
       name: "MYPAGE",
@@ -36,8 +28,8 @@ export function Nav() {
     <>
       {navs.map((n) => {
         const isActive = pathname.endsWith(n.link);
-        return (
-          <li key={JSON.stringify(n.name)} className="px-4">
+        return login ? (
+          <li key={n.name} className="px-4">
             <Link
               href={n.link}
               className={`${jost.className} ${
@@ -49,8 +41,8 @@ export function Nav() {
               {n.name}
             </Link>
           </li>
-        );
+        ) : null;
       })}
     </>
   );
-}
+};

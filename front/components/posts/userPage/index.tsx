@@ -26,6 +26,11 @@ const UserPage = () => {
 
     fetchData();
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
   return (
     <div className="">
       {userProfile ? (
@@ -47,6 +52,9 @@ const UserPage = () => {
       ) : (
         <p>ユーザー情報を読み込んでいます...</p>
       )}
+      <div className="mt-8 text-right">
+        <Button onClick={handleLogout}>ログアウト</Button>
+      </div>
       <div className="mt-8">
         <UserArticleList data={data} setData={setData} />
       </div>
