@@ -25,7 +25,7 @@ const LoginUser = () => {
   };
 
   return (
-    <div className="flex flex-col p-5 space-y-4">
+    <div className="flex flex-col space-y-4">
       <div>
         <label>ログインID</label>
         <input
