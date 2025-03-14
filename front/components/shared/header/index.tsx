@@ -6,11 +6,7 @@ import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Nav } from "@/components/shared/nav";
 
-export interface HeaderProps {
-  token: string | null;
-}
-
-export default function Header({ token }: HeaderProps) {
+export default function Header() {
   const [login, setLogin] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -51,7 +47,7 @@ export default function Header({ token }: HeaderProps) {
                 <Nav login={login} />
               </ul>
             </nav>
-            {login ? (
+            {login && (
               <button
                 onClick={toggleHamburger}
                 type="button"
@@ -71,8 +67,6 @@ export default function Header({ token }: HeaderProps) {
                 </svg>
                 Menu
               </button>
-            ) : (
-              <></>
             )}
           </header>
         </div>
