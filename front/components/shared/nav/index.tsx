@@ -28,22 +28,20 @@ export const Nav = ({ login }: NavProps) => {
     <>
       {navs.map((n) => {
         const isActive = pathname.endsWith(n.link);
-        if (login) {
-          return (
-            <li key={JSON.stringify(n.name)} className="px-4">
-              <Link
-                href={n.link}
-                className={`${jost.className} ${
-                  isActive
-                    ? "border-b-2 border-[#6C9FE0] text-sm font-[15px] text-[#6C9FE0] tracking-[.2rem]"
-                    : "text-sm font-[15px] text-[#6C9FE0] tracking-[.2rem]"
-                } `}
-              >
-                {n.name}
-              </Link>
-            </li>
-          );
-        }
+        return login ? (
+          <li key={n.name} className="px-4">
+            <Link
+              href={n.link}
+              className={`${jost.className} ${
+                isActive
+                  ? "border-b-2 border-[#6C9FE0] text-sm font-[15px] text-[#6C9FE0] tracking-[.2rem]"
+                  : "text-sm font-[15px] text-[#6C9FE0] tracking-[.2rem]"
+              } `}
+            >
+              {n.name}
+            </Link>
+          </li>
+        ) : null;
       })}
     </>
   );
