@@ -27,7 +27,7 @@ export const Nav = ({ login }: Nav) => {
   return (
     <>
       {navs.map((n) => {
-        const isActive = pathname.endsWith(n.link);
+        const isActive = new RegExp(`^${n.link}(/.*)?$`).test(pathname);
         return login ? (
           <li key={n.name} className="px-4">
             <Link
