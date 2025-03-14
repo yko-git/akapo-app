@@ -3,11 +3,11 @@ import { jost } from "@/components/shared/font";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-export interface NavProps {
+export interface Nav {
   login: boolean;
 }
 
-export const Nav = ({ login }: NavProps) => {
+export const Nav = ({ login }: Nav) => {
   const navs = [
     {
       name: "HOME",
