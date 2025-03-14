@@ -3,12 +3,11 @@ import { jost } from "@/components/shared/font";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-export function Nav() {
-  const token = localStorage.getItem("token");
-  let login = false;
-  if (token) {
-    login = true;
-  }
+export interface NavProps {
+  login: boolean;
+}
+
+export const Nav = ({ login }: NavProps) => {
   const navs = [
     {
       name: "HOME",
@@ -48,4 +47,4 @@ export function Nav() {
       })}
     </>
   );
-}
+};
