@@ -4,6 +4,11 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 export function Nav() {
+  const token = localStorage.getItem("token");
+  let login = false;
+  if (token) {
+    login = true;
+  }
   const navs = [
     {
       name: "HOME",
@@ -12,18 +17,6 @@ export function Nav() {
     {
       name: "GALLERY",
       link: "/posts",
-    },
-    {
-      name: "ABOUT",
-      link: "/about",
-    },
-    {
-      name: "SIGNUP",
-      link: "/signup",
-    },
-    {
-      name: "LOGIN",
-      link: "/login",
     },
     {
       name: "MYPAGE",
@@ -36,20 +29,22 @@ export function Nav() {
     <>
       {navs.map((n) => {
         const isActive = pathname.endsWith(n.link);
-        return (
-          <li key={JSON.stringify(n.name)} className="px-4">
-            <Link
-              href={n.link}
-              className={`${jost.className} ${
-                isActive
-                  ? "border-b-2 border-[#6C9FE0] text-sm font-[15px] text-[#6C9FE0] tracking-[.2rem]"
-                  : "text-sm font-[15px] text-[#6C9FE0] tracking-[.2rem]"
-              } `}
-            >
-              {n.name}
-            </Link>
-          </li>
-        );
+        if (login) {
+          return (
+            <li key={JSON.stringify(n.name)} className="px-4">
+              <Link
+                href={n.link}
+                className={`${jost.className} ${
+                  isActive
+                    ? "border-b-2 border-[#6C9FE0] text-sm font-[15px] text-[#6C9FE0] tracking-[.2rem]"
+                    : "text-sm font-[15px] text-[#6C9FE0] tracking-[.2rem]"
+                } `}
+              >
+                {n.name}
+              </Link>
+            </li>
+          );
+        }
       })}
     </>
   );
