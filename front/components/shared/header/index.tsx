@@ -2,16 +2,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import logo from "@/public/common/logo.svg";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Nav } from "@/components/shared/nav";
+import { LoginContext } from "../loginContext";
 
 export default function Header() {
-  const [login, setLogin] = useState(false);
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setLogin(!!token);
-  }, []);
+  const isLoggedIn = useContext(LoginContext);
 
   // visibleの値を変えることでメニューを表示・非表示させる
   const [visible, setVisible] = useState("visible");
@@ -44,10 +41,10 @@ export default function Header() {
               className={`${visible} absolute -right-4 bg-opacity-90 top-[100%] lg:static bg-white lg:bg-transparent px-5 lg:px-0 py-3 lg:py-0 shadow-sm lg:shadow-none z-10`}
             >
               <ul className="gap-13 lg:flex lg:static">
-                <Nav login={login} />
+                <Nav login={isLoggedIn} />
               </ul>
             </nav>
-            {login && (
+            {isLoggedIn && (
               <button
                 onClick={toggleHamburger}
                 type="button"
