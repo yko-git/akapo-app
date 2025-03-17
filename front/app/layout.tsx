@@ -23,7 +23,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <LoginContext.Provider value={isLoggedIn}>
+      <LoginContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
         <body className={inter.className}>
           <Header />
           {children}
