@@ -6,12 +6,18 @@ import Image from "next/image";
 import TagList from "@/components/shared/tagList";
 import Photo from "@/components/shared/photo";
 import Comments from "@/components/posts/comments";
+import { useRouter } from "next/navigation";
 
 export default function Article({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    }
     async function fetchData() {
       try {
         const post = await fetchPost({ id });

@@ -4,11 +4,17 @@ import Link from "next/link";
 import { Post } from "@/api/fetchData";
 import { fetchPosts } from "@/api/fetchData";
 import Photo from "@/components/shared/photo";
+import { useRouter } from "next/navigation";
 
 export default function ArticleMain() {
   const [data, setData] = useState<Post[] | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    }
     async function fetchData() {
       try {
         const post = await fetchPosts();

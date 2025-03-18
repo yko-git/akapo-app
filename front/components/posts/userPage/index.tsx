@@ -6,12 +6,19 @@ import { fetchUserPosts, fetchUserData } from "@/api/fetchData";
 import UserArticleList from "../userArticleList";
 import Link from "next/link";
 import Button from "@/components/shared/button";
+import { useRouter } from "next/navigation";
 
 const UserPage = () => {
   const [userProfile, setUserProfile] = useState<any | null>(null);
   const [data, setData] = useState<Post[] | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    }
+
     async function fetchData() {
       try {
         const userData = await fetchUserData();

@@ -1,10 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { createPost } from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
+import { useRouter } from "next/navigation";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
@@ -13,6 +14,14 @@ const CreatePost = () => {
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [status, setStatus] = useState<string>("0");
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    }
+  }, []);
 
   const handleSelect = (value: string | string[]) => {
     if (typeof value === "string") {
