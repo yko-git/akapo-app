@@ -41,10 +41,10 @@ export default function Header() {
               className={`${visible} absolute -right-4 bg-opacity-90 top-[100%] lg:static bg-white lg:bg-transparent px-5 lg:px-0 py-3 lg:py-0 shadow-sm lg:shadow-none z-10`}
             >
               <ul className="gap-13 lg:flex lg:static">
-                <Nav login={isLoggedIn} />
+                <Nav />
               </ul>
             </nav>
-            {isLoggedIn && (
+            {isLoggedIn?.isLoggedIn && (
               <button
                 onClick={toggleHamburger}
                 type="button"

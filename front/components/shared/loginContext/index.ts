@@ -1,3 +1,14 @@
 import { createContext } from "react";
 
-export const LoginContext = createContext(false);
+type LoginContextType = {
+  isLoggedIn: boolean;
+  setIsLoggedIn: (value: boolean) => void;
+};
+
+export const LoginContext = createContext<LoginContextType | null>(null);
+
+// デフォルト値
+const defaultContextValue: LoginContextType = {
+  isLoggedIn: false,
+  setIsLoggedIn: () => {},
+};
