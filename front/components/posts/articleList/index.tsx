@@ -6,11 +6,18 @@ import { fetchPosts } from "@/api/fetchData";
 import PhotoList from "@/components/shared/photoList";
 import Image from "next/image";
 import TagList from "@/components/shared/tagList";
+import { useRouter } from "next/navigation";
 
 export default function ArticleList() {
   const [data, setData] = useState<Post[] | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    }
+
     async function fetchData() {
       try {
         const posts = await fetchPosts();
