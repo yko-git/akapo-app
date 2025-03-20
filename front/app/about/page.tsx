@@ -58,13 +58,15 @@ export default function About() {
                   <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline block md:mr-6 mr-0">
                     紹　介
                   </span>
-                  散歩をすること、ものづくり全般が好きなママエンジニアです。
+                  散歩やものづくりが好きなママエンジニアです。
                   <br />
-                  「akapo」は、自身のインプットを目的に、
+                  「akapo」は、自身の学習・インプットを目的に開発しており、React
+                  / Next.js (ver14) / TypeScript / Vercel を使用しています。
                   <br />
-                  React/next.js（ver14）/TypeScript/MicroCMS/Vercelを使用して開発しています。
+                  バックエンドは AWS（EC2 / RDS / S3 /
+                  CloudFront）を活用しています。
                   <br />
-                  まだまだ開発途中なので、頻繁にアップデートしています。
+                  まだまだ開発途中のため、頻繁にアップデートしています！
                 </li>
               </ul>
             </div>
