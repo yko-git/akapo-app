@@ -21,33 +21,46 @@ export const Nav = () => {
       link: "/posts",
     },
     {
+      name: "ABOUT",
+      link: "/about",
+    },
+    {
       name: "MYPAGE",
       link: "/mypage",
     },
   ];
   const pathname = usePathname();
+  const isActive = (path: string) =>
+    new RegExp(`^${path}(/.*)?$`).test(pathname);
+  const linkClass = (active: boolean) =>
+    `${jost.className} text-sm font-[15px] text-[#6C9FE0] tracking-[.2rem] ${
+      active ? "border-b-2 border-[#6C9FE0]" : ""
+    }`;
 
   return (
     <>
-      {navs.map((n) => {
-        const isActive = new RegExp(`^${n.link}(/.*)?$`).test(pathname);
-        return (
-          isLoggedIn?.isLoggedIn && (
-            <li key={n.name} className="px-4">
-              <Link
-                href={n.link}
-                className={`${jost.className} ${
-                  isActive
-                    ? "border-b-2 border-[#6C9FE0] text-sm font-[15px] text-[#6C9FE0] tracking-[.2rem]"
-                    : "text-sm font-[15px] text-[#6C9FE0] tracking-[.2rem]"
-                } `}
-              >
-                {n.name}
-              </Link>
-            </li>
-          )
-        );
-      })}
+      {isLoggedIn?.isLoggedIn ? (
+        navs.map(({ name, link }) => (
+          <li key={name} className="px-4">
+            <Link href={link} className={linkClass(isActive(link))}>
+              {name}
+            </Link>
+          </li>
+        ))
+      ) : (
+        <>
+          <li className="px-4">
+            <Link href="/login" className={linkClass(isActive("/login"))}>
+              SIGNIN
+            </Link>
+          </li>
+          <li className="px-4">
+            <Link href="/about" className={linkClass(isActive("/about"))}>
+              ABOUT
+            </Link>
+          </li>
+        </>
+      )}
     </>
   );
 };
