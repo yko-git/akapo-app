@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Post } from "@/api/fetchData";
-import { fetchPost, fetchComments, Comment } from "@/api/fetchData";
+import { fetchPost } from "@/api/fetchData";
 import Image from "next/image";
 import TagList from "@/components/shared/tagList";
 import Photo from "@/components/shared/photo";
@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 
 export default function Article({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,8 +23,6 @@ export default function Article({ id }: { id: number }) {
         if (Array.isArray(post) && post.length > 0) {
           setData(post[0]);
         }
-        const commentList = await fetchComments({ postId: id });
-        setComments(commentList);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
       }
@@ -92,7 +89,7 @@ export default function Article({ id }: { id: number }) {
           </div>
         </div>
       </div>
-      <Comments comments={comments} postId={id} id={id} />
+      <Comments postId={id} id={id} />
     </>
   );
 }
