@@ -11,6 +11,7 @@ interface CommentsProps {
 }
 
 export default function Comments({ postId, id }: CommentsProps) {
+  const [comments, setComments] = useState<Comment[]>([]);
   useEffect(() => {
     async function fetchData() {
       try {
@@ -23,7 +24,9 @@ export default function Comments({ postId, id }: CommentsProps) {
 
     fetchData();
   }, [id]);
-  const [comments, setComments] = useState<Comment[]>([]);
+  const handleNewComment = (newComment: Comment) => {
+    setComments((prevComments) => [...prevComments, newComment]);
+  };
   return (
     <>
       <div className="py-20 text-center bg-[#F5F8FD] -mt-8">
@@ -35,7 +38,7 @@ export default function Comments({ postId, id }: CommentsProps) {
           </h2>
           <div className="text-left">
             <CommentList comments={comments} id={id} />
-            <CreateComment postId={postId} />
+            <CreateComment postId={postId} onNewComment={handleNewComment} />
           </div>
         </div>
       </div>
