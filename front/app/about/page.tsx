@@ -36,7 +36,7 @@ export default function About() {
             src="/profile/img-03.png"
             loading="lazy"
             alt=""
-            width={400}
+            width={440}
             height={230}
             className="md:mr-10 md:mb-0 mb-10 shadow-md"
           />
