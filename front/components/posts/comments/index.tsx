@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { jost } from "@/components/shared/font";
-import CommentList from "@/components/posts/commentList";
+// import CommentList from "@/components/posts/commentList";
 import CreateComment from "@/components/posts/createComment";
 import { fetchComments, Comment } from "@/api/fetchData";
 
@@ -37,8 +37,13 @@ export default function Comments({ postId, id }: CommentsProps) {
             COMMENTS
           </h2>
           <div className="text-left">
-            <CommentList comments={comments} id={id} />
-            <CreateComment postId={postId} onNewComment={handleNewComment} />
+            {/* <CommentList  /> */}
+            <CreateComment
+              comments={comments}
+              id={id}
+              postId={postId}
+              onNewComment={handleNewComment}
+            />
           </div>
         </div>
       </div>
