@@ -23,7 +23,7 @@ export default function About() {
               className="mx-auto"
             />
           </div>
-          <div className="md:pt-32 pt-20 md:text-sm text-xs md:leading-[3rem] leading-7 tracking-[.22em] md:text-center text-left　text-[#657994]">
+          <div className="md:pt-22 pt-20 md:text-sm text-xs md:leading-[3rem] leading-7 tracking-[.22em] md:text-center text-left　text-[#657994]">
             <p className="mb-6 md:mb-8">
               工作好きな子どもが作った作品を、ギャラリーとしてアーカイブしています。
               <br className="hidden md:block" />
@@ -31,7 +31,25 @@ export default function About() {
             </p>
           </div>
         </div>
-        <div className="text-center md:mt-36 md:mb-20 mt-24 mb-10">
+        <div className="md:flex justify-center mt-40">
+          <Image
+            src="/profile/img-03.png"
+            loading="lazy"
+            alt=""
+            width={400}
+            height={230}
+            className="md:mr-10 md:mb-0 mb-10 shadow-md"
+          />
+          <Image
+            src="/profile/img-02.png"
+            loading="lazy"
+            alt=""
+            width={400}
+            height={271}
+            className="shadow-md"
+          />
+        </div>
+        <div className="text-center md:mt-36 md:mb-20 mt-28 mb-10">
           <h3
             className={`${jost.className} text-xl text-[22px] text-[#6C9FE0] tracking-[.2rem] font-bold`}
           >
