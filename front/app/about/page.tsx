@@ -79,10 +79,10 @@ export default function About() {
                   散歩やものづくりが好きなママエンジニアです。
                   <br />
                   「akapo」は、自身の学習・インプットを目的に開発しており、React
-                  / Next.js (ver14) / TypeScript / Vercel を使用しています。
+                  / Next.js / TypeScript を使用しています。
                   <br />
                   バックエンドは AWS（EC2 / RDS / S3 /
-                  CloudFront）を活用しています。
+                  Cloudflare）を活用しています。
                   <br />
                   まだまだ開発途中のため、頻繁にアップデートしています！
                 </li>
