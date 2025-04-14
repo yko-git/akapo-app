@@ -39,7 +39,7 @@ export default function ArticleList() {
       <div className="wrapper">
         <h1 className="font-bold my-2">投稿一覧</h1>
       </div>
-      <ul className="gap-10 flex flex-wrap max-w-[1280px] mx-auto mt-10">
+      <ul className="gap-10 md:flex flex-wrap max-w-[1280px] mx-auto mt-10">
         {data.map((item, index) => (
           <li key={index}>
             <div className="mt-4">

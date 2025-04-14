@@ -13,7 +13,7 @@ interface CommentsProps {
 export default function Comments({ comments, postId, id }: CommentsProps) {
   return (
     <>
-      <div className="py-20 text-center bg-[#F5F8FD] -mt-8">
+      <div className="md:py-20 py-10 text-center bg-[#F5F8FD] -mt-8">
         <div className="wrapper">
           <h2
             className={`${jost.className} jost text-[#6C9FE0] tracking-[.2rem] font-bold`}
