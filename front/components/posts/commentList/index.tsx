@@ -19,7 +19,7 @@ export default function CommentList({
           console.log(
             `コメントしたユーザーのID comment.userId:${comment.userId}`
           );
-          console.log(`記事のID postUserId:${postUserId}`);
+          console.log(`記事を書いたユーザーのID postUserId:${postUserId}`);
 
           return (
             <li

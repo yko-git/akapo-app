@@ -91,7 +91,7 @@ export default function Article({ id }: { id: number }) {
           </div>
         </div>
       </div>
-      <Comments comments={comments} postId={id} postUserId={data.userId} />
+      <Comments comments={comments} postId={id} postUserId={data.user.id} />
     </>
   );
 }
