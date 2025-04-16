@@ -12,6 +12,10 @@ export default function CommentList({ comments, id }: CommentListProps) {
       <ul>
         {comments.map((comment) => {
           const isOwn = comment.userId === id;
+          console.log(
+            `コメントしたユーザーのID comment.userId:${comment.userId}`
+          );
+          console.log(`記事のID id:${id}`);
 
           return (
             <li
