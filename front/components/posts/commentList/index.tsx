@@ -11,7 +11,7 @@ export default function CommentList({ comments, id }: CommentListProps) {
     <div className="my-10">
       <ul>
         {comments.map((comment) => {
-          const isOwn = comment.user.id === id;
+          const isOwn = comment.userId === id;
 
           return (
             <li
