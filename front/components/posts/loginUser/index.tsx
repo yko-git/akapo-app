@@ -23,27 +23,36 @@ const LoginUser = () => {
   };
 
   return (
-    <div className="flex flex-col space-y-4">
-      <div>
-        <label>ログインID</label>
-        <input
-          type="text"
-          value={loginId}
-          onChange={(e) => setLoginId(e.target.value)}
-          className="border rounded p-2 w-full"
-        />
+    <>
+      <div className="flex flex-col space-y-4">
+        <div>
+          <label>ログインID</label>
+          <input
+            type="text"
+            value={loginId}
+            onChange={(e) => setLoginId(e.target.value)}
+            className="border rounded p-2 w-full"
+          />
+        </div>
+        <div>
+          <label>パスワード</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="border rounded p-2 w-full"
+          />
+        </div>
+        <Button onClick={handleSubmit}>ログインする</Button>
       </div>
-      <div>
-        <label>パスワード</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border rounded p-2 w-full"
-        />
+      <div className="mt-5 border-l-2 pl-4 leading-loose">
+        現在機能開発中のため、
+        <br />
+        ログインID：<strong>test</strong>
+        <br />
+        パスワード：<strong>test</strong>で仮ログイン可能です。
       </div>
-      <Button onClick={handleSubmit}>ログインする</Button>
-    </div>
+    </>
   );
 };
 
