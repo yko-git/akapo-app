@@ -12,7 +12,6 @@ export default function Article({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const router = useRouter();
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -92,7 +91,7 @@ export default function Article({ id }: { id: number }) {
           </div>
         </div>
       </div>
-      <Comments comments={comments} postId={id} id={id} />
+      <Comments comments={comments} postId={id} postUserId={data.userId} />
     </>
   );
 }

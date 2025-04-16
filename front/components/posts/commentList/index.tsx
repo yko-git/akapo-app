@@ -3,19 +3,23 @@ import Image from "next/image";
 
 interface CommentListProps {
   comments: Comment[];
-  id: number;
+  postUserId: number;
 }
 
-export default function CommentList({ comments, id }: CommentListProps) {
+export default function CommentList({
+  comments,
+  postUserId,
+}: CommentListProps) {
+  console.log(comments);
   return (
     <div className="my-10">
       <ul>
         {comments.map((comment) => {
-          const isOwn = comment.userId === id;
+          const isOwn = comment.userId === postUserId;
           console.log(
             `コメントしたユーザーのID comment.userId:${comment.userId}`
           );
-          console.log(`記事のID id:${id}`);
+          console.log(`記事のID postUserId:${postUserId}`);
 
           return (
             <li

@@ -7,10 +7,14 @@ import CreateComment from "@/components/posts/createComment";
 interface CommentsProps {
   comments: Comment[];
   postId: number;
-  id: number;
+  postUserId: number;
 }
 
-export default function Comments({ comments, postId, id }: CommentsProps) {
+export default function Comments({
+  comments,
+  postId,
+  postUserId,
+}: CommentsProps) {
   return (
     <>
       <div className="md:py-20 py-10 text-center bg-[#F5F8FD] -mt-8">
@@ -21,7 +25,7 @@ export default function Comments({ comments, postId, id }: CommentsProps) {
             COMMENTS
           </h2>
           <div className="text-left">
-            <CommentList comments={comments} id={id} />
+            <CommentList comments={comments} postUserId={postUserId} />
             <CreateComment postId={postId} />
           </div>
         </div>
