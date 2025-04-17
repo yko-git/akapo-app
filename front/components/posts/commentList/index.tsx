@@ -16,32 +16,27 @@ export default function CommentList({
       <ul>
         {comments.map((comment) => {
           const isOwn = comment.userId === postUserId;
-          console.log(
-            `コメントしたユーザーのID comment.userId:${comment.userId}`
-          );
-          console.log(`記事を書いたユーザーのID postUserId:${postUserId}`);
-
           return (
             <li
               key={comment.id}
-              className={`md:my-4 my-8 md:flex items-start ${
+              className={`md:my-4 my-8 md:flex items-center ${
                 isOwn ? "flex-row" : "flex-row-reverse"
               }`}
             >
-              <div className="inline-block text-center md:w-auto w-full">
+              <div className="inline-block text-center md:w-auto w-full shrink-0 md:mb-0 mb-5">
                 <Image
-                  className="inline-block mr-2 rounded-full object-cover w-[65px] h-[65px] border-[#6C9FE0] border-2"
+                  className="inline-block mr-2 rounded-full object-cover w-[90px] h-[90px] border-[#6C9FE0] border-4"
                   src={comment.user.iconSignedUrl}
                   alt={comment.user.name}
-                  width={65}
-                  height={65}
+                  width={90}
+                  height={90}
                   loading="lazy"
                 />
                 <p className="text-[12px] mt-1">{comment.user.name}</p>
               </div>
 
               <div
-                className={`relative md:min-w-[450px] ${
+                className={`relative md:min-w-[450px] mb-5 ${
                   isOwn ? "md:ml-8" : "md:mr-8"
                 }`}
               >
