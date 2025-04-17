@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Post } from "@/api/fetchData";
 import { fetchPost, fetchComments, Comment } from "@/api/fetchData";
+import { jost } from "@/components/shared/font";
 import Image from "next/image";
 import TagList from "@/components/shared/tagList";
 import Photo from "@/components/shared/photo";
@@ -41,6 +43,30 @@ export default function Article({ id }: { id: number }) {
   return (
     <>
       <div className="wrapper">
+        <div className="md:mt-10 wrapper">
+          <Link
+            href="/posts"
+            className={`${jost.className} py-2 pl-3 tracking-[.2em] pr-5 inline-flex items-center rounded-lg text-[#6C9FE0] text-sm`}
+          >
+            <div className="mr-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  stroke-linejoin="round"
+                  d="M15.75 19.5 8.25 12l7.5-7.5"
+                ></path>
+              </svg>
+            </div>
+            BACK
+          </Link>
+        </div>
         <div className="md:mt-12">
           <div className="md:flex justify-between">
             <Photo
