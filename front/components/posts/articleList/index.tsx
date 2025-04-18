@@ -9,7 +9,7 @@ import TagList from "@/components/shared/tagList";
 import { useRouter } from "next/navigation";
 
 export default function ArticleList() {
-  const [data, setData] = useState<Post[] | null>(null);
+  const [data, setData] = useState<Post[] | undefined>(undefined);
   const router = useRouter();
 
   useEffect(() => {
@@ -21,14 +21,17 @@ export default function ArticleList() {
     async function fetchData() {
       try {
         const posts = await fetchPosts();
-        setData(posts);
+        const sortedPosts = posts?.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setData(sortedPosts);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
       }
     }
     fetchData();
   }, []);
-
   // データが取得できていない場合の表示
   if (!data) {
     return <p className="text-center">読み込み中・・・</p>;
