@@ -25,7 +25,16 @@ export default function Comments({
             COMMENTS
           </h2>
           <div className="text-left">
-            <CommentList comments={comments} postUserId={postUserId} />
+            {!comments || comments.length === 0 ? (
+              <div className="mt-20">
+                <p className="text-center font-bold tracking-wider">
+                  コメントをとうこうしてね
+                </p>
+              </div>
+            ) : (
+              <CommentList comments={comments} postUserId={postUserId} />
+            )}
+
             <CreateComment postId={postId} />
           </div>
         </div>
