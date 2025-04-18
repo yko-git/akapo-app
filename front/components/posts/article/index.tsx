@@ -43,7 +43,7 @@ export default function Article({ id }: { id: number }) {
   return (
     <>
       <div className="wrapper">
-        <div className="md:mt-10 wrapper">
+        <div className="md:my-10 mb-5">
           <Link
             href="/posts"
             className={`${jost.className} py-2 pl-3 tracking-[.2em] pr-5 inline-flex items-center rounded-lg text-[#6C9FE0] text-sm`}
@@ -59,7 +59,7 @@ export default function Article({ id }: { id: number }) {
               >
                 <path
                   strokeLinecap="round"
-                  stroke-linejoin="round"
+                  strokeLinejoin="round"
                   d="M15.75 19.5 8.25 12l7.5-7.5"
                 ></path>
               </svg>
