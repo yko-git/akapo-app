@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { jost } from "@/components/shared/font";
 
 export default function ArticleInfo() {
-  const [data, setData] = useState<Post[] | null>(null);
+  const [data, setData] = useState<Post[] | undefined>(undefined);
   const router = useRouter();
 
   useEffect(() => {
@@ -19,7 +19,11 @@ export default function ArticleInfo() {
     async function fetchData() {
       try {
         const posts = await fetchPosts();
-        setData(posts);
+        const sortedPosts = posts?.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setData(sortedPosts);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
       }
