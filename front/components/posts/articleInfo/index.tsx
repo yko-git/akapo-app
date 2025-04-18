@@ -40,7 +40,7 @@ export default function ArticleInfo() {
         NEW POST
       </h3>
       <ul className="md:ml-24 md:text-sm text-xs space-y-4">
-        {data.map((item, index) => (
+        {data.slice(0, 3).map((item, index) => (
           <li key={index}>
             <Link
               href={`/posts/${item.id}`}
