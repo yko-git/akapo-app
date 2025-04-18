@@ -1,0 +1,61 @@
+"use client";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Post } from "@/api/fetchData";
+import { fetchPosts } from "@/api/fetchData";
+import { useRouter } from "next/navigation";
+import { jost } from "@/components/shared/font";
+
+export default function ArticleInfo() {
+  const [data, setData] = useState<Post[] | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    }
+
+    async function fetchData() {
+      try {
+        const posts = await fetchPosts();
+        setData(posts);
+      } catch (error) {
+        console.error("投稿の取得でエラーが発生しました:", error);
+      }
+    }
+    fetchData();
+  }, []);
+
+  // データが取得できていない場合の表示
+  if (!data) {
+    return <p className="text-center">読み込み中・・・</p>;
+  }
+
+  return (
+    <div className="bg-white rounded-xl shadow-md py-9 md:px-20 px-8 md:flex items-center">
+      <h3
+        className={`${jost.className} text-sm text-[#6C9FE0] tracking-[.15rem] font-bold md:mb-0 mb-5`}
+      >
+        NEW POST
+      </h3>
+      <ul className="md:ml-24 md:text-sm text-xs space-y-4">
+        {data.map((item, index) => (
+          <li key={index}>
+            <Link
+              href={`/posts/${item.id}`}
+              className="tracking-[.15rem] md:flex py-3"
+            >
+              <div
+                className={`${jost.className} md:mr-4 md:mb-0 mb-1 text-[#9F9F9F] font-bold md:min-w-32`}
+              >
+                {new Date(item.createdAt).toLocaleDateString()}
+              </div>
+              {item.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}

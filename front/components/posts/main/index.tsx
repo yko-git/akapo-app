@@ -3,12 +3,13 @@ import logo from "@/public/common/logo.svg";
 import bnrgallery from "@/public/home/bnr-gallery.svg";
 import Link from "next/link";
 import ArticleMain from "@/components/posts/articleMain";
+import ArticleInfo from "../articleInfo";
 
 export default function Main() {
   return (
     <>
       <div className="relative">
-        <div className="absolute md:bottom-16 bottom-96 -right-1 md:w-[85%] w-[95%] bg-[#6C9FE0] opacity-40 h-[21px] rounded-md inline-block"></div>
+        <div className="absolute md:bottom-60 bottom-96 -right-1 md:w-[85%] w-[95%] bg-[#6C9FE0] opacity-40 h-[21px] rounded-md inline-block -z-10"></div>
         <div className="wrapper">
           <div className="lg:w-[850px] mx-auto flex justify-between items-center flex-col-reverse md:flex-row">
             <h2>
@@ -38,6 +39,7 @@ export default function Main() {
               <ArticleMain />
             </ul>
           </div>
+          <ArticleInfo />
         </div>
       </div>
     </>
