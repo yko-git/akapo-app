@@ -89,7 +89,7 @@ export async function updateIconSignedUrls(item: any) {
     await user.save();
   }
 
-  return item;
+  return user;
 }
 
 function toCDNUrl(signedUrl: string) {
