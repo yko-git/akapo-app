@@ -1,21 +1,30 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { createComment } from "@/api/fetchData";
+import { createComment, Comment } from "@/api/fetchData";
 import Button from "@/components/shared/button";
 
 interface CreateComment {
   postId: number;
+  onCommentAdded: (comment: Comment) => void;
 }
 
-export default function CreateComment({ postId }: CreateComment) {
+export default function CreateComment({
+  postId,
+  onCommentAdded,
+}: CreateComment) {
   const [body, setBody] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
+    setIsSubmitting(true);
     const postData = { body, postId };
     try {
-      await createComment(postId, postData);
+      const newComment = await createComment(postId, postData);
+      onCommentAdded(newComment);
     } catch (error) {
       console.error("投稿処理中にエラーが発生しました:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -30,9 +39,9 @@ export default function CreateComment({ postId }: CreateComment) {
         />
       </div>
       <div className="text-right mt-4">
-        <Button mode="Success" onClick={handleSubmit}>
-          投稿する
-        </Button>
+        <button onClick={handleSubmit} type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "コメント送信中..." : "コメントする"}
+        </button>
       </div>
     </div>
   );

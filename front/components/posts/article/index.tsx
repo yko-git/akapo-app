@@ -7,12 +7,16 @@ import { jost } from "@/components/shared/font";
 import Image from "next/image";
 import TagList from "@/components/shared/tagList";
 import Photo from "@/components/shared/photo";
-import Comments from "@/components/posts/comments";
+import CommentList from "@/components/posts/commentList";
+import CreateComment from "@/components/posts/createComment";
 import { useRouter } from "next/navigation";
 
 export default function Article({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
+  const handleCommentAdded = (newComment: Comment) => {
+    setComments((prevComments) => [newComment, ...prevComments]);
+  };
   const router = useRouter();
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -117,7 +121,28 @@ export default function Article({ id }: { id: number }) {
           </div>
         </div>
       </div>
-      <Comments comments={comments} postId={id} postUserId={data.user.id} />
+      <div className="md:py-20 py-10 text-center bg-[#F5F8FD] -mt-8">
+        <div className="wrapper">
+          <h2
+            className={`${jost.className} jost text-[#6C9FE0] tracking-[.2rem] font-bold`}
+          >
+            COMMENTS
+          </h2>
+          <div className="text-left">
+            {!comments || comments.length === 0 ? (
+              <div className="mt-20">
+                <p className="text-center font-bold tracking-wider">
+                  コメントをとうこうしてね
+                </p>
+              </div>
+            ) : (
+              <CommentList comments={comments} postUserId={data.user.id} />
+            )}
+
+            <CreateComment postId={id} onCommentAdded={handleCommentAdded} />
+          </div>
+        </div>
+      </div>
     </>
   );
 }

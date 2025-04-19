@@ -235,5 +235,5 @@ export async function createComment(
   postData: NewComment
 ): Promise<Comment> {
   const response = await instance.post(`posts/${postId}/comments`, postData);
-  return response.data.comments;
+  return response.data.comment;
 }
