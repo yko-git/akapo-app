@@ -212,7 +212,19 @@ export const createComment = async (req: any, res: Response) => {
       postId: req.params.id,
     });
 
-    res.json({ comment });
+    // ユーザーの署名付きURLを更新
+    const updatedUser = await updateIconSignedUrls(user);
+
+    // フロントに返す形式を整える
+    const responseComment = {
+      ...comment.get({ plain: true }),
+      user: {
+        name: updatedUser.name,
+        iconSignedUrl: updatedUser.iconSignedUrl,
+      },
+    };
+
+    res.json({ comment: responseComment });
   } catch (err) {
     console.log(err);
     return res
