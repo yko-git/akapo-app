@@ -21,6 +21,7 @@ export default function CreateComment({
     try {
       const newComment = await createComment(postId, postData);
       onCommentAdded(newComment);
+      setBody("");
     } catch (error) {
       console.error("投稿処理中にエラーが発生しました:", error);
     } finally {
