@@ -14,8 +14,9 @@ import { useRouter } from "next/navigation";
 export default function Article({ id }: { id: number }) {
   const [data, setData] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
-  const handleCommentAdded = (newComment: Comment) => {
-    setComments((prevComments) => [newComment, ...prevComments]);
+  const handleCommentAdded = async () => {
+    const commentList = await fetchComments({ postId: id });
+    setComments(commentList);
   };
   const router = useRouter();
   useEffect(() => {
