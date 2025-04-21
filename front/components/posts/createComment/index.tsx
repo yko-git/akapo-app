@@ -40,9 +40,9 @@ export default function CreateComment({
         />
       </div>
       <div className="text-right mt-4">
-        <button onClick={handleSubmit} type="submit" disabled={isSubmitting}>
+        <Button onClick={handleSubmit} type="submit" disabled={isSubmitting}>
           {isSubmitting ? "コメント送信中..." : "コメントする"}
-        </button>
+        </Button>
       </div>
     </div>
   );
