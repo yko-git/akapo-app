@@ -237,3 +237,8 @@ export async function createComment(
   const response = await instance.post(`posts/${postId}/comments`, postData);
   return response.data.comment;
 }
+
+// コメントデータ削除関数
+export async function deleteComments({ id }: { id: number }): Promise<void> {
+  return await instance.delete(`posts/comments/${id}`);
+}

@@ -6,6 +6,7 @@ import {
   getPost,
   patchPost,
   deletePost,
+  deleteComment,
   createComment,
   getComment,
 } from "../controllers/postsController";
@@ -31,5 +32,10 @@ router.post(
   createComment
 );
 router.get("/:id/comments", getComment);
+router.delete(
+  "/comments/:commentId",
+  passport.authenticate("jwt", { session: false }),
+  deleteComment
+);
 
 export default router;

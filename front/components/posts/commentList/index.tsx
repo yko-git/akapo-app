@@ -1,21 +1,55 @@
+"use client";
+import { useEffect, useState } from "react";
 import { Comment } from "@/api/fetchData";
 import Image from "next/image";
+import { fetchUserData, deleteComments } from "@/api/fetchData";
 
 interface CommentListProps {
   comments: Comment[];
   postUserId: number;
+  setComments: any;
 }
 
 export default function CommentList({
   comments,
   postUserId,
+  setComments,
 }: CommentListProps) {
-  console.log(comments);
+  const [user, setUser] = useState<any | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const userData = await fetchUserData();
+        setUser(userData);
+      } catch (error) {
+        console.error("データ取得中にエラー:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
   return (
     <div className="my-10">
       <ul>
         {comments.map((comment) => {
           const isOwn = comment.userId === postUserId;
+          const userComment = comment.userId === user?.id;
+
+          const handleDelete = async (id: number) => {
+            const confirm = window.confirm("コメントを削除しますか？");
+            if (!confirm) {
+              return;
+            }
+            try {
+              await deleteComments({ id });
+              setComments(comments.filter((comment) => comment.id !== id));
+              alert("コメントを削除しました。");
+            } catch (error) {
+              console.error("コメント削除処理中にエラーが発生しました:", error);
+            }
+          };
+
           return (
             <li
               key={comment.id}
@@ -53,6 +87,23 @@ export default function CommentList({
                   }`}
                 >
                   {comment.body}
+                  {userComment && (
+                    <div
+                      className="absolute right-2 bottom-2 p-1 border-1 border border-gray-300"
+                      onClick={() => handleDelete(comment.id)}
+                    >
+                      <svg
+                        width="8"
+                        height="8"
+                        viewBox="0 0 122.878 122.88"
+                        className="fill-current text-gray-500"
+                      >
+                        <g>
+                          <path d="M1.426,8.313c-1.901-1.901-1.901-4.984,0-6.886c1.901-1.902,4.984-1.902,6.886,0l53.127,53.127l53.127-53.127 c1.901-1.902,4.984-1.902,6.887,0c1.901,1.901,1.901,4.985,0,6.886L68.324,61.439l53.128,53.128c1.901,1.901,1.901,4.984,0,6.886 c-1.902,1.902-4.985,1.902-6.887,0L61.438,68.326L8.312,121.453c-1.901,1.902-4.984,1.902-6.886,0 c-1.901-1.901-1.901-4.984,0-6.886l53.127-53.128L1.426,8.313L1.426,8.313z" />
+                        </g>
+                      </svg>
+                    </div>
+                  )}
                 </div>
                 <div
                   className={`absolute top-1/2 md:inline-block hidden border-solid ${
