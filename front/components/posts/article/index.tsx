@@ -137,7 +137,11 @@ export default function Article({ id }: { id: number }) {
                 </p>
               </div>
             ) : (
-              <CommentList comments={comments} postUserId={data.user.id} />
+              <CommentList
+                comments={comments}
+                postUserId={data.user.id}
+                setComments={setComments}
+              />
             )}
 
             <CreateComment postId={id} onCommentAdded={handleCommentAdded} />

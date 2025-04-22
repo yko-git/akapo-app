@@ -262,3 +262,22 @@ export const getComment = async (req: any, res: Response) => {
       .json({ errorMessage: "コメントの取得に失敗しました" });
   }
 };
+
+export const deleteComment = async (req: any, res: Response) => {
+  const { commentId } = req.params;
+  try {
+    const deleted = await Comment.destroy({
+      where: { id: commentId },
+    });
+
+    if (!deleted) {
+      return res
+        .status(404)
+        .json({ message: "コメントが見つかりませんでした。" });
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ message: "削除に失敗しました。", error });
+  }
+};
