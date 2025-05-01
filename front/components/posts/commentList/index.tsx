@@ -36,14 +36,15 @@ export default function CommentList({
           const isOwn = comment.userId === postUserId;
           const userComment = comment.userId === user?.id;
 
-          const handleDelete = async (id: number) => {
+          const handleDelete = async ({ commentId }: { commentId: number }) => {
             const confirm = window.confirm("コメントを削除しますか？");
-            if (!confirm) {
-              return;
-            }
+            if (!confirm) return;
+
             try {
-              await deleteComments({ id });
-              setComments(comments.filter((comment) => comment.id !== id));
+              await deleteComments({ commentId });
+              setComments(
+                comments.filter((comment) => comment.id !== commentId)
+              );
               alert("コメントを削除しました。");
             } catch (error) {
               console.error("コメント削除処理中にエラーが発生しました:", error);
@@ -90,7 +91,7 @@ export default function CommentList({
                   {userComment && (
                     <div
                       className="absolute right-2 bottom-2 p-1 border-1 border border-gray-300"
-                      onClick={() => handleDelete(comment.id)}
+                      onClick={() => handleDelete({ commentId: comment.id })}
                     >
                       <svg
                         width="8"
