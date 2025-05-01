@@ -138,6 +138,7 @@ export default function Article({ id }: { id: number }) {
               </div>
             ) : (
               <CommentList
+                id={id}
                 comments={comments}
                 postUserId={data.user.id}
                 setComments={setComments}

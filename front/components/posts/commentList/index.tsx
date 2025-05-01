@@ -8,12 +8,14 @@ interface CommentListProps {
   comments: Comment[];
   postUserId: number;
   setComments: any;
+  id: number;
 }
 
 export default function CommentList({
   comments,
   postUserId,
   setComments,
+  id,
 }: CommentListProps) {
   const [user, setUser] = useState<any | null>(null);
 
@@ -36,12 +38,12 @@ export default function CommentList({
           const isOwn = comment.userId === postUserId;
           const userComment = comment.userId === user?.id;
 
-          const handleDelete = async ({ commentId }: { commentId: number }) => {
+          const handleDelete = async (commentId: number) => {
             const confirm = window.confirm("コメントを削除しますか？");
             if (!confirm) return;
 
             try {
-              await deleteComments({ commentId });
+              await deleteComments({ commentId, postId: id });
               setComments(
                 comments.filter((comment) => comment.id !== commentId)
               );
@@ -91,7 +93,7 @@ export default function CommentList({
                   {userComment && (
                     <div
                       className="absolute right-2 bottom-2 p-1 border-1 border border-gray-300"
-                      onClick={() => handleDelete({ commentId: comment.id })}
+                      onClick={() => handleDelete(comment.id)}
                     >
                       <svg
                         width="8"

@@ -264,20 +264,27 @@ export const getComment = async (req: any, res: Response) => {
 };
 
 export const deleteComment = async (req: any, res: Response) => {
-  const { commentId } = req.params;
   try {
-    const deleted = await Comment.destroy({
-      where: { id: commentId },
+    const postId = Number(req.params.id);
+    const commentId = Number(req.params.commentId);
+
+    console.log("削除対象 postId:", postId, "commentId:", commentId);
+
+    const comment = await Comment.findOne({
+      where: {
+        id: commentId,
+        postId: postId,
+      },
     });
 
-    if (!deleted) {
-      return res
-        .status(404)
-        .json({ message: "コメントが見つかりませんでした。" });
+    if (!comment) {
+      return res.status(404).json({ message: "コメントが見つかりません" });
     }
 
+    await comment.destroy();
     res.status(204).send();
   } catch (error) {
-    res.status(500).json({ message: "削除に失敗しました。", error });
+    console.error("コメント削除時のエラー:", JSON.stringify(error, null, 2));
+    res.status(500).json({ message: "サーバーエラー", error });
   }
 };

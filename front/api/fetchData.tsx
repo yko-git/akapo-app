@@ -240,9 +240,11 @@ export async function createComment(
 
 // コメントデータ削除関数
 export async function deleteComments({
+  postId,
   commentId,
 }: {
+  postId: number;
   commentId: number;
 }): Promise<void> {
-  return await instance.delete(`posts/comments/${commentId}`);
+  return await instance.delete(`posts/${postId}/comments/${commentId}`);
 }

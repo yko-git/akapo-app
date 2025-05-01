@@ -17,7 +17,7 @@ router.post("/", passport.authenticate("jwt", { session: false }), createPosts);
 router.get("/", passport.authenticate("jwt", { session: false }), getPostsList);
 router.get("/:id", passport.authenticate("jwt", { session: false }), getPost);
 router.delete(
-  "/comments/:commentId",
+  "/:id/comments/:commentId",
   (req, res, next) => {
     console.log("コメント削除にアクセス:", req.headers.authorization);
     next();
