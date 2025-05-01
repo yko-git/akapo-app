@@ -17,25 +17,33 @@ router.post("/", passport.authenticate("jwt", { session: false }), createPosts);
 router.get("/", passport.authenticate("jwt", { session: false }), getPostsList);
 router.get("/:id", passport.authenticate("jwt", { session: false }), getPost);
 router.delete(
-  "/:id",
+  "/comments/:commentId",
+  (req, res, next) => {
+    console.log("コメント削除にアクセス:", req.headers.authorization);
+    next();
+  },
   passport.authenticate("jwt", { session: false }),
-  deletePost
+  deleteComment
 );
-router.patch(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  patchPost
-);
+
 router.post(
   "/:id/comments",
   passport.authenticate("jwt", { session: false }),
   createComment
 );
+
 router.get("/:id/comments", getComment);
+
 router.delete(
-  "/comments/:commentId",
+  "/:id",
   passport.authenticate("jwt", { session: false }),
-  deleteComment
+  deletePost
+);
+
+router.patch(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  patchPost
 );
 
 export default router;
