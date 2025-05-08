@@ -1,5 +1,5 @@
 import Image from "next/image";
-import logo from "@/public/common/logo.svg";
+import logo from "@/public/home/logo.svg";
 import bnrgallery from "@/public/home/bnr-gallery.svg";
 import Link from "next/link";
 import ArticleMain from "@/components/posts/articleMain";
@@ -16,7 +16,7 @@ export default function Main() {
               <Image
                 src={logo}
                 loading="lazy"
-                alt=""
+                alt="こどもの成長と思い出を、作品とともに記録するサイト"
                 width={369}
                 height={359}
                 className="md:min-w-[369px] mx-auto md:mt-0 mt-5 md:p-0 p-5"
