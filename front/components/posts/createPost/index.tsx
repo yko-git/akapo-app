@@ -14,6 +14,8 @@ const CreatePost = () => {
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [status, setStatus] = useState<string>("0");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<string>("投稿する");
   const router = useRouter();
 
   useEffect(() => {
@@ -45,6 +47,8 @@ const CreatePost = () => {
       return;
     }
 
+    setIsSubmitting(true);
+    console.log(isSubmitting);
     const postData = { title, body, status, categoryIds };
     console.log(postData);
     try {
@@ -52,11 +56,15 @@ const CreatePost = () => {
       if (postImg) {
         setImageUrl(postImg);
         alert("投稿が完了しました");
+        setSubmitMessage("投稿が完了しました");
       } else {
         console.error("画像のアップロードまたは投稿に失敗しました");
+        setSubmitMessage("投稿が完了しました");
       }
     } catch (error) {
       console.error("投稿処理中にエラーが発生しました:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -100,8 +108,8 @@ const CreatePost = () => {
         <label>画像</label>
         <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
-      <Button mode="Success" onClick={handleSubmit}>
-        投稿する
+      <Button mode="Success" onClick={handleSubmit} disabled={isSubmitting}>
+        {isSubmitting ? "投稿送信中..." : submitMessage}
       </Button>
       {imageUrl && (
         <div>
