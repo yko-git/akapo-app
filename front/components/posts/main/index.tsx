@@ -1,3 +1,6 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import logo from "@/public/home/logo.svg";
 import bnrgallery from "@/public/home/bnr-gallery.svg";
@@ -5,7 +8,52 @@ import Link from "next/link";
 import ArticleMain from "@/components/posts/articleMain";
 import ArticleInfo from "../articleInfo";
 
+import { Post } from "@/api/fetchData";
+import { fetchPosts } from "@/api/fetchData";
+
 export default function Main() {
+  const [data, setData] = useState<Post[] | undefined>(undefined);
+  const router = useRouter();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    }
+
+    async function fetchData() {
+      try {
+        const posts = await fetchPosts();
+        const sortedPosts = posts?.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setData(sortedPosts);
+      } catch (error) {
+        console.error("投稿の取得でエラーが発生しました:", error);
+      }
+    }
+    fetchData();
+  }, []);
+
+  // データが取得できていない場合の表示
+  if (!data) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
+        <div className="text-center p-8 rounded-lg shadow-md bg-white my-20">
+          <p className="text-gray-800 text-lg font-medium mb-2">
+            現在、サービスは一時停止中です。
+          </p>
+          <p className="text-gray-600 mb-4">
+            午前9時から午後7時の間にアクセスしてください。
+          </p>
+          <hr className="my-4" />
+          <p className="text-gray-600">
+            Please access between 9:00 AM and 7:00 PM.
+          </p>
+        </div>
+      </div>
+    );
+  }
   return (
     <>
       <div className="relative">
@@ -39,7 +87,7 @@ export default function Main() {
               <ArticleMain />
             </ul>
           </div>
-          <ArticleInfo />
+          <ArticleInfo data={data} />
         </div>
       </div>
     </>

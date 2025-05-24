@@ -1,41 +1,8 @@
-"use client";
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Post } from "@/api/fetchData";
-import { fetchPosts } from "@/api/fetchData";
-import { useRouter } from "next/navigation";
 import { jost } from "@/components/shared/font";
+import { ArticleData } from "@/api/fetchData";
 
-export default function ArticleInfo() {
-  const [data, setData] = useState<Post[] | undefined>(undefined);
-  const router = useRouter();
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-    }
-
-    async function fetchData() {
-      try {
-        const posts = await fetchPosts();
-        const sortedPosts = posts?.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        setData(sortedPosts);
-      } catch (error) {
-        console.error("投稿の取得でエラーが発生しました:", error);
-      }
-    }
-    fetchData();
-  }, []);
-
-  // データが取得できていない場合の表示
-  if (!data) {
-    return <p className="text-center">読み込み中・・・</p>;
-  }
-
+export default function ArticleInfo({ data }: ArticleData) {
   return (
     <div className="bg-white rounded-xl shadow-md py-9 md:px-20 px-8 md:flex items-center">
       <h3
