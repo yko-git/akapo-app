@@ -68,6 +68,10 @@ export type Comment = {
   };
 };
 
+export type ArticleData = {
+  data: Post[];
+};
+
 // axiosインスタンス
 const instance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
