@@ -12,6 +12,9 @@ import CreateComment from "@/components/posts/createComment";
 import { useRouter } from "next/navigation";
 
 export default function Article({ id }: { id: number }) {
+  const [status, setStatus] = useState<"loading" | "service-down" | "success">(
+    "loading"
+  );
   const [data, setData] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const handleCommentAdded = async () => {
@@ -32,8 +35,10 @@ export default function Article({ id }: { id: number }) {
         }
         const commentList = await fetchComments({ postId: id });
         setComments(commentList);
+        setStatus("success");
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
+        setStatus("service-down");
       }
     }
 
@@ -41,7 +46,19 @@ export default function Article({ id }: { id: number }) {
   }, [id]);
 
   // データが取得できていない場合の表示
-  if (!data) {
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
+        <div className="text-center p-8 rounded-lg shadow-md bg-white my-20">
+          <p className="text-gray-800 text-lg font-medium mb-2">
+            読み込み中です…
+          </p>
+          <p className="text-gray-600 mb-4">しばらくお待ちください。</p>
+        </div>
+      </div>
+    );
+  }
+  if (!data || status === "service-down") {
     return (
       <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
         <div className="text-center p-8 rounded-lg shadow-md bg-white my-20">

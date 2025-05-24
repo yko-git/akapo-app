@@ -9,6 +9,9 @@ import TagList from "@/components/shared/tagList";
 import { useRouter } from "next/navigation";
 
 export default function ArticleList() {
+  const [status, setStatus] = useState<"loading" | "service-down" | "success">(
+    "loading"
+  );
   const [data, setData] = useState<Post[] | undefined>(undefined);
   const router = useRouter();
 
@@ -26,14 +29,29 @@ export default function ArticleList() {
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         setData(sortedPosts);
+        setStatus("success");
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
+        setStatus("service-down");
       }
     }
     fetchData();
   }, []);
+
   // データが取得できていない場合の表示
-  if (!data) {
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
+        <div className="text-center p-8 rounded-lg shadow-md bg-white my-20">
+          <p className="text-gray-800 text-lg font-medium mb-2">
+            読み込み中です…
+          </p>
+          <p className="text-gray-600 mb-4">しばらくお待ちください。</p>
+        </div>
+      </div>
+    );
+  }
+  if (!data || status === "service-down") {
     return (
       <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
         <div className="text-center p-8 rounded-lg shadow-md bg-white my-20">
