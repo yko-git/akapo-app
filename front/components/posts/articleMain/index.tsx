@@ -22,8 +22,14 @@ export default function ArticleMain() {
     }
     async function fetchData() {
       try {
-        const post = await fetchPosts();
-        setData(post);
+        const posts = await fetchPosts();
+        if (posts) {
+          const sortedPosts = posts?.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+          setData(sortedPosts);
+        }
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
       }
