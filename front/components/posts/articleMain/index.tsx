@@ -5,6 +5,11 @@ import { Post } from "@/api/fetchData";
 import { fetchPosts } from "@/api/fetchData";
 import Photo from "@/components/shared/photo";
 import { useRouter } from "next/navigation";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectFade, Autoplay } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/effect-fade";
 
 export default function ArticleMain() {
   const [data, setData] = useState<Post[] | null>(null);
@@ -38,18 +43,31 @@ export default function ArticleMain() {
     <div className="md:my-5 md:w-[395px] md:py-6 tracking-[.2rem]">
       <div className="md:max-w-[395px] mx-auto">
         {data.length > 0 ? (
-          <>
-            <div>
-              <Link href={`posts/${data[data.length - 1].id}`}>
-                <Photo
-                  src={data[data.length - 1]?.signedUrl}
-                  alt={data[data.length - 1].title}
-                  width={400}
-                  height={542}
-                />
-              </Link>
-            </div>
-          </>
+          <Swiper
+            effect="fade"
+            modules={[EffectFade, Autoplay]}
+            speed={800}
+            fadeEffect={{ crossFade: true }}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+          >
+            {data.map((value) => {
+              return (
+                <SwiperSlide key={value.id}>
+                  <Link href={`posts/${value.id}`}>
+                    <Photo
+                      src={value?.signedUrl}
+                      alt={value.title}
+                      width={400}
+                      height={542}
+                    />
+                  </Link>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
         ) : (
           <p>投稿がありません。</p>
         )}
