@@ -48,35 +48,58 @@ export default function ArticleMain() {
   return (
     <div className="md:my-5 md:w-[395px] md:py-6 tracking-[.2rem]">
       <div className="md:max-w-[395px] mx-auto">
-        {data.length > 0 ? (
-          <Swiper
-            effect="fade"
-            modules={[EffectFade, Autoplay]}
-            speed={800}
-            fadeEffect={{ crossFade: true }}
-            autoplay={{
-              delay: 3000,
-              disableOnInteraction: false,
-            }}
-          >
-            {data.map((value) => {
-              return (
-                <SwiperSlide key={value.id}>
-                  <Link href={`posts/${value.id}`}>
-                    <Photo
-                      src={value?.signedUrl}
-                      alt={value.title}
-                      width={400}
-                      height={542}
-                    />
-                  </Link>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-        ) : (
-          <p>投稿がありません。</p>
-        )}
+        <div className="hidden md:block">
+          {data.length > 0 ? (
+            <Swiper
+              effect="fade"
+              modules={[EffectFade, Autoplay]}
+              speed={800}
+              fadeEffect={{ crossFade: true }}
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+              breakpoints={{
+                0: {
+                  slidesPerView: 1,
+                },
+                768: {
+                  slidesPerView: 1,
+                },
+                1024: {
+                  slidesPerView: 1,
+                },
+              }}
+            >
+              {data.map((value) => {
+                return (
+                  <SwiperSlide key={value.id}>
+                    <Link href={`posts/${value.id}`}>
+                      <Photo
+                        src={value?.signedUrl}
+                        alt={value.title}
+                        width={400}
+                        height={542}
+                      />
+                    </Link>
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
+          ) : (
+            <p>投稿がありません。</p>
+          )}
+        </div>
+        <div className="md:hidden block">
+          <Link href={`posts/${data[0].id}`}>
+            <Photo
+              src={data[0]?.signedUrl}
+              alt={data[0].title}
+              width={400}
+              height={542}
+            />
+          </Link>
+        </div>
       </div>
     </div>
   );
