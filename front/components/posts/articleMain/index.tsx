@@ -53,7 +53,7 @@ export default function ArticleMain() {
             <Swiper
               effect="fade"
               modules={[EffectFade, Autoplay]}
-              speed={800}
+              speed={1300}
               fadeEffect={{ crossFade: true }}
               autoplay={{
                 delay: 3000,
