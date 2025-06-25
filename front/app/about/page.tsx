@@ -25,9 +25,11 @@ export default function About() {
           </div>
           <div className="md:pt-22 pt-20 md:text-sm text-xs md:leading-[3rem] leading-7 tracking-[.22em] md:text-center text-left　text-[#657994]">
             <p className="mb-6 md:mb-8">
-              工作好きな子どもが作った作品を、ギャラリーとしてアーカイブしています。
+              工作が大好きな子どもたちの作品を、ギャラリーのようにアーカイブしています。
               <br className="hidden md:block" />
-              子どもの成長に合わせて、親子で様々な実験ができるようにカスタマイズしていきます。
+              子どもの成長に合わせて、親子でいろんな実験が楽しめるよう、
+              <br />
+              これからもカスタマイズしていきます。
             </p>
           </div>
         </div>
@@ -78,13 +80,13 @@ export default function About() {
                   </span>
                   散歩やものづくりが好きなママエンジニアです。
                   <br />
-                  「akapo」は、自身の学習・インプットを目的に開発しており、React
+                  「Akapo」は、自身の学習やインプットを目的に開発しており、React
                   / Next.js / TypeScript を使用しています。
                   <br />
-                  バックエンドは AWS（EC2 / RDS / S3 /
-                  Cloudflare）を活用しています。
+                  バックエンドには AWS（EC2 / RDS / S3）や Cloudflare
+                  を活用しています。
                   <br />
-                  まだまだ開発途中のため、頻繁にアップデートしています！
+                  まだまだ開発途中のため、頻繁にアップデートを行っています！
                 </li>
               </ul>
             </div>
@@ -95,7 +97,7 @@ export default function About() {
                 <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline block md:mr-6 mr-0">
                   言　語
                 </span>
-                HTML, JavaScript, CSS, PHP, React, TypeScript, Next.js...
+                HTML, JavaScript, CSS, PHP, React, Vue, TypeScript, Next.js...
               </li>
               <li className="md:flex">
                 <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline block md:mr-6 mr-0">
@@ -108,9 +110,9 @@ export default function About() {
                 <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline block md:mr-6 mr-0">
                   経　歴
                 </span>
-                21歳の時に都内デザイン制作会社でキャリアをスタートし、
+                21歳のときに都内のデザイン制作会社でキャリアをスタートし、
                 <br />
-                主にWEBページ作成からフロントエンドまで幅広く業務を経験しています。
+                主にWebページの作成からフロントエンド開発まで、幅広い業務を経験してきました。
               </li>
               <li className="md:flex">
                 <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline-flex items-center block md:mr-6 mr-0">

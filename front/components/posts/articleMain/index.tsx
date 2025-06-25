@@ -60,7 +60,7 @@ export default function ArticleMain() {
                 disableOnInteraction: false,
               }}
               onSlideChange={(swiper) => {
-                const newDelay = swiper.activeIndex === 0 ? 5000 : 3000;
+                const newDelay = swiper.activeIndex === 0 ? 7000 : 3000;
                 if (
                   swiper.params.autoplay &&
                   typeof swiper.params.autoplay !== "boolean"
