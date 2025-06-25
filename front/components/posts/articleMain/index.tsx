@@ -59,6 +59,16 @@ export default function ArticleMain() {
                 delay: 3000,
                 disableOnInteraction: false,
               }}
+              onSlideChange={(swiper) => {
+                const newDelay = swiper.activeIndex === 0 ? 5000 : 3000;
+                if (
+                  swiper.params.autoplay &&
+                  typeof swiper.params.autoplay !== "boolean"
+                ) {
+                  swiper.params.autoplay.delay = newDelay;
+                  swiper.autoplay?.start();
+                }
+              }}
               breakpoints={{
                 0: {
                   slidesPerView: 1,
