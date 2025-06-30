@@ -1,6 +1,6 @@
 interface ButtonProps {
   onClick?: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   mode?: keyof typeof buttonColors;
   type?: "button" | "submit";
   disabled?: boolean;
