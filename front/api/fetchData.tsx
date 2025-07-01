@@ -20,6 +20,7 @@ export interface UserProfile {
   loginId: string;
   iconUrl?: string;
   signedUrl?: string;
+  iconSignedUrl: string;
 }
 
 export interface Post {
