@@ -3,10 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { Post, deletePost } from "@/api/fetchData";
 import Button from "@/components/shared/button";
+import { Dispatch, SetStateAction } from "react";
 
 interface UserArticleListProps {
   data: Post[] | null;
-  setData: any;
+  setData: Dispatch<SetStateAction<Post[] | null>>;
 }
 
 export default function UserArticleList({
