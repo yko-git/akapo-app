@@ -73,6 +73,10 @@ export type ArticleData = {
   data: Post[];
 };
 
+export type Category = {
+  id: number;
+};
+
 // axiosインスタンス
 const instance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
