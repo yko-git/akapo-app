@@ -1,13 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Comment } from "@/api/fetchData";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Comment, UserProfile } from "@/api/fetchData";
 import Image from "next/image";
 import { fetchUserData, deleteComments } from "@/api/fetchData";
 
 interface CommentListProps {
   comments: Comment[];
   postUserId: number;
-  setComments: any;
+  setComments: Dispatch<SetStateAction<Comment[]>>;
   id: number;
 }
 
@@ -17,7 +17,7 @@ export default function CommentList({
   setComments,
   id,
 }: CommentListProps) {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     async function fetchData() {
