@@ -20,6 +20,7 @@ export interface UserProfile {
   loginId: string;
   iconUrl?: string;
   signedUrl?: string;
+  iconSignedUrl: string;
 }
 
 export interface Post {
@@ -70,6 +71,10 @@ export type Comment = {
 
 export type ArticleData = {
   data: Post[];
+};
+
+export type Category = {
+  id: number;
 };
 
 // axiosインスタンス

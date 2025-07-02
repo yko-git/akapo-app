@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Post } from "@/api/fetchData";
+import { Post, UserProfile } from "@/api/fetchData";
 import Image from "next/image";
 import { fetchUserPosts, fetchUserData } from "@/api/fetchData";
 import UserArticleList from "../userArticleList";
@@ -9,7 +9,7 @@ import Button from "@/components/shared/button";
 import { useRouter } from "next/navigation";
 
 const UserPage = () => {
-  const [userProfile, setUserProfile] = useState<any | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [data, setData] = useState<Post[] | null>(null);
   const router = useRouter();
 

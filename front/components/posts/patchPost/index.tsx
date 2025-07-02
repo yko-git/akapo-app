@@ -7,6 +7,7 @@ import {
   Post,
   NewPost,
   uploadImage,
+  Category,
 } from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
@@ -31,7 +32,7 @@ const PatchPost = ({ id }: { id: number }) => {
           setTitle(data.title);
           setBody(data.body);
           setStatus(data.status.toString());
-          setCategoryIds(data.categories.map((cat: any) => cat.id));
+          setCategoryIds(data.categories.map((cat: Category) => cat.id));
           setImageUrl(data.signedUrl || null);
         } else {
           console.error("データが見つかりませんでした");
