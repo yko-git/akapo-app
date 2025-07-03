@@ -2,7 +2,7 @@
 import { jost } from "@/components/shared/font";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { LoginContext } from "../loginContext";
 
 export interface Nav {
