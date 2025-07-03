@@ -5,10 +5,6 @@ import Link from "next/link";
 import { useContext } from "react";
 import { LoginContext } from "../loginContext";
 
-export interface Nav {
-  login: boolean;
-}
-
 export const Nav = () => {
   const isLoggedIn = useContext(LoginContext);
   const navs = [
