@@ -63,7 +63,7 @@ export const loginAuth =
       const user = req.user;
       const payload = { user: req.user };
       const token = jwt.sign(payload, `${process.env.JWT_SECRET}` as string, {
-        expiresIn: "30days",
+        expiresIn: "5m",
       });
       res.json({ user, token });
     } catch (err) {
