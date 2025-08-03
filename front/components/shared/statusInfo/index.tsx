@@ -1,0 +1,40 @@
+import { Post } from "@/api/fetchData";
+
+interface StatusInfoProps {
+  status: "loading" | "service-down" | "success";
+  data: Post | Post[] | null | undefined;
+}
+
+export default function StatusInfo({ status, data }: StatusInfoProps) {
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
+        <div className="text-center p-8 rounded-lg shadow-md bg-white my-20">
+          <p className="text-gray-800 text-lg font-medium mb-2">
+            読み込み中です…
+          </p>
+          <p className="text-gray-600 mb-4">しばらくお待ちください。</p>
+        </div>
+      </div>
+    );
+  }
+  if (!data || status === "service-down") {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
+        <div className="text-center p-8 rounded-lg shadow-md bg-white my-20">
+          <p className="text-gray-800 text-lg font-medium mb-2">
+            現在、サービスは一時停止中です。
+          </p>
+          <p className="text-gray-600 mb-4">
+            午前9時から午後7時の間にアクセスしてください。
+          </p>
+          <hr className="my-4" />
+          <p className="text-gray-600">
+            Please access between 9:00 AM and 7:00 PM.
+          </p>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
