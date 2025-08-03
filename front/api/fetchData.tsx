@@ -92,6 +92,18 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
+// レスポンスで401を検出したらログイン画面へリダイレクト
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token"); // トークンをクリア
+      window.location.href = "/login"; // ログイン画面へ遷移
+    }
+    return Promise.reject(error);
+  }
+);
+
 // 個別投稿データ取得関数
 export async function fetchPost({
   id,
