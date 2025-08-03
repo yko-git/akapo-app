@@ -2,10 +2,12 @@
 import React, { useState } from "react";
 import Button from "@/components/shared/button";
 import { createLogin } from "@/api/fetchData";
+import { useRouter } from "next/navigation";
 
 const LoginUser = () => {
   const [loginId, setLoginId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const router = useRouter();
 
   const handleSubmit = async () => {
     const postData = { loginId, password };
@@ -14,7 +16,7 @@ const LoginUser = () => {
 
       if (token) {
         alert("ログインに成功しました！");
-        window.location.href = "/mypage";
+        router.push("/mypage");
       }
     } catch (error) {
       console.error("ログイン処理でエラーが発生しました", error);
