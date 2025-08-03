@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { jost } from "@/components/shared/font";
 import logo from "@/public/common/logo.svg";
+import Button from "@/components/shared/button";
 
 export default function About() {
   return (
@@ -50,6 +51,21 @@ export default function About() {
             height={271}
             className="shadow-md"
           />
+        </div>
+        <div className="text-center md:mt-20 mt-12">
+          <h2 className="font-bold">新規ユーザー登録</h2>
+          <div className="mt-5">
+            <p>
+              akapoを使用するには、
+              <br className="md:hidden" />
+              サインアップが必要です。
+            </p>
+            <div className="mt-5">
+              <Link href="/signup">
+                <Button mode="Success">サインアップ</Button>
+              </Link>
+            </div>
+          </div>
         </div>
         <div className="text-center md:mt-36 md:mb-20 mt-28 mb-10">
           <h3
