@@ -7,8 +7,12 @@ import UserArticleList from "../userArticleList";
 import Link from "next/link";
 import Button from "@/components/shared/button";
 import { useRouter } from "next/navigation";
+import StatusInfo from "@/components/shared/statusInfo";
 
 const UserPage = () => {
+  const [status, setStatus] = useState<"loading" | "service-down" | "success">(
+    "loading"
+  );
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [data, setData] = useState<Post[] | null>(null);
   const router = useRouter();
@@ -25,9 +29,11 @@ const UserPage = () => {
         setUserProfile(userData);
 
         const posts = await fetchUserPosts();
+        setStatus("success");
         setData(posts);
       } catch (error) {
         console.error("データ取得中にエラー:", error);
+        setStatus("service-down");
       }
     }
 
@@ -38,6 +44,12 @@ const UserPage = () => {
     localStorage.removeItem("token");
     router.push("/login");
   };
+
+  // データが取得できていない場合の表示
+  if (status !== "success" || data === null) {
+    return <StatusInfo status={status} data={data} />;
+  }
+
   return (
     <div className="">
       {userProfile ? (
