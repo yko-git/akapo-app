@@ -14,11 +14,6 @@ const UserPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-    }
-
     async function fetchData() {
       try {
         const userData = await fetchUserData();
@@ -36,7 +31,7 @@ const UserPage = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    router.push("/login");
   };
   return (
     <div className="">

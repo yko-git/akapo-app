@@ -53,20 +53,21 @@ export const createAuth = async (req: Request, res: Response) => {
   }
 };
 
-export const loginAuth =
-  (passport.authenticate("local", {
+export const loginAuth = [
+  passport.authenticate("local", {
     session: false,
   }),
   (req: Request, res: Response) => {
     try {
       // jwtのtokenを作成
       const user = req.user;
-      const payload = { user: req.user };
-      const token = jwt.sign(payload, `${process.env.JWT_SECRET}` as string, {
-        expiresIn: "30days",
+      const payload = { user };
+      const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
+        expiresIn: "30d",
       });
       res.json({ user, token });
     } catch (err) {
-      return res.status(401).json({ errorMessage: "認証ができませんでした" });
+      res.status(401).json({ errorMessage: "認証ができませんでした" });
     }
-  });
+  },
+];
