@@ -51,7 +51,8 @@ const UserPage = () => {
   }
 
   return (
-    <div className="">
+    <div className="wrapper">
+      <h1 className="font-bold my-2">マイページ</h1>
       {userProfile ? (
         <>
           <div className="p-5 text-center">
