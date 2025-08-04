@@ -10,6 +10,8 @@ const CreateUser = () => {
   const [password, setPassword] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<string>("投稿する");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFile(event.target.files ? event.target.files[0] : null);
@@ -21,6 +23,8 @@ const CreateUser = () => {
       return;
     }
 
+    setIsSubmitting(true);
+
     const userData = { loginId, name, password };
     try {
       const postImg = await createUser(file, userData);
@@ -28,9 +32,12 @@ const CreateUser = () => {
         alert("画像のアップロードまたは投稿に失敗しました");
       }
       alert("ユーザー登録が完了しました。ログインしてください。");
+      setSubmitMessage("ユーザー登録が完了しました");
       router.push("/login");
     } catch (error) {
       console.error("登録処理中にエラーが発生しました:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -67,7 +74,9 @@ const CreateUser = () => {
           className="border rounded p-2 w-full"
         />
       </div>
-      <Button onClick={handleSubmit}>登録する</Button>
+      <Button mode="Success" onClick={handleSubmit} disabled={isSubmitting}>
+        {isSubmitting ? "登録中..." : submitMessage}
+      </Button>
     </div>
   );
 };
