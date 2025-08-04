@@ -21,11 +21,16 @@ const UserPage = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/login");
+      return;
     }
 
     async function fetchData() {
       try {
         const userData = await fetchUserData();
+        if (!userData) {
+          router.push("/login");
+          return;
+        }
         setUserProfile(userData);
 
         const posts = await fetchUserPosts();
