@@ -30,7 +30,7 @@ jobs:
           vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
 
       - name: Wait for deployment to be live
-        uses: jakejarvis/wait-action@v0.1.2
+        uses: jakejarvis/wait-action@v1
         with:
           url: "https://akapo-front.vercel.app"
 
