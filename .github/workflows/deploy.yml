@@ -33,6 +33,7 @@ jobs:
         run: npm install --prefix front cypress --save-dev
 
       - name: Run Cypress tests
-        run: npx cypress run --config-file front/cypress.config.ts
+        run: npx cypress run --config supportFile=cypress/support/e2e.ts
+        working-directory: ./front
         env:
           CYPRESS_BASE_URL: https://akapo-front.vercel.app
