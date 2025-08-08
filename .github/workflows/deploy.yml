@@ -29,11 +29,16 @@ jobs:
           npm install -g vercel
           vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
 
+      - name: Wait for deployment to be live
+        uses: jakejarvis/wait-action@v0.1.2
+        with:
+          url: "https://akapo-front.vercel.app"
+
       - name: Install Cypress
         run: npm install --prefix front cypress --save-dev
 
       - name: Run Cypress tests
-        run: npx cypress run --config supportFile=cypress/support/e2e.ts
+        run: npx cypress run
         working-directory: ./front
         env:
           CYPRESS_BASE_URL: https://akapo-front.vercel.app
