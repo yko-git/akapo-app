@@ -22,7 +22,7 @@ describe("ログインフォームのテスト", () => {
     cy.get('input[name="loginId"]').type("test");
 
     // パスワードフィールドにテキストを入力
-    cy.get('input[name="password"]').type("ps");
+    cy.get('input[name="password"]').type("test");
 
     // ログインボタンをクリック
     cy.get('#loginForm button[type="submit"]').click();
