@@ -28,8 +28,7 @@ jobs:
         run: |
           npm install -g vercel
           vercel --prod \
-            --token ${{ secrets.VERCEL_TOKEN }} \
-            --project-id ${{ secrets.VERCEL_PROJECT_ID }}
+            --token ${{ secrets.VERCEL_TOKEN }}
 
       - name: Install Cypress
         run: npm install --prefix front cypress --save-dev
