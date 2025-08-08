@@ -29,7 +29,6 @@ jobs:
           npm install -g vercel
           vercel --prod \
             --token ${{ secrets.VERCEL_TOKEN }} \
-            --org-id ${{ secrets.VERCEL_ORG_ID }} \
             --project-id ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Install Cypress
