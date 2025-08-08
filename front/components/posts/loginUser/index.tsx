@@ -26,7 +26,7 @@ const LoginUser = () => {
 
   return (
     <>
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-4" id="loginForm">
         <div>
           <label>ログインID</label>
           <input
@@ -34,6 +34,7 @@ const LoginUser = () => {
             value={loginId}
             onChange={(e) => setLoginId(e.target.value)}
             className="border rounded p-2 w-full"
+            name="loginId"
           />
         </div>
         <div>
@@ -43,9 +44,12 @@ const LoginUser = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="border rounded p-2 w-full"
+            name="password"
           />
         </div>
-        <Button onClick={handleSubmit}>ログインする</Button>
+        <Button type="submit" onClick={handleSubmit}>
+          ログインする
+        </Button>
       </div>
       <div className="mt-5 border-l-2 pl-4 leading-loose">
         現在機能開発中のため、
