@@ -14,7 +14,7 @@ describe("ログインフォームのテスト", () => {
     cy.get('input[name="password"]').should("exist");
 
     // type属性とテキスト内容を使用してログインボタンを確認
-    cy.get('button[type="submit"]').contains("ログインする");
+    cy.get('[data-cy="login-submit"]').click();
   });
 
   it("有効な認証情報でログインできる", () => {
@@ -25,7 +25,7 @@ describe("ログインフォームのテスト", () => {
     cy.get('input[name="password"]').type("test");
 
     // ログインボタンをクリック
-    cy.get('#loginForm button[type="submit"]').click();
+    cy.get('[data-cy="login-submit"]').click();
 
     // ログイン後にダッシュボードページにリダイレクトされることを確認
     cy.url().should("include", "/mypage");

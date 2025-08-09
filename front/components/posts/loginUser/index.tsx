@@ -57,7 +57,9 @@ const LoginUser = () => {
             name="password"
           />
         </div>
-        <Button type="submit">ログインする</Button>
+        <Button type="submit" data-cy="login-submit">
+          ログインする
+        </Button>
       </form>
 
       <div className="mt-5 border-l-2 pl-4 leading-loose">
