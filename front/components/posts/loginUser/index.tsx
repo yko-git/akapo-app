@@ -29,7 +29,7 @@ const LoginUser = () => {
 
   return (
     <>
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-4" id="loginForm">
         <div>
           <label>ログインID</label>
           <input
@@ -37,6 +37,7 @@ const LoginUser = () => {
             value={loginId}
             onChange={(e) => setLoginId(e.target.value)}
             className="border rounded p-2 w-full"
+            name="loginId"
           />
         </div>
         <div>
@@ -46,6 +47,7 @@ const LoginUser = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="border rounded p-2 w-full"
+            name="password"
           />
         </div>
         <Button type="button" onClick={handleSubmit}>
