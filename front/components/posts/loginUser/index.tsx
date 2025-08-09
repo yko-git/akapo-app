@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Button from "@/components/shared/button";
 import { createLogin } from "@/api/fetchData";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const LoginUser = () => {
   const [loginId, setLoginId] = useState<string>("");
@@ -16,8 +17,9 @@ const LoginUser = () => {
 
       if (!token) {
         alert("ログインに失敗しました");
+        return;
       }
-      alert("ログインに成功しました！");
+      toast.success("ログインに成功しました！");
       router.push("/mypage");
     } catch (error) {
       alert("ログインに失敗しました");
@@ -46,7 +48,9 @@ const LoginUser = () => {
             className="border rounded p-2 w-full"
           />
         </div>
-        <Button onClick={handleSubmit}>ログインする</Button>
+        <Button type="button" onClick={handleSubmit}>
+          ログインする
+        </Button>
       </div>
       <div className="mt-5 border-l-2 pl-4 leading-loose">
         現在機能開発中のため、

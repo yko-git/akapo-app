@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Post, deletePost } from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import { Dispatch, SetStateAction } from "react";
+import toast from "react-hot-toast";
 
 interface UserArticleListProps {
   data: Post[] | null;
@@ -26,7 +27,7 @@ export default function UserArticleList({
     try {
       await deletePost({ id });
       setData(data.filter((data) => data.id !== id));
-      alert("記事を削除しました。");
+      toast("記事を削除しました");
     } catch (error) {
       console.error("記事削除処理中にエラーが発生しました:", error);
     }
