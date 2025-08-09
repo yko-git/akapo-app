@@ -14,13 +14,14 @@ const LoginUser = () => {
     try {
       const token = await createLogin(postData);
 
-      if (token) {
-        alert("ログインに成功しました！");
-        router.push("/mypage");
+      if (!token) {
+        alert("ログインに失敗しました");
       }
+      alert("ログインに成功しました！");
+      router.push("/mypage");
     } catch (error) {
-      console.error("ログイン処理でエラーが発生しました", error);
       alert("ログインに失敗しました");
+      console.error("ログイン処理でエラーが発生しました", error);
     }
   };
 
