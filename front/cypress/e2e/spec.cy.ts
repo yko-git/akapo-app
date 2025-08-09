@@ -13,8 +13,8 @@ describe("ログインフォームのテスト", () => {
     // name属性を使用してパスワード入力フィールドの存在を確認
     cy.get('input[name="password"]').should("exist");
 
-    // type属性とテキスト内容を使用してログインボタンを確認
-    cy.get('[data-cy="login-submit"]').click();
+    // テキスト内容を使用してログインボタンを確認
+    cy.get('[data-cy="login-submit"]').contains("ログインする");
   });
 
   it("有効な認証情報でログインできる", () => {
