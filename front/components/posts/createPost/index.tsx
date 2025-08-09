@@ -6,6 +6,7 @@ import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
@@ -55,7 +56,7 @@ const CreatePost = () => {
       const postImg = await createPost(file, postData);
       if (postImg) {
         setImageUrl(postImg);
-        alert("投稿が完了しました");
+        toast.success("投稿が完了しました");
         setSubmitMessage("投稿が完了しました");
       } else {
         console.error("画像のアップロードまたは投稿に失敗しました");

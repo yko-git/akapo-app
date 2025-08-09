@@ -12,6 +12,7 @@ import {
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
+import toast from "react-hot-toast";
 
 const PatchPost = ({ id }: { id: number }) => {
   const [title, setTitle] = useState<string>("");
@@ -85,7 +86,7 @@ const PatchPost = ({ id }: { id: number }) => {
 
       const existingImageUrl = await patchPost(id, postData);
       setImageUrl(existingImageUrl);
-      alert("編集が完了しました");
+      toast.success("編集が完了しました");
     } catch (error) {
       console.error("投稿処理中にエラーが発生しました:", error);
     }

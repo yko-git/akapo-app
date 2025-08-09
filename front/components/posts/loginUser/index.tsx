@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Button from "@/components/shared/button";
 import { createLogin } from "@/api/fetchData";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const LoginUser = () => {
   const [loginId, setLoginId] = useState<string>("");
@@ -14,13 +15,15 @@ const LoginUser = () => {
     try {
       const token = await createLogin(postData);
 
-      if (token) {
-        alert("ログインに成功しました！");
-        router.push("/mypage");
+      if (!token) {
+        alert("ログインに失敗しました");
+        return;
       }
+      toast.success("ログインに成功しました！");
+      router.push("/mypage");
     } catch (error) {
-      console.error("ログイン処理でエラーが発生しました", error);
       alert("ログインに失敗しました");
+      console.error("ログイン処理でエラーが発生しました", error);
     }
   };
 
@@ -47,7 +50,7 @@ const LoginUser = () => {
             name="password"
           />
         </div>
-        <Button type="submit" onClick={handleSubmit}>
+        <Button type="button" onClick={handleSubmit}>
           ログインする
         </Button>
       </div>
