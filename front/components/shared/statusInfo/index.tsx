@@ -26,11 +26,11 @@ export default function StatusInfo({ status, data }: StatusInfoProps) {
             現在、サービスは一時停止中です。
           </p>
           <p className="text-gray-600 mb-4">
-            午前9時から午後7時の間にアクセスしてください。
+            午前9時から午後9時の間にアクセスしてください。
           </p>
           <hr className="my-4" />
           <p className="text-gray-600">
-            Please access between 9:00 AM and 7:00 PM.
+            Please access between 9:00 AM and 9:00 PM.
           </p>
         </div>
       </div>

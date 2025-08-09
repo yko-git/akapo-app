@@ -69,10 +69,9 @@ export default function RootLayout({
               style: {
                 borderRadius: "8px",
                 background: "#fff",
-                border: "2px solid #6C9FE0",
                 color: "#6C9FE0",
-                fontSize: "18px",
-                padding: "15px",
+                fontSize: "14px",
+                padding: "10px 20px",
               },
               success: {
                 icon: <MySuccessIcon />,

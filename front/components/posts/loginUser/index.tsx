@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Button from "@/components/shared/button";
 import { createLogin } from "@/api/fetchData";
 import { useRouter } from "next/navigation";
+import { fetchUserData } from "@/api/fetchData";
 import toast from "react-hot-toast";
 
 const LoginUser = () => {
@@ -14,15 +15,15 @@ const LoginUser = () => {
     const postData = { loginId, password };
     try {
       const token = await createLogin(postData);
-
+      const userData = await fetchUserData();
       if (!token) {
         alert("ログインに失敗しました");
         return;
       }
-      toast.success("ログインに成功しました！");
+      toast.success(`ようこそ ${userData?.name} さん`);
       router.push("/mypage");
     } catch (error) {
-      alert("ログインに失敗しました");
+      toast.error("ログインに失敗しました");
       console.error("ログイン処理でエラーが発生しました", error);
     }
   };
