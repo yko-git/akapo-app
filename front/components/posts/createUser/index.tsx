@@ -11,7 +11,7 @@ const CreateUser = () => {
   const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState<string>("投稿する");
+  const [submitMessage, setSubmitMessage] = useState<string>("登録する");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFile(event.target.files ? event.target.files[0] : null);
@@ -44,7 +44,9 @@ const CreateUser = () => {
   return (
     <div className="flex flex-col p-5 space-y-4">
       <div>
-        <label>ログインID</label>
+        <label>
+          <h3 className="font-bold">ログインID</h3>
+        </label>
         <input
           type="text"
           value={loginId}
@@ -53,7 +55,9 @@ const CreateUser = () => {
         />
       </div>
       <div>
-        <label>名前</label>
+        <label>
+          <h3 className="font-bold">アカウント名</h3>
+        </label>
         <input
           type="text"
           value={name}
@@ -62,11 +66,15 @@ const CreateUser = () => {
         />
       </div>
       <div>
-        <label>アイコン画像</label>
+        <label>
+          <h3 className="font-bold">アイコン画像</h3>
+        </label>
         <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
       <div>
-        <label>パスワード</label>
+        <label>
+          <h3 className="font-bold">パスワード</h3>
+        </label>
         <input
           type="password"
           value={password}
