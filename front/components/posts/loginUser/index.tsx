@@ -51,7 +51,7 @@ const LoginUser = () => {
             name="password"
           />
         </div>
-        <Button type="button" onClick={handleSubmit}>
+        <Button type="submit" onClick={handleSubmit}>
           ログインする
         </Button>
       </div>
