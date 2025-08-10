@@ -32,6 +32,7 @@ export interface Post {
   categories: { id: number; name: string }[];
   user: User;
   imageKey: string;
+  commentCount: number;
 }
 
 export interface NewPost {
