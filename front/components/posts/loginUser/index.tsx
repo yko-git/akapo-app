@@ -10,8 +10,7 @@ const LoginUser = () => {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     const postData = { loginId, password };
 
     try {
@@ -32,11 +31,7 @@ const LoginUser = () => {
 
   return (
     <>
-      <form
-        className="flex flex-col space-y-4"
-        id="loginForm"
-        onSubmit={handleSubmit}
-      >
+      <div className="flex flex-col space-y-4" id="loginForm">
         <div>
           <label>ログインID</label>
           <input
@@ -57,10 +52,12 @@ const LoginUser = () => {
             name="password"
           />
         </div>
-        <Button type="submit" data-cy="login-submit">
-          ログインする
-        </Button>
-      </form>
+        <div id="loginSubmit">
+          <Button type="submit" onClick={handleSubmit}>
+            ログインする
+          </Button>
+        </div>
+      </div>
 
       <div className="mt-5 border-l-2 pl-4 leading-loose">
         現在機能開発中のため、
