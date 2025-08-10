@@ -1,33 +1,26 @@
 describe("ログインフォームのテスト", () => {
   beforeEach(() => {
-    // 各テストの前にログインページにアクセス
     cy.visit("/login");
+
+    // フォーム全体と送信ボタンの表示を待つ
+    cy.get("#loginForm", { timeout: 10000 }).should("be.visible");
+    cy.get("#loginSubmit", { timeout: 10000 }).should("be.visible");
   });
+
   it("ログインフォームが表示される", () => {
-    // IDセレクタを使用してログインフォームが表示されていることを確認
-    cy.get("#loginForm").should("be.visible");
-
-    // name属性を使用してユーザー名入力フィールドの存在を確認
-    cy.get('input[name="loginId"]').should("exist");
-
-    // name属性を使用してパスワード入力フィールドの存在を確認
-    cy.get('input[name="password"]').should("exist");
-
-    // type属性とテキスト内容を使用してログインボタンを確認
-    cy.get("#loginSubmit").contains("ログインする");
+    cy.get('input[name="loginId"]').should("exist").and("be.visible");
+    cy.get('input[name="password"]').should("exist").and("be.visible");
+    cy.get("#loginSubmit button").should("contain.text", "ログインする");
   });
 
   it("有効な認証情報でログインできる", () => {
-    // ユーザー名フィールドにテキストを入力
-    cy.get('input[name="loginId"]').type("yko");
+    cy.get('input[name="loginId"]').should("be.visible").type("yko");
+    cy.get('input[name="password"]').should("be.visible").type("yko");
 
-    // パスワードフィールドにテキストを入力
-    cy.get('input[name="password"]').type("yko");
+    // ボタンをクリック
+    cy.get("#loginSubmit button").should("be.enabled").click();
 
-    // ログインボタンをクリック
-    cy.get("#loginSubmit").click();
-
-    // ログイン後にダッシュボードページにリダイレクトされることを確認
-    // cy.url().should("include", "/mypage");
+    // 遷移を待ってURL確認
+    cy.url({ timeout: 20000 }).should("include", "/mypage");
   });
 });
