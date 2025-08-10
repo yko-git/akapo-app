@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Post } from "@/api/fetchData";
-import { fetchPosts } from "@/api/fetchData";
+import { fetchPosts, fetchComments } from "@/api/fetchData";
 import PhotoList from "@/components/shared/photoList";
 import Image from "next/image";
 import TagList from "@/components/shared/tagList";
@@ -25,11 +25,20 @@ export default function ArticleList() {
     async function fetchData() {
       try {
         const posts = await fetchPosts();
-        const sortedPosts = posts?.sort(
+        const sortedPosts = (posts ?? []).sort(
           (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
-        setData(sortedPosts);
+        const postsWithComments = await Promise.all(
+          sortedPosts.map(async (post) => {
+            const comments = await fetchComments({ postId: post.id });
+            return {
+              ...post,
+              commentCount: comments?.length || 0,
+            };
+          })
+        );
+        setData(postsWithComments);
         setStatus("success");
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
@@ -37,7 +46,7 @@ export default function ArticleList() {
       }
     }
     fetchData();
-  }, []);
+  }, [router]);
 
   // データが取得できていない場合の表示
   if (status !== "success" || data === undefined) {
@@ -62,9 +71,12 @@ export default function ArticleList() {
                 />
               </Link>
             </div>
-            <ul className="mt-4">
-              <TagList Categories={item.categories} />
-            </ul>
+            <div className="mt-4 flex justify-between">
+              <ul>
+                <TagList Categories={item.categories} />
+              </ul>
+              <div className="text-sm mt-2">コメント {item.commentCount}件</div>
+            </div>
             <div className="font-semibold mt-4">{item.title}</div>
             <div className="flex items-center justify-between mt-2 text-[#807f7f]">
               <div className="flex items-center">
