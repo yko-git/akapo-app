@@ -1,6 +1,9 @@
 describe("ログインフォームのテスト", () => {
   beforeEach(() => {
     cy.visit("/login");
+    cy.wait(2000); // 2秒待つ
+    cy.url().then((url) => cy.log("Current URL:", url));
+    cy.get("#loginSubmit", { timeout: 10000 }).should("be.visible");
 
     // フォーム全体と送信ボタンの表示を待つ
     cy.get("#loginForm", { timeout: 10000 }).should("be.visible");
