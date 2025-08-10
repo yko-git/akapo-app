@@ -71,28 +71,32 @@ export default function ArticleList() {
                 />
               </Link>
             </div>
-            <div className="mt-4 flex justify-between">
-              <ul>
-                <TagList Categories={item.categories} />
-              </ul>
-              <div className="text-sm mt-2">コメント {item.commentCount}件</div>
-            </div>
-            <div className="font-semibold mt-4">{item.title}</div>
-            <div className="flex items-center justify-between mt-2 text-[#807f7f]">
-              <div className="flex items-center">
-                <Image
-                  className="inline-block mr-2 rounded-full object-cover w-[31px] h-[31px] "
-                  src={item.user.iconSignedUrl}
-                  alt=""
-                  width={31}
-                  height={31}
-                  loading="lazy"
-                />
-                <p className="text-sm">{item.user.name}</p>
+            <div className="px-4">
+              <div className="mt-4 flex justify-between">
+                <ul>
+                  <TagList Categories={item.categories} />
+                </ul>
+                <div className="text-sm mt-2">
+                  コメント {item.commentCount}件
+                </div>
               </div>
-              <p className="text-sm">
-                {new Date(item.createdAt).toLocaleDateString()}
-              </p>
+              <div className="font-semibold mt-4">{item.title}</div>
+              <div className="flex items-center justify-between mt-2 text-[#807f7f]">
+                <div className="flex items-center">
+                  <Image
+                    className="inline-block mr-2 rounded-full object-cover w-[31px] h-[31px] "
+                    src={item.user.iconSignedUrl}
+                    alt=""
+                    width={31}
+                    height={31}
+                    loading="lazy"
+                  />
+                  <p className="text-sm">{item.user.name}</p>
+                </div>
+                <p className="text-sm">
+                  {new Date(item.createdAt).toLocaleDateString()}
+                </p>
+              </div>
             </div>
           </li>
         ))}
