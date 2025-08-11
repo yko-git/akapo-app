@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { createUser } from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import imageCompression from "browser-image-compression";
 
 const CreateUser = () => {
   const [loginId, setLoginId] = useState<string>("");
@@ -19,19 +21,39 @@ const CreateUser = () => {
 
   const handleSubmit = async () => {
     if (!file) {
-      alert("画像を選択してください");
+      toast.error("画像を選択してください");
       return;
     }
 
-    setIsSubmitting(true);
+    // 許可するMIMEタイプ
+    const allowedTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/webp",
+      "image/svg+xml",
+    ];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("PNG/JPEG/WEBP/SVG以外のファイル形式はご遠慮ください");
+      return; // ここで処理終了
+    }
 
+    const sizeMB = file.size / 1024 / 1024;
+    if (sizeMB > 5) {
+      toast.error("ファイルサイズは5MB以下でお願いいたします");
+      return;
+    }
+
+    // 画像を圧縮
+    const options = { maxSizeMB: 1, maxWidthOrHeight: 1920 };
+    const compressedFile = await imageCompression(file, options);
     const userData = { loginId, name, password };
+
     try {
-      const postImg = await createUser(file, userData);
+      const postImg = await createUser(compressedFile, userData);
       if (!postImg) {
         alert("画像のアップロードまたは投稿に失敗しました");
       }
-      alert("ユーザー登録が完了しました。ログインしてください。");
+      toast.success("ユーザー登録が完了しました。ログインしてください。");
       setSubmitMessage("ユーザー登録が完了しました");
       router.push("/login");
     } catch (error) {
