@@ -31,7 +31,17 @@ const LoginUser = () => {
 
   return (
     <>
-      <div className="flex flex-col space-y-4" id="loginForm">
+      <div className="p-5 bg-gray-50">
+        <div className="text-center p-4 rounded-lg shadow-md bg-white">
+          <p className="text-gray-600">
+            ログインは
+            <br />
+            <strong>午前9時〜午後9時</strong>
+            の間にご利用いただけます
+          </p>
+        </div>
+      </div>
+      <div className="flex flex-col space-y-6 mt-10" id="loginForm">
         <div>
           <label>ログインID</label>
           <input
