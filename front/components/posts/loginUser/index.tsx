@@ -32,9 +32,9 @@ const LoginUser = () => {
   return (
     <>
       <div className="p-5 bg-gray-50">
-        <div className="text-center p-4 rounded-lg shadow-md bg-white">
+        <div className="text-center leading-8 tracking-wider p-4 rounded-lg shadow-md bg-white">
           <p className="text-gray-600">
-            ログインは
+            ログイン・新規ユーザー登録は
             <br />
             <strong>午前9時〜午後9時</strong>
             の間にご利用いただけます
