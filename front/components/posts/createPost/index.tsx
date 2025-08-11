@@ -79,7 +79,7 @@ const CreatePost = () => {
         toast.success("投稿が完了しました");
         setSubmitMessage("投稿が完了しました");
       } else {
-        console.error("画像のアップロードまたは投稿に失敗しました");
+        toast.error("画像のアップロードまたは投稿に失敗しました");
         setSubmitMessage("投稿に失敗しました");
       }
     } catch (error) {
