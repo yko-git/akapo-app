@@ -7,6 +7,7 @@ import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import imageCompression from "browser-image-compression";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
@@ -41,26 +42,45 @@ const CreatePost = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFile(event.target.files ? event.target.files[0] : null);
   };
-
   const handleSubmit = async () => {
     if (!file) {
-      alert("画像を選択してください");
+      toast.error("画像を選択してください");
       return;
     }
 
+    // 許可するMIMEタイプ
+    const allowedTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/webp",
+      "image/svg+xml",
+    ];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("PNG/JPEG/WEBP/SVG以外のファイル形式はご遠慮ください");
+      return; // ここで処理終了
+    }
+
+    const sizeMB = file.size / 1024 / 1024;
+    if (sizeMB > 5) {
+      toast.error("ファイルサイズは5MB以下でお願いいたします");
+      return;
+    }
+
+    // 画像を圧縮
+    const options = { maxSizeMB: 1, maxWidthOrHeight: 1920 };
+    const compressedFile = await imageCompression(file, options);
+
     setIsSubmitting(true);
-    console.log(isSubmitting);
     const postData = { title, body, status, categoryIds };
-    console.log(postData);
     try {
-      const postImg = await createPost(file, postData);
+      const postImg = await createPost(compressedFile, postData);
       if (postImg) {
         setImageUrl(postImg);
         toast.success("投稿が完了しました");
         setSubmitMessage("投稿が完了しました");
       } else {
         console.error("画像のアップロードまたは投稿に失敗しました");
-        setSubmitMessage("投稿が完了しました");
+        setSubmitMessage("投稿に失敗しました");
       }
     } catch (error) {
       console.error("投稿処理中にエラーが発生しました:", error);
