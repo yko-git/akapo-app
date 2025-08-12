@@ -87,8 +87,8 @@ export default function ArticleList() {
                 </ul>
                 <div className="text-sm mt-2 relative">
                   {item.hasNewComment && (
-                    <p className="text-red-500 font-bold text-xs absolute -top-4 right-0">
-                      NEW
+                    <p className="bg-red-500 text-white px-2 py-1 rounded-sm text-[9px] absolute -top-9 right-0 text-nowrap">
+                      NEW COMMENT
                     </p>
                   )}
                   コメント {item.commentCount}件
