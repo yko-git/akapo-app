@@ -33,6 +33,7 @@ export interface Post {
   user: User;
   imageKey: string;
   commentCount: number;
+  hasNewComment?: boolean;
 }
 
 export interface NewPost {

@@ -32,9 +32,18 @@ export default function ArticleList() {
         const postsWithComments = await Promise.all(
           sortedPosts.map(async (post) => {
             const comments = await fetchComments({ postId: post.id });
+            const now = new Date();
+
+            const hasNewComment = comments.some((comment) => {
+              const commentDate = new Date(comment.createdAt);
+              const diffMSec = now.getTime() - commentDate.getTime();
+              const diffHour = diffMSec / (60 * 60 * 1000);
+              return diffHour < 24;
+            });
             return {
               ...post,
               commentCount: comments?.length || 0,
+              hasNewComment,
             };
           })
         );
@@ -76,7 +85,12 @@ export default function ArticleList() {
                 <ul>
                   <TagList Categories={item.categories} />
                 </ul>
-                <div className="text-sm mt-2">
+                <div className="text-sm mt-2 relative">
+                  {item.hasNewComment && (
+                    <p className="text-red-500 font-bold text-xs absolute -top-4 right-0">
+                      NEW
+                    </p>
+                  )}
                   コメント {item.commentCount}件
                 </div>
               </div>
