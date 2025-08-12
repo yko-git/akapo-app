@@ -27,7 +27,7 @@ jobs:
       - name: Deploy to Vercel
         run: |
           npm install -g vercel
-          vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
+          vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }} --cwd front
 
       - name: Install wait-on
         run: npm install -g wait-on
