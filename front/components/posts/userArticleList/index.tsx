@@ -19,6 +19,9 @@ export default function UserArticleList({
     return <p>投稿がありません。</p>;
   }
 
+  const sortedPosts = (data ?? []).sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
   const handleDelete = async (id: number) => {
     const confirm = window.confirm("記事を削除しますか？");
     if (!confirm) {
@@ -82,8 +85,8 @@ export default function UserArticleList({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {data ? (
-              data.map((item, index) => (
+            {sortedPosts ? (
+              sortedPosts.map((item, index) => (
                 <tr key={index}>
                   <td className="px-6 py-4 text-sm font-medium text-gray-900">
                     <div>
