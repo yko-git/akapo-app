@@ -91,7 +91,7 @@ export default function ArticleList() {
                       NEW COMMENT
                     </p>
                   )}
-                  コメント {item.commentCount}件
+                  コメント {item.commentCount} 件
                 </div>
               </div>
               <div className="font-semibold mt-4">{item.title}</div>
