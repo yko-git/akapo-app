@@ -78,15 +78,17 @@ const UserPage = () => {
         <p>ユーザー情報を読み込んでいます...</p>
       )}
       <div className="mt-8 text-right">
-        <Button onClick={handleLogout}>ログアウト</Button>
+        <Button mode="Danger" onClick={handleLogout}>
+          ログアウト
+        </Button>
+      </div>
+      <div className="mt-10 text-center">
+        <Link href="/posts/new">
+          <Button>新しい投稿を作成する</Button>
+        </Link>
       </div>
       <div className="mt-8">
         <UserArticleList data={data} setData={setData} />
-      </div>
-      <div className="mt-10 text-right">
-        <Link href="/posts/new">
-          <Button>新しい投稿を作成</Button>
-        </Link>
       </div>
     </div>
   );
