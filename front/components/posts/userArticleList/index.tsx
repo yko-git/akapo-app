@@ -114,7 +114,7 @@ export default function UserArticleList({
                       ))}
                     </ul>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500 text-center">
+                  <td className="px-6 py-4 text-sm text-gray-500 text-center whitespace-nowrap">
                     <Link href={`/posts/new/${item.id}`}>
                       <Button
                         mode="Info"
@@ -124,7 +124,7 @@ export default function UserArticleList({
                       </Button>
                     </Link>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500 text-center">
+                  <td className="px-6 py-4 text-sm text-gray-500 text-center whitespace-nowrap">
                     <Button
                       mode="Danger"
                       onClick={() => handleDelete(item.id)}
