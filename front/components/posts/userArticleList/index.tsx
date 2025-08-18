@@ -116,11 +116,20 @@ export default function UserArticleList({
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 text-center">
                     <Link href={`/posts/new/${item.id}`}>
-                      <Button>編集</Button>
+                      <Button
+                        mode="Info"
+                        className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
+                      >
+                        編集
+                      </Button>
                     </Link>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 text-center">
-                    <Button mode="Danger" onClick={() => handleDelete(item.id)}>
+                    <Button
+                      mode="Danger"
+                      onClick={() => handleDelete(item.id)}
+                      className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
+                    >
                       削除
                     </Button>
                   </td>
