@@ -68,19 +68,6 @@ export default function Main() {
               />
             </h2>
             <ul className="md:w-[395px] relative">
-              {/* <Link
-                href="/posts/"
-                className="absolute bottom-16 -right-14 md:bottom-28 md:-right-24 md:hover:-right-28 transition-all"
-              >
-                <Image
-                  src={bnrgallery}
-                  loading="lazy"
-                  alt=""
-                  width={179}
-                  height={179}
-                  className="md:min-w-[179px] max-w-[120px]"
-                />
-              </Link> */}
               <ArticleMain />
             </ul>
           </div>

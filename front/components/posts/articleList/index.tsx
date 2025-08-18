@@ -7,12 +7,8 @@ import PhotoList from "@/components/shared/photoList";
 import Image from "next/image";
 import TagList from "@/components/shared/tagList";
 import { useRouter } from "next/navigation";
-import StatusInfo from "@/components/shared/statusInfo";
 
 export default function ArticleList() {
-  const [status, setStatus] = useState<"loading" | "service-down" | "success">(
-    "loading"
-  );
   const [data, setData] = useState<Post[] | undefined>(undefined);
   const router = useRouter();
 
@@ -48,19 +44,17 @@ export default function ArticleList() {
           })
         );
         setData(postsWithComments);
-        setStatus("success");
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
-        setStatus("service-down");
       }
     }
     fetchData();
   }, [router]);
 
   // データが取得できていない場合の表示
-  if (status !== "success" || data === undefined) {
-    return <StatusInfo status={status} data={data} />;
-  }
+  // if (status !== "success" || data === undefined) {
+  //   return <StatusInfo status={status} data={data} />;
+  // }
 
   return (
     <>
@@ -68,7 +62,7 @@ export default function ArticleList() {
         <h1 className="font-bold md:my-2 md:text-3xl text-xl">作品一覧</h1>
       </div>
       <ul className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-y-20 gap-x-5 max-w-[1400px] mx-auto md:mt-10 px-5">
-        {data.map((item, index) => (
+        {data?.map((item, index) => (
           <li key={index}>
             <div className="mt-4">
               <Link href={`/posts/${item.id}`}>
