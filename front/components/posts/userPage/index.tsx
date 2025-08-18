@@ -8,6 +8,7 @@ import Link from "next/link";
 import Button from "@/components/shared/button";
 import { useRouter } from "next/navigation";
 import StatusInfo from "@/components/shared/statusInfo";
+import { jost } from "@/components/shared/font";
 
 const UserPage = () => {
   const [status, setStatus] = useState<"loading" | "service-down" | "success">(
@@ -57,10 +58,16 @@ const UserPage = () => {
 
   return (
     <div className="wrapper">
-      <h1 className="font-bold my-2">マイページ</h1>
+      <div className="text-center">
+        <h3
+          className={`${jost.className} md:text-[53px] text-[22px] text-[#6C9FE0] tracking-[.2rem] font-bold`}
+        >
+          Mypage
+        </h3>
+      </div>
       {userProfile ? (
         <>
-          <div className="p-5 text-center">
+          <div className="p-5 text-center mt-8">
             <div className="inline-block text-center">
               <Image
                 className="inline-block mr-2 rounded-full object-cover w-[140px] h-[140px] border-[#6C9FE0] border-4"
@@ -77,14 +84,23 @@ const UserPage = () => {
       ) : (
         <p>ユーザー情報を読み込んでいます...</p>
       )}
-      <div className="mt-8 text-right">
-        <Button mode="Danger" onClick={handleLogout}>
-          ログアウト
+      <div className="mt-8 md:text-right text-center">
+        <Button
+          mode="Danger"
+          onClick={handleLogout}
+          className="py-5 px-10 text-white text-sm font-semibold tracking-widest rounded-lg"
+        >
+          ログアウトする
         </Button>
       </div>
       <div className="mt-10 text-center">
         <Link href="/posts/new">
-          <Button>新しい投稿を作成する</Button>
+          <Button
+            mode="Info"
+            className="py-5 px-10 text-white text-sm font-semibold tracking-widest rounded-lg"
+          >
+            新しい投稿を作成する
+          </Button>
         </Link>
       </div>
       <div className="mt-8">
