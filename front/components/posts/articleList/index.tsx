@@ -64,10 +64,10 @@ export default function ArticleList() {
 
   return (
     <>
-      <div className="wrapper">
-        <h1 className="font-bold my-2">投稿一覧</h1>
+      <div className="wrapper md:mt-20">
+        <h1 className="font-bold md:my-2 md:text-3xl text-xl">作品一覧</h1>
       </div>
-      <ul className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-y-20 gap-x-5 max-w-[1400px] mx-auto mt-10 px-5">
+      <ul className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-y-20 gap-x-5 max-w-[1400px] mx-auto md:mt-10 px-5">
         {data.map((item, index) => (
           <li key={index}>
             <div className="mt-4">

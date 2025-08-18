@@ -1,30 +1,34 @@
 import LoginUser from "@/components/posts/loginUser";
-import Button from "@/components/shared/button";
+import { jost } from "@/components/shared/font";
 import Link from "next/link";
 
 export default function Login() {
   return (
     <>
       <div className="m-4 wrapper">
-        <h1 className="font-bold my-2">ログインまたは新規ユーザー登録</h1>
-        <div className="mt-10">
-          <div>
+        <div className="md:flex justify-center items-center gap-12">
+          <h3
+            className={`${jost.className} md:text-[53px] text-[22px] text-[#6C9FE0] tracking-[.2rem] font-bold`}
+          >
+            Login
+          </h3>
+          <p className="text-[#878787] md:text-lg font-semibold tracking-widest md:mt-0 mt-3">
+            ログイン・新規ユーザー登録は
+            <br />
+            午前9時〜午後9時の間にご利用いただけます
+          </p>
+        </div>
+
+        <div className="mt-6">
+          <div className="max-w-[448px] mx-auto">
             <LoginUser />
           </div>
           <div className="text-center md:mt-20 mt-12">
-            <h2 className="font-bold">新規ユーザー登録</h2>
-            <div className="mt-5">
-              <p>
-                akapoを使用するには、
-                <br className="md:hidden" />
-                サインアップが必要です。
-              </p>
-              <div className="mt-5">
-                <Link href="/signup">
-                  <Button mode="Success">サインアップ</Button>
-                </Link>
-              </div>
-            </div>
+            <h2 className="font-bold tracking-wide text-[#161616]">
+              <Link href="/signup" className="underline">
+                まだアカウントをお持ちでない方はこちら
+              </Link>
+            </h2>
           </div>
         </div>
       </div>
