@@ -93,7 +93,7 @@ const PatchPost = ({ id }: { id: number }) => {
   };
 
   return (
-    <div className="flex flex-col p-5 space-y-4">
+    <div className="flex flex-col space-y-6 mt-10">
       <div>
         <label>タイトル</label>
         <input
@@ -133,7 +133,11 @@ const PatchPost = ({ id }: { id: number }) => {
         <label>画像</label>
         <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
-      <Button mode="Success" onClick={handleSubmit}>
+      <Button
+        mode="Success"
+        onClick={handleSubmit}
+        className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
+      >
         投稿する
       </Button>
       {imageUrl && (

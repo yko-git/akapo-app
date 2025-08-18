@@ -13,12 +13,8 @@ export const Nav = () => {
   const isLoggedIn = useContext(LoginContext);
   const navs = [
     {
-      name: "HOME",
-      link: "/",
-    },
-    {
       name: "GALLERY",
-      link: "/posts",
+      link: "/",
     },
     {
       name: "ABOUT",
@@ -27,6 +23,10 @@ export const Nav = () => {
     {
       name: "MYPAGE",
       link: "/mypage",
+    },
+    {
+      name: "PROFILE",
+      link: "/profile",
     },
   ];
   const pathname = usePathname();

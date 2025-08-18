@@ -6,7 +6,7 @@ import logo from "@/public/home/logo.svg";
 import bnrgallery from "@/public/home/bnr-gallery.svg";
 import Link from "next/link";
 import ArticleMain from "@/components/posts/articleMain";
-import ArticleInfo from "../articleInfo";
+import { jost } from "@/components/shared/font";
 
 import { Post } from "@/api/fetchData";
 import { fetchPosts } from "@/api/fetchData";
@@ -47,8 +47,14 @@ export default function Main() {
   }
   return (
     <>
-      <div className="relative">
-        <div className="absolute md:bottom-60 bottom-96 -right-1 md:w-[85%] w-[95%] bg-[#6C9FE0] opacity-40 h-[21px] rounded-md inline-block -z-10"></div>
+      <div className="text-center">
+        <h3
+          className={`${jost.className} md:text-[53px] text-[22px] text-[#6C9FE0] tracking-[.2rem] font-bold`}
+        >
+          Gallery
+        </h3>
+      </div>
+      <div className="bg-[#F5F8FD] mt-8">
         <div className="wrapper">
           <div className="lg:w-[850px] mx-auto flex justify-between items-center flex-col-reverse md:flex-row">
             <h2>
@@ -61,8 +67,8 @@ export default function Main() {
                 className="md:min-w-[369px] mx-auto md:mt-0 mt-5 md:p-0 p-5"
               />
             </h2>
-            <ul className="md:w-[395px] lg:mr-0 md:mr-16 mr-8 relative">
-              <Link
+            <ul className="md:w-[395px] relative">
+              {/* <Link
                 href="/posts/"
                 className="absolute bottom-16 -right-14 md:bottom-28 md:-right-24 md:hover:-right-28 transition-all"
               >
@@ -74,11 +80,10 @@ export default function Main() {
                   height={179}
                   className="md:min-w-[179px] max-w-[120px]"
                 />
-              </Link>
+              </Link> */}
               <ArticleMain />
             </ul>
           </div>
-          <ArticleInfo data={data} />
         </div>
       </div>
     </>

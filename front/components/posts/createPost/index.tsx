@@ -90,7 +90,7 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="flex flex-col p-5 space-y-4">
+    <div className="flex flex-col space-y-6 mt-10">
       <div>
         <label>タイトル</label>
         <input
@@ -129,7 +129,12 @@ const CreatePost = () => {
         <label>画像</label>
         <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
-      <Button mode="Success" onClick={handleSubmit} disabled={isSubmitting}>
+      <Button
+        mode="Success"
+        onClick={handleSubmit}
+        disabled={isSubmitting}
+        className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
+      >
         {isSubmitting ? "投稿送信中..." : submitMessage}
       </Button>
       {imageUrl && (

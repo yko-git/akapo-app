@@ -40,7 +40,12 @@ export default function CreateComment({
         />
       </div>
       <div className="text-right mt-4">
-        <Button onClick={handleSubmit} type="submit" disabled={isSubmitting}>
+        <Button
+          onClick={handleSubmit}
+          type="submit"
+          disabled={isSubmitting}
+          className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
+        >
           {isSubmitting ? "コメント送信中..." : "コメントする"}
         </Button>
       </div>
