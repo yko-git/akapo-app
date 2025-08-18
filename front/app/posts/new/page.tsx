@@ -18,7 +18,7 @@ export default function PostPage() {
       <hr />
       <div className="wrapper">
         <div className="my-4">
-          <Link href="/posts">
+          <Link href="/">
             <Button
               mode="Info"
               className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"

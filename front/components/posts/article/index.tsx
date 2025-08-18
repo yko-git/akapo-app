@@ -55,7 +55,7 @@ export default function Article({ id }: { id: number }) {
       <div className="wrapper">
         <div className="md:my-10 mb-5">
           <Link
-            href="/posts"
+            href="/"
             className={`${jost.className} py-2 pl-3 tracking-[.2em] pr-5 inline-flex items-center rounded-lg text-[#6C9FE0] text-sm`}
           >
             <div className="mr-2">
