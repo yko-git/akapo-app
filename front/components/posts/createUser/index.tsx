@@ -64,47 +64,52 @@ const CreateUser = () => {
   };
 
   return (
-    <div className="flex flex-col p-5 space-y-4">
+    <div className="flex flex-col space-y-6 mt-10">
       <div>
-        <label>
+        <label className="font-semibold text-lg tracking-widest">
           <h3 className="font-bold">ログインID</h3>
         </label>
         <input
           type="text"
           value={loginId}
           onChange={(e) => setLoginId(e.target.value)}
-          className="border rounded p-2 w-full"
+          className="border rounded p-2 w-full mt-2"
         />
       </div>
       <div>
-        <label>
+        <label className="font-semibold text-lg tracking-widest">
           <h3 className="font-bold">アカウント名</h3>
         </label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="border rounded p-2 w-full"
+          className="border rounded p-2 w-full mt-2"
         />
       </div>
       <div>
-        <label>
+        <label className="font-semibold text-lg tracking-widest">
           <h3 className="font-bold">アイコン画像</h3>
         </label>
         <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
       <div>
-        <label>
+        <label className="font-semibold text-lg tracking-widest">
           <h3 className="font-bold">パスワード</h3>
         </label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border rounded p-2 w-full"
+          className="border rounded p-2 w-full mt-2"
         />
       </div>
-      <Button mode="Success" onClick={handleSubmit} disabled={isSubmitting}>
+      <Button
+        mode="Success"
+        onClick={handleSubmit}
+        disabled={isSubmitting}
+        className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
+      >
         {isSubmitting ? "登録中..." : submitMessage}
       </Button>
     </div>

@@ -31,39 +31,37 @@ const LoginUser = () => {
 
   return (
     <>
-      <div className="p-5 bg-gray-50">
-        <div className="text-center leading-8 tracking-wider p-4 rounded-lg shadow-md bg-white">
-          <p className="text-gray-600">
-            ログイン・新規ユーザー登録は
-            <br />
-            <strong>午前9時〜午後9時</strong>
-            の間にご利用いただけます
-          </p>
-        </div>
-      </div>
       <div className="flex flex-col space-y-6 mt-10" id="loginForm">
         <div>
-          <label>ログインID</label>
+          <label className="font-semibold text-lg tracking-widest">
+            ログインID
+          </label>
           <input
             type="text"
             value={loginId}
             onChange={(e) => setLoginId(e.target.value)}
-            className="border rounded p-2 w-full"
+            className="border rounded p-2 w-full mt-2"
             name="loginId"
           />
         </div>
         <div>
-          <label>パスワード</label>
+          <label className="font-semibold text-lg tracking-widest">
+            パスワード
+          </label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="border rounded p-2 w-full"
+            className="border rounded p-2 w-full mt-2"
             name="password"
           />
         </div>
-        <div id="loginSubmit">
-          <Button type="submit" onClick={handleSubmit}>
+        <div id="loginSubmit" className="text-center">
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
+          >
             ログインする
           </Button>
         </div>
