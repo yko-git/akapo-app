@@ -13,10 +13,6 @@ export const Nav = () => {
   const isLoggedIn = useContext(LoginContext);
   const navs = [
     {
-      name: "GALLERY",
-      link: "/",
-    },
-    {
       name: "ABOUT",
       link: "/about",
     },
