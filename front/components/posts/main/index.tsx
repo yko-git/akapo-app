@@ -3,11 +3,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import logo from "@/public/home/logo.svg";
-import bnrgallery from "@/public/home/bnr-gallery.svg";
-import Link from "next/link";
 import ArticleMain from "@/components/posts/articleMain";
 import { jost } from "@/components/shared/font";
-
+import ArticleList from "@/components/posts/articleList";
 import { Post } from "@/api/fetchData";
 import { fetchPosts } from "@/api/fetchData";
 import StatusInfo from "@/components/shared/statusInfo";
@@ -73,6 +71,10 @@ export default function Main() {
           </div>
         </div>
       </div>
+      <div className="wrapper md:mt-20">
+        <h1 className="font-bold md:my-2 md:text-3xl text-xl">作品一覧</h1>
+      </div>
+      <ArticleList />
     </>
   );
 }
