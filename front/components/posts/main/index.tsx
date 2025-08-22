@@ -45,7 +45,7 @@ export default function Main() {
   }
   return (
     <>
-      <div className="text-center">
+      <div className="text-center md:mb-0 mb-5">
         <h3
           className={`${jost.className} md:text-[53px] text-[22px] text-[#6C9FE0] tracking-[.2rem] font-bold`}
         >
