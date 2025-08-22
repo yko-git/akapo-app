@@ -108,8 +108,8 @@ export default function Article({ id }: { id: number }) {
                           className="inline-block mr-2 rounded-full object-cover md:w-[90px] md:h-[90px] w-[40px] h-[40px]"
                           src={data.user.iconSignedUrl}
                           alt=""
-                          width={40}
-                          height={40}
+                          width={90}
+                          height={90}
                           loading="lazy"
                         />
                         <p className="text-[12px] md:mt-1">{data.user.name}</p>
