@@ -28,13 +28,20 @@ export default function Header() {
     <header className="sticky top-0 bg-white bg-opacity-90 z-10">
       <div className="wrapper lg:pb-10 !pb-0 !pt-0">
         <div className="mx-auto max-w-screen-2xl">
-          <header className="flex items-center justify-between py-2 md:py-8 relative md:gap-0 gap-4">
+          <header className="flex items-center justify-between py-4 md:py-8 relative md:gap-0 gap-4">
             <Link
               href="/"
               className="inline-flex items-center gap-2.5 text-3xl font-bold text-black md:text-3xl"
               aria-label="logo"
             >
-              <Image src={logo} loading="lazy" width="184" height="56" alt="" />
+              <Image
+                src={logo}
+                className="md:w-[184px] w-[124px]"
+                loading="lazy"
+                width="184"
+                height="56"
+                alt=""
+              />
             </Link>
 
             <nav
