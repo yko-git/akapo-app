@@ -52,7 +52,7 @@ export default function Main() {
           Gallery
         </h3>
       </div>
-      <div className="bg-[#F5F8FD] mt-8">
+      {/* <div className="bg-[#F5F8FD] mt-8">
         <div className="wrapper">
           <div className="lg:w-[850px] mx-auto flex justify-between items-center flex-col-reverse md:flex-row">
             <h2>
@@ -73,7 +73,7 @@ export default function Main() {
       </div>
       <div className="wrapper md:mt-20">
         <h1 className="font-bold md:my-2 md:text-3xl text-xl">作品一覧</h1>
-      </div>
+      </div> */}
       <ArticleList />
     </>
   );
