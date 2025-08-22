@@ -53,10 +53,10 @@ export default function Article({ id }: { id: number }) {
   return (
     <>
       <div className="wrapper">
-        <div className="md:my-10 mb-5">
+        <div className="md:my-10">
           <Link
             href="/"
-            className={`${jost.className} py-2 pl-3 tracking-[.2em] pr-5 inline-flex items-center rounded-lg text-[#6C9FE0] text-sm`}
+            className={`${jost.className} tracking-[.2em] pr-5 inline-flex items-center rounded-lg text-[#6C9FE0] text-sm`}
           >
             <div className="mr-2">
               <svg
@@ -78,7 +78,7 @@ export default function Article({ id }: { id: number }) {
           </Link>
         </div>
         <div className="md:mt-12">
-          <div className="md:flex justify-between">
+          <div className="flex flex-col-reverse md:flex-row justify-between md:gap-0 gap-10">
             <Photo
               src={data.signedUrl}
               alt={data.title}
@@ -86,21 +86,33 @@ export default function Article({ id }: { id: number }) {
               height={542}
             />
 
-            <div className="md:w-full md:pl-10 tracking-[.2em] md:mt-0 mt-10 relative">
+            <div className="md:w-full md:pl-10 tracking-[.2em] relative">
+              <div className="md:block flex justify-between">
+                <ul className="mt-2">
+                  <TagList Categories={data.categories} />
+                </ul>
+                <p className="text-[#9F9F9F] text-[12px] mt-4 ">
+                  {new Date(data.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+              <div className="mt-4 md:text-[27px] text-lg leading-9 font-bold">
+                {data.title}
+              </div>
+
               <div className="mt-4">
                 <div className="inline-block text-center md:absolute right-0 top-0">
                   {data ? (
                     <>
-                      <div className="inline-block text-center">
+                      <div className="md:block flex items-center text-center">
                         <Image
-                          className="inline-block mr-2 rounded-full object-cover w-[90px] h-[90px] border-[#6C9FE0] border-4"
+                          className="inline-block mr-2 rounded-full object-cover md:w-[90px] md:h-[90px] w-[40px] h-[40px]"
                           src={data.user.iconSignedUrl}
                           alt=""
-                          width={90}
-                          height={90}
+                          width={40}
+                          height={40}
                           loading="lazy"
                         />
-                        <p className="text-[12px] mt-1">{data.user.name}</p>
+                        <p className="text-[12px] md:mt-1">{data.user.name}</p>
                       </div>
                     </>
                   ) : (
@@ -108,21 +120,19 @@ export default function Article({ id }: { id: number }) {
                   )}
                 </div>
               </div>
-              <p className="text-[#9F9F9F] text-[12px] mt-4 ">
-                {new Date(data.createdAt).toLocaleDateString()}
-              </p>
-              {/* category */}
-              <ul className="mt-2">
-                <TagList Categories={data.categories} />
-              </ul>
-              <div className="mt-4 md:text-[27px] text-lg leading-9 font-bold">
-                {data.title}
-              </div>
-              <div className="mt-4 leading-8 text-slate-500">
+
+              <div className="md:block hidden mt-4 leading-8 text-slate-500">
                 {data.body.split("\n").map((item: string, index: number) => (
                   <p key={index}>{item}</p>
                 ))}
               </div>
+            </div>
+          </div>
+          <div className="md:hidden block mt-4">
+            <div className="mt-4 leading-8 text-slate-500">
+              {data.body.split("\n").map((item: string, index: number) => (
+                <p key={index}>{item}</p>
+              ))}
             </div>
           </div>
         </div>
