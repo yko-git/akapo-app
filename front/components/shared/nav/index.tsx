@@ -33,7 +33,7 @@ export const Nav = () => {
   const isActive = (path: string) =>
     new RegExp(`^${path}(/.*)?$`).test(pathname);
   const linkClass = (active: boolean) =>
-    `${jost.className} text-sm font-[15px] text-[#6C9FE0] tracking-[.2rem] ${
+    `${jost.className} md:text-sm text-[45px] text-[#6C9FE0] tracking-[.2rem] ${
       active ? "border-b-2 border-[#6C9FE0]" : ""
     }`;
 
