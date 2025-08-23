@@ -12,8 +12,9 @@ export default function Header() {
 
   // 画面の大きさの判定ができる
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1024px)" });
-  const toggleHamburger = () =>
+  const toggleHamburger = () => {
     setVisible(visible === "visible" ? "hidden" : "visible");
+  };
 
   const [mounted, setMounted] = useState(false);
 
@@ -56,7 +57,11 @@ export default function Header() {
               className={`${visible} fixed inset-0 bg-white bg-opacity-95 lg:static lg:bg-transparent px-5 lg:px-0 py-3 lg:py-0 z-20`}
             >
               <ul className="flex flex-col items-center justify-center h-full md:gap-5 gap-10 lg:flex-row lg:static">
-                <Nav />
+                <Nav
+                  onLinkClick={() => {
+                    if (!isDesktopOrLaptop) setVisible("hidden");
+                  }}
+                />
               </ul>
             </nav>
             {!isDesktopOrLaptop && (

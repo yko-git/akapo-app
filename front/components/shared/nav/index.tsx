@@ -2,32 +2,23 @@
 import { jost } from "@/components/shared/font";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { LoginContext } from "../loginContext";
 
 export interface Nav {
   login: boolean;
 }
+interface NavProps {
+  onLinkClick?: () => void;
+}
 
-export const Nav = () => {
+export const Nav = ({ onLinkClick }: NavProps) => {
   const isLoggedIn = useContext(LoginContext);
   const navs = [
-    {
-      name: "HOME",
-      link: "/",
-    },
-    {
-      name: "ABOUT",
-      link: "/about",
-    },
-    {
-      name: "MYPAGE",
-      link: "/mypage",
-    },
-    {
-      name: "PROFILE",
-      link: "/profile",
-    },
+    { name: "HOME", link: "/" },
+    { name: "ABOUT", link: "/about" },
+    { name: "MYPAGE", link: "/mypage" },
+    { name: "PROFILE", link: "/profile" },
   ];
   const pathname = usePathname();
   const isActive = (path: string) =>
@@ -37,35 +28,28 @@ export const Nav = () => {
       active ? "border-b-2 border-[#6C9FE0]" : ""
     }`;
 
+  const renderLinks = (links: typeof navs) =>
+    links.map(({ name, link }) => (
+      <li key={name} className="px-4">
+        <Link
+          href={link}
+          className={linkClass(isActive(link))}
+          onClick={onLinkClick}
+        >
+          {name}
+        </Link>
+      </li>
+    ));
+
   return (
     <>
-      {isLoggedIn?.isLoggedIn ? (
-        navs.map(({ name, link }) => (
-          <li key={name} className="px-4">
-            <Link href={link} className={linkClass(isActive(link))}>
-              {name}
-            </Link>
-          </li>
-        ))
-      ) : (
-        <>
-          <li className="px-4">
-            <Link href="/login" className={linkClass(isActive("/login"))}>
-              LOGIN
-            </Link>
-          </li>
-          <li className="px-4">
-            <Link href="/signup" className={linkClass(isActive("/signup"))}>
-              SIGNIN
-            </Link>
-          </li>
-          <li className="px-4">
-            <Link href="/about" className={linkClass(isActive("/about"))}>
-              ABOUT
-            </Link>
-          </li>
-        </>
-      )}
+      {isLoggedIn?.isLoggedIn
+        ? renderLinks(navs)
+        : renderLinks([
+            { name: "LOGIN", link: "/login" },
+            { name: "SIGNIN", link: "/signup" },
+            { name: "ABOUT", link: "/about" },
+          ])}
     </>
   );
 };
