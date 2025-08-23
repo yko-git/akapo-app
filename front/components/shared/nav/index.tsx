@@ -51,6 +51,11 @@ export const Nav = () => {
         <>
           <li className="px-4">
             <Link href="/login" className={linkClass(isActive("/login"))}>
+              LOGIN
+            </Link>
+          </li>
+          <li className="px-4">
+            <Link href="/signup" className={linkClass(isActive("/signup"))}>
               SIGNIN
             </Link>
           </li>
