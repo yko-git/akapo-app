@@ -12,7 +12,7 @@ export default function Photo({ src, alt, width, height }: PhotoProps) {
     <div className="relative text-center">
       <div className="w-[50%] h-[35px] absolute top-[-20px] left-1/2 translate-x-[-50%] opacity-50 bg-orange-50 origin-[-3deg]"></div>
       <div className="shadow-xl md:overflow-hidden max-w-[400px] border-[6px] border-white inline-block">
-        <Image
+        <img
           src={src}
           alt={alt}
           width={width}
