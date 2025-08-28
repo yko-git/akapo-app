@@ -140,7 +140,7 @@ const CreatePost = () => {
       {imageUrl && (
         <div>
           <h3>アップロードされた画像:</h3>
-          <Image src={imageUrl} alt="Uploaded" width={100} height={100} />
+          <img src={imageUrl} alt="Uploaded" width={100} height={100} />
         </div>
       )}
     </div>

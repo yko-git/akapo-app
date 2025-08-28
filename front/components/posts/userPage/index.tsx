@@ -69,7 +69,7 @@ const UserPage = () => {
         <>
           <div className="p-5 text-center mt-8">
             <div className="inline-block text-center">
-              <Image
+              <img
                 className="inline-block mr-2 rounded-full object-cover w-[140px] h-[140px] border-[#6C9FE0] border-4"
                 src={userProfile.iconSignedUrl}
                 alt=""

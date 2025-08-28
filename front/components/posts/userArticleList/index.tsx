@@ -97,7 +97,7 @@ export default function UserArticleList({
                     <div>{item.body.slice(0, 25)}</div>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 text-center">
-                    <Image
+                    <img
                       src={item.signedUrl}
                       alt={item.title}
                       width={50}
