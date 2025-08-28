@@ -67,13 +67,13 @@ const LoginUser = () => {
         </div>
       </div>
 
-      <div className="mt-5 border-l-2 pl-4 leading-loose">
+      {/* <div className="mt-5 border-l-2 pl-4 leading-loose">
         現在機能開発中のため、
         <br />
         ログインID：<strong>test</strong>
         <br />
         パスワード：<strong>test</strong>で仮ログイン可能です。
-      </div>
+      </div> */}
     </>
   );
 };
