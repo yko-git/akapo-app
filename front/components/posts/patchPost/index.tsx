@@ -143,13 +143,7 @@ const PatchPost = ({ id }: { id: number }) => {
       {imageUrl && (
         <div>
           <h3>アップロードされた画像:</h3>
-          <img
-            src={imageUrl}
-            alt="Uploaded"
-            width={100}
-            height={100}
-            unoptimized
-          />
+          <img src={imageUrl} alt="Uploaded" width={100} height={100} />
         </div>
       )}
     </div>
