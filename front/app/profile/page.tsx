@@ -33,7 +33,7 @@ export default function Profile() {
                   <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline block md:mr-6 mr-0">
                     紹　介
                   </span>
-                  散歩やものづくりが好きなママエンジニアです。
+                  散歩やものづくりが好きなママです。
                   <br />
                   「Akapo」は、自身の学習やインプットを目的に開発しており、React
                   / Next.js / TypeScript を使用しています。
@@ -69,7 +69,7 @@ export default function Profile() {
                 <br />
                 主にWebページの作成からフロントエンド開発まで、幅広い業務を経験してきました。
               </li>
-              <li className="md:flex">
+              {/* <li className="md:flex">
                 <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline-flex items-center block md:mr-6 mr-0">
                   <span>学習記録</span>
                   <svg
@@ -92,7 +92,7 @@ export default function Profile() {
                 >
                   https://github.com/yko-git/til
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
