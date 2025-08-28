@@ -104,7 +104,7 @@ export default function Article({ id }: { id: number }) {
                   {data ? (
                     <>
                       <div className="md:block flex items-center text-center">
-                        <Image
+                        <img
                           className="inline-block mr-2 rounded-full object-cover md:w-[90px] md:h-[90px] w-[40px] h-[40px]"
                           src={data.user.iconSignedUrl}
                           alt=""
