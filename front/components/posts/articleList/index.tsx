@@ -83,7 +83,7 @@ export default function ArticleList() {
               <div className="font-semibold mt-4">{item.title}</div>
               <div className="flex items-center justify-between mt-2 text-[#807f7f]">
                 <div className="flex items-center">
-                  <Image
+                  <img
                     className="inline-block mr-2 rounded-full object-cover w-[31px] h-[31px] "
                     src={item.user.iconSignedUrl}
                     alt=""
