@@ -61,7 +61,7 @@ export default function CommentList({
               }`}
             >
               <div className="inline-block text-center md:w-auto w-full shrink-0 md:mb-0 mb-5">
-                <Image
+                <img
                   className="inline-block mr-2 rounded-full object-cover w-[90px] h-[90px] border-[#6C9FE0] border-4"
                   src={comment.user.iconSignedUrl}
                   alt={comment.user.name}
