@@ -79,12 +79,7 @@ export default function Article({ id }: { id: number }) {
         </div>
         <div className="md:mt-12">
           <div className="flex flex-col-reverse md:flex-row justify-between md:gap-0 gap-10">
-            <Photo
-              src={data.signedUrl}
-              alt={data.title}
-              width={400}
-              height={542}
-            />
+            <Photo src={data.signedUrl} alt={data.title} />
 
             <div className="md:w-full md:pl-10 tracking-[.2em] relative">
               <div className="md:block flex justify-between">

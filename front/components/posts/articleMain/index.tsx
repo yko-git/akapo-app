@@ -40,9 +40,7 @@ export default function ArticleMain() {
 
   // データが取得できていない場合の表示
   if (!data) {
-    return (
-      <Photo src="/home/dummyimg.png" alt="dummy" width={280} height={280} />
-    );
+    return <Photo src="/home/dummyimg.png" alt="dummy" />;
   }
 
   return (
@@ -85,12 +83,7 @@ export default function ArticleMain() {
                 return (
                   <SwiperSlide key={value.id}>
                     <Link href={`posts/${value.id}`}>
-                      <Photo
-                        src={value?.signedUrl}
-                        alt={value.title}
-                        width={400}
-                        height={542}
-                      />
+                      <Photo src={value?.signedUrl} alt={value.title} />
                     </Link>
                   </SwiperSlide>
                 );
@@ -102,12 +95,7 @@ export default function ArticleMain() {
         </div>
         <div className="md:hidden block">
           <Link href={`posts/${data[0].id}`}>
-            <Photo
-              src={data[0]?.signedUrl}
-              alt={data[0].title}
-              width={400}
-              height={542}
-            />
+            <Photo src={data[0]?.signedUrl} alt={data[0].title} />
           </Link>
         </div>
       </div>
