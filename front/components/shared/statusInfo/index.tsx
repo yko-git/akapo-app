@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Post } from "@/api/fetchData";
 
 interface StatusInfoProps {
@@ -22,6 +23,15 @@ export default function StatusInfo({ status, data }: StatusInfoProps) {
     return (
       <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
         <div className="text-center p-8 rounded-lg shadow-md bg-white my-20">
+          <p className="m-4 inline-block">
+            <Image
+              src="/common/zzz.png"
+              loading="lazy"
+              alt=""
+              width={160}
+              height={100}
+            />
+          </p>
           <p className="text-gray-800 text-lg font-medium mb-2">
             現在、サービスは一時停止中です。
           </p>
