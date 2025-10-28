@@ -78,10 +78,29 @@ export default function Article({ id }: { id: number }) {
           </Link>
         </div>
         <div className="md:mt-12">
-          <div className="flex flex-col-reverse md:flex-row justify-between md:gap-0 gap-10">
+          <div className="flex flex-col-reverse md:flex-row md:items-start md:gap-10 gap-10">
             <Photo src={data.signedUrl} alt={data.title} />
 
-            <div className="md:w-full md:pl-10 tracking-[.2em] relative">
+            <div className="md:pl-10 tracking-[.2em] relative">
+              <div className="inline-block text-center md:absolute right-0 -top-2 md:mt-0 mt-4">
+                {data ? (
+                  <>
+                    <div className="md:block flex items-center text-center">
+                      <img
+                        className="inline-block mr-2 rounded-full object-cover md:w-[90px] md:h-[90px] w-[40px] h-[40px]"
+                        src={data.user.iconSignedUrl}
+                        alt=""
+                        width={90}
+                        height={90}
+                        loading="lazy"
+                      />
+                      <p className="text-[12px] md:mt-1">{data.user.name}</p>
+                    </div>
+                  </>
+                ) : (
+                  <p>ユーザー情報を読み込んでいます...</p>
+                )}
+              </div>
               <div className="md:block flex justify-between">
                 <ul className="mt-2">
                   <TagList Categories={data.categories} />
@@ -90,30 +109,8 @@ export default function Article({ id }: { id: number }) {
                   {new Date(data.createdAt).toLocaleDateString()}
                 </p>
               </div>
-              <div className="mt-4 md:text-[27px] text-lg leading-9 font-bold">
+              <div className="md:mt-12 mt-4 md:text-[27px] text-lg leading-9 font-bold">
                 {data.title}
-              </div>
-
-              <div className="mt-4">
-                <div className="inline-block text-center md:absolute right-0 top-0">
-                  {data ? (
-                    <>
-                      <div className="md:block flex items-center text-center">
-                        <img
-                          className="inline-block mr-2 rounded-full object-cover md:w-[90px] md:h-[90px] w-[40px] h-[40px]"
-                          src={data.user.iconSignedUrl}
-                          alt=""
-                          width={90}
-                          height={90}
-                          loading="lazy"
-                        />
-                        <p className="text-[12px] md:mt-1">{data.user.name}</p>
-                      </div>
-                    </>
-                  ) : (
-                    <p>ユーザー情報を読み込んでいます...</p>
-                  )}
-                </div>
               </div>
 
               <div className="md:block hidden mt-4 leading-8 text-slate-500">

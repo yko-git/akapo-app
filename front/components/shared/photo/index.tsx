@@ -8,13 +8,13 @@ export interface PhotoProps {
 export default function Photo({ src, alt }: PhotoProps) {
   return (
     <div className="relative text-center">
-      <div className="w-[50%] h-[35px] absolute top-[-20px] left-1/2 translate-x-[-50%] opacity-50 bg-orange-50 origin-[-3deg]"></div>
-      <div className="shadow-xl md:overflow-hidden max-w-[500px] border-[6px] border-white inline-block">
+      <div className="w-[50%] h-[35px] absolute top-[-20px] left-1/2 -translate-x-1/2 opacity-50 bg-orange-50 rotate-[-3deg]"></div>
+      <div className="shadow-xl md:overflow-hidden md:w-[500px] w-full max-w-full mx-auto flex-shrink-0 border-[6px] border-white">
         <img
           src={src}
           alt={alt}
           loading="lazy"
-          className="object-cover md:h-[auto]"
+          className="object-cover w-full h-auto"
         />
       </div>
     </div>
