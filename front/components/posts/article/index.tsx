@@ -81,7 +81,7 @@ export default function Article({ id }: { id: number }) {
           <div className="flex flex-col-reverse md:flex-row md:items-start md:gap-10 gap-10">
             <Photo src={data.signedUrl} alt={data.title} />
 
-            <div className="md:pl-10 tracking-[.2em] relative">
+            <div className="md:pl-10 tracking-[.2em] relative md:min-w-96">
               <div className="inline-block text-center md:absolute right-0 -top-2 md:mt-0 mt-4">
                 {data ? (
                   <>
