@@ -9,8 +9,8 @@ import TagList from "@/components/shared/tagList";
 import Photo from "@/components/shared/photo";
 import CommentList from "@/components/posts/commentList";
 import CreateComment from "@/components/posts/createComment";
-import { useRouter } from "next/navigation";
 import StatusInfo from "@/components/shared/statusInfo";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 export default function Article({ id }: { id: number }) {
   const [status, setStatus] = useState<"loading" | "service-down" | "success">(
@@ -22,12 +22,9 @@ export default function Article({ id }: { id: number }) {
     const commentList = await fetchComments({ postId: id });
     setComments(commentList);
   };
-  const router = useRouter();
+  const isAuthChecked = useRequireAuth();
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-    }
+    if (!isAuthChecked) return; // 認証チェックが完了していない場合はデータ取得をスキップ
     async function fetchData() {
       try {
         const post = await fetchPost({ id });
@@ -44,7 +41,7 @@ export default function Article({ id }: { id: number }) {
     }
 
     fetchData();
-  }, [id]);
+  }, [id, isAuthChecked]);
 
   if (status !== "success" || data === null) {
     return <StatusInfo status={status} data={data} />;

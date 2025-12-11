@@ -1,13 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import { createPost } from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
@@ -18,14 +17,10 @@ const CreatePost = () => {
   const [status, setStatus] = useState<string>("0");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<string>("投稿する");
-  const router = useRouter();
+  const checked = useRequireAuth();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-    }
-  }, []);
+  // 認証チェック完了前は何も表示しない
+  if (!checked) return null;
 
   const handleSelect = (value: string | string[]) => {
     if (typeof value === "string") {

@@ -4,19 +4,15 @@ import Link from "next/link";
 import { Post } from "@/api/fetchData";
 import { fetchPosts, fetchComments } from "@/api/fetchData";
 import PhotoList from "@/components/shared/photoList";
-import Image from "next/image";
 import TagList from "@/components/shared/tagList";
-import { useRouter } from "next/navigation";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 export default function ArticleList() {
   const [data, setData] = useState<Post[] | undefined>(undefined);
-  const router = useRouter();
 
+  const isAuthChecked = useRequireAuth();
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-    }
+    if (!isAuthChecked) return; // 認証チェックが完了していない場合はデータ取得をスキップ
 
     async function fetchData() {
       try {
@@ -49,7 +45,7 @@ export default function ArticleList() {
       }
     }
     fetchData();
-  }, [router]);
+  }, [isAuthChecked]);
 
   return (
     <>

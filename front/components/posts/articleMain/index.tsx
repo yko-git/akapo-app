@@ -4,22 +4,20 @@ import Link from "next/link";
 import { Post } from "@/api/fetchData";
 import { fetchPosts } from "@/api/fetchData";
 import Photo from "@/components/shared/photo";
-import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Autoplay } from "swiper/modules";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 import "swiper/css";
 import "swiper/css/effect-fade";
 
 export default function ArticleMain() {
   const [data, setData] = useState<Post[] | null>(null);
-  const router = useRouter();
+  const isAuthChecked = useRequireAuth();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-    }
+    if (!isAuthChecked) return; // 認証チェックが完了していない場合はデータ取得をスキップ
+
     async function fetchData() {
       try {
         const posts = await fetchPosts();
@@ -36,7 +34,7 @@ export default function ArticleMain() {
     }
 
     fetchData();
-  }, []);
+  }, [isAuthChecked]);
 
   // データが取得できていない場合の表示
   if (!data) {
