@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Post, UserProfile } from "@/api/fetchData";
-import Image from "next/image";
 import { fetchUserPosts, fetchUserData } from "@/api/fetchData";
 import UserArticleList from "../userArticleList";
 import Link from "next/link";
@@ -9,6 +8,7 @@ import Button from "@/components/shared/button";
 import { useRouter } from "next/navigation";
 import StatusInfo from "@/components/shared/statusInfo";
 import { jost } from "@/components/shared/font";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 const UserPage = () => {
   const [status, setStatus] = useState<"loading" | "service-down" | "success">(
@@ -17,21 +17,14 @@ const UserPage = () => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [data, setData] = useState<Post[] | null>(null);
   const router = useRouter();
+  const isAuthChecked = useRequireAuth();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
+    if (!isAuthChecked) return; // 認証チェックが完了していない場合はデータ取得をスキップ
 
     async function fetchData() {
       try {
         const userData = await fetchUserData();
-        if (!userData) {
-          router.push("/login");
-          return;
-        }
         setUserProfile(userData);
 
         const posts = await fetchUserPosts();
@@ -44,7 +37,7 @@ const UserPage = () => {
     }
 
     fetchData();
-  }, []);
+  }, [isAuthChecked]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");

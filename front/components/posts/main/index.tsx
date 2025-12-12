@@ -1,26 +1,20 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import logo from "@/public/home/logo.svg";
-import ArticleMain from "@/components/posts/articleMain";
 import { jost } from "@/components/shared/font";
 import ArticleList from "@/components/posts/articleList";
 import { Post } from "@/api/fetchData";
 import { fetchPosts } from "@/api/fetchData";
 import StatusInfo from "@/components/shared/statusInfo";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 export default function Main() {
   const [status, setStatus] = useState<"loading" | "service-down" | "success">(
     "loading"
   );
   const [data, setData] = useState<Post[] | undefined>(undefined);
-  const router = useRouter();
+  const isAuthChecked = useRequireAuth();
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-    }
+    if (!isAuthChecked) return; // 認証チェックが完了していない場合はデータ取得をスキップ
 
     async function fetchData() {
       try {
@@ -37,7 +31,7 @@ export default function Main() {
       }
     }
     fetchData();
-  }, []);
+  }, [isAuthChecked]);
 
   // データが取得できていない場合の表示
   if (status !== "success" || data === undefined) {
