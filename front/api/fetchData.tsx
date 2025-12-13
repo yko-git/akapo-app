@@ -71,8 +71,8 @@ export type Comment = {
   };
 };
 
-export type ArticleData = {
-  data: Post[];
+export type ArticleData<T> = {
+  data: T;
 };
 
 export type Category = {
