@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { jost } from "@/components/shared/font";
-import { ArticleData } from "@/api/fetchData";
+import { ArticleData, Post } from "@/api/fetchData";
 
-export default function ArticleInfo({ data }: ArticleData) {
+export default function ArticleInfo({ data }: ArticleData<Post[]>) {
   return (
     <div className="bg-white rounded-xl shadow-md py-9 md:px-20 px-8 md:flex items-center">
       <h3
