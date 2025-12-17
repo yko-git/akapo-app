@@ -8,7 +8,7 @@ import { Nav } from "@/components/shared/nav";
 
 export default function Header() {
   // visibleの値を変えることでメニューを表示・非表示させる
-  const [visible, setVisible] = useState("hidden");
+  const [visible, setVisible] = useState<"hidden" | "visible">("hidden");
 
   // 画面の大きさの判定ができる
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1024px)" });
@@ -16,7 +16,7 @@ export default function Header() {
     setVisible(visible === "visible" ? "hidden" : "visible");
   };
 
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
     if (isDesktopOrLaptop) {
