@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { Post } from "@/api/fetchData";
 import { fetchPost, fetchComments, Comment } from "@/api/fetchData";
@@ -45,6 +45,12 @@ export default function Article({ id }: { id: number }) {
 
     fetchData();
   }, [id]);
+
+  const bodyParagraphs = useMemo(() => {
+    return data?.body
+      .split("\n")
+      .map((item: string, index: number) => <p key={index}>{item}</p>);
+  }, [data?.body]);
 
   if (status !== "success" || data === null) {
     return <StatusInfo status={status} data={data} />;
@@ -122,9 +128,7 @@ export default function Article({ id }: { id: number }) {
           </div>
           <div className="md:hidden block mt-4">
             <div className="mt-4 leading-8 text-slate-500">
-              {data.body.split("\n").map((item: string, index: number) => (
-                <p key={index}>{item}</p>
-              ))}
+              {bodyParagraphs}
             </div>
           </div>
         </div>
