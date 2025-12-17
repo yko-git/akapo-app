@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 const LoginUser = () => {
-  const [loginId, setLoginId] = useState("");
-  const [password, setPassword] = useState("");
+  const [loginId, setLoginId] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const router = useRouter();
 
   const handleSubmit = async () => {
