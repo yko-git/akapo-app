@@ -15,7 +15,7 @@ const CreatePost = () => {
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [status, setStatus] = useState<string>("0");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitMessage, setSubmitMessage] = useState<string>("投稿する");
   const checked = useRequireAuth();
 

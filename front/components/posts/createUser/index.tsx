@@ -12,7 +12,7 @@ const CreateUser = () => {
   const [password, setPassword] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitMessage, setSubmitMessage] = useState<string>("登録する");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
