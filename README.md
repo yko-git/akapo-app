@@ -2,8 +2,10 @@
 
 こちらは、[akapo](https://akapo-front.vercel.app/) の開発用リポジトリです。
 
-**子どもや自身の工作・作品を投稿し、コメントで交流できるギャラリーサービス**です。
+**子どもや自身の工作・作品を投稿し、コメントで交流できるギャラリーサービス**です。  
+フロントエンドとバックエンドを分離し、認証付きAPIを前提に設計・実装しています。
 
+---
 
 <img width="889" height="565" alt="image" src="https://github.com/user-attachments/assets/49b9a809-828d-44de-a98c-1e3977c608a0" />
 
@@ -59,15 +61,20 @@ PASS: test
 - 認証を前提としたAPI設計
 - 非同期処理や状態管理の理解
 - 実務を意識した構成・命名
+- 認証を前提としたAPI設計（JWT + 認証ミドルウェア）
 
 などを意識しながら実装しています。
+
+akapo を通して、  
+**設計に関する技術的な判断力** や  
+**実際に使うユーザー視点でのUI・機能設計** を継続的に磨いていきたいと考えています。
 
 ---
 
 ## 使用技術
 
 ### フロントエンド
-- Next.js（App Router / Client Components）
+- Next.js（App Router / Client Components：画面構成・ルーティング）
 - TypeScript
 - React
 - Tailwind CSS
@@ -89,5 +96,4 @@ PASS: test
 
 ## 今後の予定
 - UI/UXの改善
-- パフォーマンス改善
-- 検索機能
+- 検索機能（条件検索・ページング）
