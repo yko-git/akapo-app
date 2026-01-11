@@ -15,6 +15,12 @@ export const NewUserSchema = z.object({
   password: z.string().min(6, "パスワードは6文字以上である必要があります"),
 });
 
+// NewLogin スキーマ
+export const NewLoginSchema = z.object({
+  loginId: z.string().min(1, "ログインIDは必須です"),
+  password: z.string().min(1, "パスワードは必須です"),
+});
+
 // UserProfile スキーマ
 export const UserProfileSchema = z.object({
   id: z.number(),
@@ -28,4 +34,5 @@ export const UserProfileSchema = z.object({
 // TypeScriptの型を自動生成
 export type User = z.infer<typeof UserSchema>;
 export type NewUser = z.infer<typeof NewUserSchema>;
+export type NewLogin = z.infer<typeof NewLoginSchema>;
 export type UserProfile = z.infer<typeof UserProfileSchema>;
