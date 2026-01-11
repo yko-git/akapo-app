@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Post } from "@/api/fetchData";
-import { fetchPost, fetchComments, Comment } from "@/api/fetchData";
+import { Post } from "@/schemas/post.schema";
+import { Comment } from "@/schemas/comment.schema";
+import { fetchPost, fetchComments } from "@/api/fetchData";
 import { jost } from "@/components/shared/font";
 import Image from "next/image";
 import TagList from "@/components/shared/tagList";

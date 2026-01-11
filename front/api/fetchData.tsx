@@ -1,83 +1,8 @@
 import axios from "axios";
+import { NewUser, NewLogin, UserProfile } from "@/schemas/user.schema";
+import { Post, NewPost } from "@/schemas/post.schema";
+import { Comment, NewComment } from "@/schemas/comment.schema";
 require("dotenv").config();
-
-export interface User {
-  id: number;
-  name: string;
-  iconUrl: string;
-  iconSignedUrl: string;
-}
-
-export interface NewUser {
-  loginId: string;
-  name: string;
-  password: string;
-}
-
-export interface UserProfile {
-  id: number;
-  name: string;
-  loginId: string;
-  iconUrl?: string;
-  signedUrl?: string;
-  iconSignedUrl: string;
-}
-
-export interface Post {
-  id: number;
-  title: string;
-  body: string;
-  signedUrl: string;
-  createdAt: string;
-  categories: { id: number; name: string }[];
-  user: User;
-  imageKey: string;
-  commentCount: number;
-  hasNewComment?: boolean;
-}
-
-export interface NewPost {
-  title: string;
-  body: string;
-  status: string;
-  categoryIds: number[];
-  imageKey?: string;
-}
-
-export interface NewComment {
-  body: string;
-}
-
-export interface TagListProps {
-  Categories?: Array<{ name: string }>;
-}
-
-interface NewLogin {
-  loginId: string;
-  password: string;
-}
-
-export type Comment = {
-  id: number;
-  postId: number;
-  userId: number;
-  body: string;
-  createdAt: string;
-  updatedAt: string;
-  user: {
-    name: string;
-    iconSignedUrl: string;
-    id: number;
-  };
-};
-
-export type ArticleData<T> = {
-  data: T;
-};
-
-export type Category = {
-  id: number;
-};
 
 // axiosインスタンス
 const instance = axios.create({
