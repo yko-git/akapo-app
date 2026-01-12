@@ -1,7 +1,18 @@
 import axios from "axios";
-import { NewUser, NewLogin, UserProfile } from "@/schemas/user.schema";
-import { Post, NewPost } from "@/schemas/post.schema";
-import { Comment, NewComment } from "@/schemas/comment.schema";
+import {
+  NewUser,
+  NewLogin,
+  UserProfile,
+  UserProfileSchema,
+} from "@/schemas/user.schema";
+import {
+  Post,
+  NewPost,
+  PostSchema,
+  NewPostSchema,
+} from "@/schemas/post.schema";
+import { Comment, CommentSchema, NewComment } from "@/schemas/comment.schema";
+import z from "zod";
 require("dotenv").config();
 
 // axiosインスタンス
@@ -32,19 +43,32 @@ instance.interceptors.response.use(
 );
 
 // 個別投稿データ取得関数
-export async function fetchPost({
-  id,
-}: {
-  id?: number; // オプショナルにする
-}): Promise<Post | null> {
+export async function fetchPost({ id }: { id?: number }): Promise<Post | null> {
   const response = await instance.get(`posts/${id}`);
-  return response.data.posts;
+
+  // レスポンスデータのバリデーション
+  const result = PostSchema.safeParse(response.data.posts);
+  if (!result.success) {
+    console.error("データの形式が正しくありません:", result.error);
+    return null;
+  }
+
+  return result.data;
 }
 
 // 複数投稿データ取得関数
 export async function fetchPosts(): Promise<Post[] | null> {
   const response = await instance.get(`posts/`);
-  return response.data.posts;
+
+  // レスポンスデータのバリデーション
+  const result = z.array(PostSchema).safeParse(response.data.posts);
+
+  if (!result.success) {
+    console.error("データの形式が正しくありません:", result.error);
+    return null;
+  }
+
+  return result.data;
 }
 
 // 記事投稿関数
@@ -52,7 +76,12 @@ export async function createPost(
   file: File,
   postData: NewPost
 ): Promise<string | undefined> {
-  const { title, body, status, categoryIds } = postData;
+  // バリデーション
+  const validation = NewPostSchema.safeParse(postData);
+  if (!validation.success) {
+    throw new Error("Invalid post data");
+  }
+  const { title, body, status, categoryIds } = validation.data;
   // S3の署名付きURLを取得
   const signedUrlResponse = await instance.get("signedurl", {
     params: { filename: file.name },
@@ -77,7 +106,14 @@ export async function createPost(
     },
   });
 
-  return postResponse.data.post.signedUrl; // サーバーからの署名付きURLを使用
+  // レスポンスデータのバリデーション
+  const result = PostSchema.safeParse(postResponse.data.post);
+  if (!result.success) {
+    console.error("データの形式が正しくありません:", result.error);
+    return undefined;
+  }
+
+  return result.data.signedUrl; // サーバーからの署名付きURLを使用
 }
 
 // 新規ユーザー登録
@@ -109,7 +145,14 @@ export async function createUser(
     },
   });
 
-  return userResponse.data.user.iconSignedUrl; // サーバーからの署名付きURLを使用
+  // レスポンスデータのバリデーション
+  const result = UserProfileSchema.safeParse(userResponse.data.user);
+  if (!result.success) {
+    console.error("データの形式が正しくありません:", result.error);
+    return undefined;
+  }
+
+  return result.data.iconSignedUrl; // サーバーからの署名付きURLを使用
 }
 
 // 新規ログイン用関数
@@ -126,13 +169,27 @@ export async function createLogin(
 // ユーザー投稿データ取得関数
 export async function fetchUserPosts(): Promise<Post[] | null> {
   const response = await instance.get(`user/posts`);
-  return response.data.posts;
+
+  // レスポンスデータのバリデーション
+  const result = z.array(PostSchema).safeParse(response.data.posts);
+  if (!result.success) {
+    console.error("データの形式が正しくありません:", result.error);
+    return null;
+  }
+  return result.data;
 }
 
 // ユーザー情報取得関数
 export async function fetchUserData(): Promise<UserProfile | null> {
   const response = await instance.get(`user`);
-  return response.data.user;
+
+  // レスポンスデータのバリデーション
+  const result = UserProfileSchema.safeParse(response.data.user);
+  if (!result.success) {
+    console.error("ユーザーデータが不正です:", result.error);
+    return null;
+  }
+  return result.data;
 }
 
 // 個別投稿データ削除関数
@@ -174,7 +231,14 @@ export async function fetchComments({
   postId: number;
 }): Promise<Comment[]> {
   const response = await instance.get(`posts/${postId}/comments`);
-  return response.data.comments;
+
+  // レスポンスデータのバリデーション
+  const result = z.array(CommentSchema).safeParse(response.data.comments);
+  if (!result.success) {
+    console.error("コメントデータが不正です:", result.error);
+    return []; // 空配列を返す
+  }
+  return result.data;
 }
 
 // コメント投稿関数
@@ -183,7 +247,14 @@ export async function createComment(
   postData: NewComment
 ): Promise<Comment> {
   const response = await instance.post(`posts/${postId}/comments`, postData);
-  return response.data.comment;
+
+  // レスポンスデータのバリデーション
+  const result = CommentSchema.safeParse(response.data.comment);
+  if (!result.success) {
+    console.error("データの形式が正しくありません:", result.error);
+    throw new Error("Invalid comment data");
+  }
+  return result.data;
 }
 
 // コメントデータ削除関数
