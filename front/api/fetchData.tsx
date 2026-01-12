@@ -43,7 +43,7 @@ instance.interceptors.response.use(
 );
 
 // 個別投稿データ取得関数
-export async function fetchPost({ id }: { id?: number }): Promise<Post | null> {
+export async function fetchPost({ id }: { id: number }): Promise<Post | null> {
   const response = await instance.get(`posts/${id}`);
 
   // レスポンスデータのバリデーション
@@ -75,13 +75,12 @@ export async function fetchPosts(): Promise<Post[] | null> {
 export async function createPost(
   file: File,
   postData: NewPost
-): Promise<string | undefined> {
+): Promise<string> {
   // バリデーション
   const validation = NewPostSchema.safeParse(postData);
   if (!validation.success) {
     throw new Error("Invalid post data");
   }
-  const { title, body, status, categoryIds } = validation.data;
   // S3の署名付きURLを取得
   const signedUrlResponse = await instance.get("signedurl", {
     params: { filename: file.name },
@@ -98,10 +97,7 @@ export async function createPost(
   // 記事情報をサーバーに送信
   const postResponse = await instance.post("posts", {
     post: {
-      title,
-      body,
-      status,
-      categoryIds,
+      ...validation.data,
       imageKey: safeFilePath, // 画像のキーを指定
     },
   });
@@ -110,7 +106,7 @@ export async function createPost(
   const result = PostSchema.safeParse(postResponse.data.post);
   if (!result.success) {
     console.error("データの形式が正しくありません:", result.error);
-    return undefined;
+    throw new Error("Invalid response data");
   }
 
   return result.data.signedUrl; // サーバーからの署名付きURLを使用
@@ -120,7 +116,7 @@ export async function createPost(
 export async function createUser(
   file: File,
   userData: NewUser
-): Promise<string | undefined> {
+): Promise<string> {
   const { loginId, name, password } = userData;
   // S3の署名付きURLを取得
   const signedUrlResponse = await instance.get("signedurl", {
@@ -135,7 +131,7 @@ export async function createUser(
     },
   });
 
-  // 記事情報をサーバーに送信
+  // ユーザー情報をサーバーに送信
   const userResponse = await instance.post("auth/signup", {
     user: {
       loginId,
@@ -149,17 +145,20 @@ export async function createUser(
   const result = UserProfileSchema.safeParse(userResponse.data.user);
   if (!result.success) {
     console.error("データの形式が正しくありません:", result.error);
-    return undefined;
+    throw new Error("Invalid response data");
   }
 
   return result.data.iconSignedUrl; // サーバーからの署名付きURLを使用
 }
 
 // 新規ログイン用関数
-export async function createLogin(
-  postData: NewLogin
-): Promise<string | undefined> {
+export async function createLogin(postData: NewLogin): Promise<string> {
   const response = await instance.post("auth/login", postData);
+
+  // レスポンスデータのバリデーション
+  if (!response.data.token) {
+    throw new Error("Token not received");
+  }
   const { token } = response.data;
   // トークンをlocalStorageに保存
   localStorage.setItem("token", token);
@@ -198,30 +197,36 @@ export async function deletePost({ id }: { id: number }): Promise<void> {
 }
 
 // 記事編集関数
-export async function patchPost(id: number, postData: NewPost) {
-  const { title, body, status, categoryIds } = postData;
-  // 記事情報をサーバーに送信
+export async function patchPost(
+  id: number,
+  postData: NewPost
+): Promise<string> {
+  const validation = NewPostSchema.safeParse(postData);
+  if (!validation.success) {
+    throw new Error("Invalid post data");
+  }
+
   const postResponse = await instance.patch(`posts/${id}`, {
-    post: postData,
+    post: validation.data,
   });
 
-  return postResponse.data.post.signedUrl; // サーバーからの署名付きURLを使用
+  return postResponse.data.post.signedUrl;
 }
 
 // 記事編集関数（画像）
-export async function uploadImage(file: File) {
+export async function uploadImage(
+  file: File
+): Promise<{ signedUrl: string; safeFilePath: string }> {
   const signedUrlResponse = await instance.get("signedurl", {
     params: { filename: file.name },
   });
   const { signedUrl, safeFilePath } = signedUrlResponse.data;
 
-  if (file && file.name) {
-    await axios.put(signedUrl, file, {
-      headers: { "Content-Type": file.type },
-    });
+  await axios.put(signedUrl, file, {
+    headers: { "Content-Type": file.type },
+  });
 
-    return { signedUrl, safeFilePath };
-  }
+  return { signedUrl, safeFilePath };
 }
 
 // コメントデータ取得関数
