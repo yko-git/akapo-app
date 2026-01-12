@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z, ZodTypeAny } from "zod";
 import { UserSchema } from "./user.schema";
 
 // Category スキーマ
@@ -32,7 +32,19 @@ export const NewPostSchema = z.object({
   imageKey: z.string().optional(),
 });
 
+// 汎用的なレスポンスデータスキーマ
+export const ArticleDataSchema = <T extends ZodTypeAny>(schema: T) =>
+  z.object({
+    data: schema,
+  });
+
 // TypeScriptの型を自動生成
 export type Category = z.infer<typeof CategorySchema>;
 export type Post = z.infer<typeof PostSchema>;
 export type NewPost = z.infer<typeof NewPostSchema>;
+export type ArticleData<T> = {
+  data: T;
+};
+export type TagListProps = {
+  categories: Pick<Category, "name">[];
+};

@@ -1,14 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import {
-  patchPost,
-  fetchPost,
-  Post,
-  NewPost,
-  uploadImage,
-  Category,
-} from "@/api/fetchData";
+import { patchPost, fetchPost, uploadImage } from "@/api/fetchData";
+import { Post, NewPost } from "@/schemas/post.schema";
+import { Category } from "@/schemas/post.schema";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";

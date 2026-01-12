@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Post } from "@/api/fetchData";
+import { Post } from "@/schemas/post.schema";
 
 interface StatusInfoProps {
   status: "loading" | "service-down" | "success";

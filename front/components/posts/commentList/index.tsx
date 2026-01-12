@@ -1,7 +1,7 @@
 "use client";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Comment, UserProfile } from "@/api/fetchData";
-import Image from "next/image";
+import { Comment } from "@/schemas/comment.schema";
+import { UserProfile } from "@/schemas/user.schema";
 import { fetchUserData, deleteComments } from "@/api/fetchData";
 
 interface CommentListProps {

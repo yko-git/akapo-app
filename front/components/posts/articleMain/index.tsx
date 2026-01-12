@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Post } from "@/api/fetchData";
 import { fetchPosts } from "@/api/fetchData";
+import { Post } from "@/schemas/post.schema";
 import Photo from "@/components/shared/photo";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Autoplay } from "swiper/modules";

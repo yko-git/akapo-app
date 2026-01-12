@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Post, UserProfile } from "@/api/fetchData";
+import { Post } from "@/schemas/post.schema";
+import { UserProfile } from "@/schemas/user.schema";
 import { fetchUserPosts, fetchUserData } from "@/api/fetchData";
 import UserArticleList from "../userArticleList";
 import Link from "next/link";

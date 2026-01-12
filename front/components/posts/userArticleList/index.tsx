@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
-import { Post, deletePost } from "@/api/fetchData";
+import { deletePost } from "@/api/fetchData";
+import { Post } from "@/schemas/post.schema";
 import Button from "@/components/shared/button";
 import { Dispatch, SetStateAction } from "react";
 import toast from "react-hot-toast";
