@@ -17,7 +17,7 @@ export const PostSchema = z.object({
   categories: z.array(CategorySchema),
   user: UserSchema,
   imageKey: z.string(),
-  commentCount: z.number(),
+  commentCount: z.number().optional(),
   hasNewComment: z.boolean().optional(),
 });
 
