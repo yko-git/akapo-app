@@ -101,7 +101,7 @@ export default function Article({ id }: { id: number }) {
               </div>
               <div className="md:block flex justify-between">
                 <ul className="mt-2">
-                  <TagList Categories={data.categories} />
+                  <TagList categories={data.categories} />
                 </ul>
                 <p className="text-[#9F9F9F] text-[12px] mt-4 ">
                   {new Date(data.createdAt).toLocaleDateString()}

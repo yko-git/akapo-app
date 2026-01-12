@@ -65,7 +65,7 @@ export default function ArticleList() {
             <div className="px-4">
               <div className="mt-4 flex justify-between">
                 <ul>
-                  <TagList Categories={item.categories} />
+                  <TagList categories={item.categories} />
                 </ul>
                 <div className="text-sm mt-2 relative">
                   {item.hasNewComment && (
