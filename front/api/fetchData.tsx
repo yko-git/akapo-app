@@ -10,6 +10,8 @@ import {
   NewPost,
   PostSchema,
   NewPostSchema,
+  PostResponseSchema,
+  PostListResponseSchema,
 } from "@/schemas/post.schema";
 import { Comment, CommentSchema, NewComment } from "@/schemas/comment.schema";
 import z from "zod";
@@ -43,32 +45,25 @@ instance.interceptors.response.use(
 );
 
 // 個別投稿データ取得関数
-export async function fetchPost({ id }: { id: number }): Promise<Post | null> {
-  const response = await instance.get(`posts/${id}`);
+export async function fetchPost({ id }: { id: number }) {
+  const res = await instance.get(`/posts/${id}`);
 
   // レスポンスデータのバリデーション
-  const result = PostSchema.safeParse(response.data.posts);
-  if (!result.success) {
-    console.error("データの形式が正しくありません:", result.error);
+  const parsed = PostResponseSchema.safeParse(res.data);
+  if (!parsed.success) {
+    console.error("post parse error", parsed.error);
     return null;
   }
 
-  return result.data;
+  return parsed.data.post;
 }
-
 // 複数投稿データ取得関数
-export async function fetchPosts(): Promise<Post[] | null> {
-  const response = await instance.get(`posts/`);
+export async function fetchPosts(): Promise<Post[]> {
+  const res = await instance.get("/posts");
 
   // レスポンスデータのバリデーション
-  const result = z.array(PostSchema).safeParse(response.data.posts);
-
-  if (!result.success) {
-    console.error("データの形式が正しくありません:", result.error);
-    return null;
-  }
-
-  return result.data;
+  const parsed = PostListResponseSchema.parse(res.data);
+  return parsed.posts;
 }
 
 // 記事投稿関数
@@ -102,14 +97,7 @@ export async function createPost(
     },
   });
 
-  // レスポンスデータのバリデーション
-  const result = PostSchema.safeParse(postResponse.data.post);
-  if (!result.success) {
-    console.error("データの形式が正しくありません:", result.error);
-    throw new Error("Invalid response data");
-  }
-
-  return result.data.signedUrl; // サーバーからの署名付きURLを使用
+  return postResponse.data.post.signedUrl;
 }
 
 // 新規ユーザー登録
