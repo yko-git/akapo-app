@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { createComment, Comment } from "@/api/fetchData";
+import { createComment } from "@/api/fetchData";
+import { Comment } from "@/schemas/comment.schema";
 import Button from "@/components/shared/button";
 
 interface CreateComment {

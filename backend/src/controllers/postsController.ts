@@ -7,6 +7,7 @@ import {
   updateSignedUrls,
   fetchPosts,
   fetchComments,
+  fetchPostById,
 } from "../services";
 import { getSignedUrl, signedURLConfig, generateExpiresAt } from "../aws";
 
@@ -73,39 +74,31 @@ export const userPosts = async (req: any, res: Response) => {
 
 export const getPostsList = async (req: any, res: Response) => {
   try {
-    const query = req.query;
-
-    const posts = await fetchPosts({ query });
-    const users = posts.map((post) => post.user!);
+    const posts = await fetchPosts(req.query);
 
     const updatedPosts = await updateSignedUrls(posts);
-    const updatedUsers = await Promise.all(
-      users.map((user) => updateIconSignedUrls(user))
+    await Promise.all(
+      updatedPosts.map((post) => updateIconSignedUrls(post.user))
     );
 
-    return res.json({ posts: updatedPosts, users: updatedUsers });
+    return res.json({ posts: updatedPosts });
   } catch (err) {
-    console.error("投稿の取得中にエラーが発生しました:", err);
-    return res
-      .status(500)
-      .json({ errorMessage: "投稿リストを取得できませんでした" });
+    return res.status(500).json({ errorMessage: "投稿取得失敗" });
   }
 };
 
 export const getPost = async (req: any, res: Response) => {
-  const { id } = req.params;
-  const posts = await fetchPosts({ id });
-  const users = posts.map((post) => post.user!);
+  const id = Number(req.params.id);
 
-  if (!posts || posts.length === 0) {
-    return res.status(404).json({ errorMessage: "投稿が取得できませんでした" });
+  const post = await fetchPostById(id);
+  if (!post) {
+    return res.status(404).json({ errorMessage: "投稿が見つかりません" });
   }
 
-  const updatedPosts = await updateSignedUrls(posts);
-  const updatedUser = await Promise.all(
-    users.map((user) => updateIconSignedUrls(user))
-  );
-  return res.json({ posts: updatedPosts, user: updatedUser });
+  const updatedPosts = await updateSignedUrls([post]);
+  await updateIconSignedUrls(post.user);
+
+  return res.json({ post: updatedPosts[0] });
 };
 
 export const patchPost = async (req: any, res: Response) => {
@@ -218,8 +211,12 @@ export const createComment = async (req: any, res: Response) => {
     // フロントに返す形式を整える
     const responseComment = {
       ...comment.get({ plain: true }),
+      postId: Number(comment.postId),
+      userId: Number(comment.userId),
       user: {
+        id: updatedUser.id,
         name: updatedUser.name,
+        iconUrl: updatedUser.iconUrl,
         iconSignedUrl: updatedUser.iconSignedUrl,
       },
     };

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { jost } from "@/components/shared/font";
 import ArticleList from "@/components/posts/articleList";
-import { Post } from "@/api/fetchData";
+import { Post } from "@/schemas/post.schema";
 import { fetchPosts } from "@/api/fetchData";
 import StatusInfo from "@/components/shared/statusInfo";
 import { useRequireAuth } from "@/hooks/useRequireAuth";

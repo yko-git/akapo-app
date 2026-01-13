@@ -8,14 +8,10 @@ import { Post } from "../models/post";
 import { User } from "../models/user";
 import { Comment } from "../models/comment";
 
-// 共通の投稿取得関数
-export async function fetchPosts(params: { id?: string; query?: any }) {
-  const { id, query } = params;
-
-  const where = id ? { id } : query || {};
-
-  const posts = await Post.findAll({
-    where,
+// 複数取得
+export async function fetchPosts(query?: any) {
+  return Post.findAll({
+    where: query || {},
     include: [
       {
         model: Category,
@@ -29,7 +25,24 @@ export async function fetchPosts(params: { id?: string; query?: any }) {
       },
     ],
   });
-  return posts;
+}
+
+// 単一取得
+export async function fetchPostById(id: number) {
+  return Post.findByPk(id, {
+    include: [
+      {
+        model: Category,
+        as: "categories",
+        through: { attributes: [] },
+      },
+      {
+        model: User,
+        as: "user",
+        attributes: ["id", "name", "iconUrl", "iconSignedUrl"],
+      },
+    ],
+  });
 }
 
 // 投稿用署名付きURLの更新ロジック

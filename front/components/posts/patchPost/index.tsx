@@ -1,14 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import {
-  patchPost,
-  fetchPost,
-  Post,
-  NewPost,
-  uploadImage,
-  Category,
-} from "@/api/fetchData";
+import { patchPost, fetchPost, uploadImage } from "@/api/fetchData";
+import { Post, NewPost } from "@/schemas/post.schema";
+import { Category } from "@/schemas/post.schema";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
@@ -27,17 +21,16 @@ const PatchPost = ({ id }: { id: number }) => {
     async function fetchData() {
       try {
         const post = await fetchPost({ id });
-        if (Array.isArray(post) && post.length > 0) {
-          const data = post[0];
-          setData(data);
-          setTitle(data.title);
-          setBody(data.body);
-          setStatus(data.status.toString());
-          setCategoryIds(data.categories.map((cat: Category) => cat.id));
-          setImageUrl(data.signedUrl || null);
-        } else {
-          console.error("データが見つかりませんでした");
+        if (!post) {
+          console.error("投稿が存在しません");
+          return;
         }
+        setData(post);
+        setTitle(post.title);
+        setBody(post.body);
+        setStatus(post.status.toString());
+        setCategoryIds(post.categories.map((cat: Category) => cat.id));
+        setImageUrl(post.signedUrl || null);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
       }

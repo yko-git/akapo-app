@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { jost } from "@/components/shared/font";
-import { ArticleData, Post } from "@/api/fetchData";
+import { ArticleData, Post } from "@/schemas/post.schema";
 
 export default function ArticleInfo({ data }: ArticleData<Post[]>) {
   return (
