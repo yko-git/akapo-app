@@ -13,12 +13,26 @@ export const PostSchema = z.object({
   title: z.string(),
   body: z.string(),
   signedUrl: z.string(),
+  imageKey: z.string(),
+  status: z.number(),
   createdAt: z.string(),
+  updatedAt: z.string(),
+  urlExpiresAt: z.string(),
+  userId: z.number(),
   categories: z.array(CategorySchema),
   user: UserSchema,
-  imageKey: z.string(),
   commentCount: z.number().optional(),
   hasNewComment: z.boolean().optional(),
+});
+
+// 単体 Post 用
+export const PostResponseSchema = z.object({
+  post: PostSchema,
+});
+
+// 複数 Post 用
+export const PostListResponseSchema = z.object({
+  posts: z.array(PostSchema),
 });
 
 // NewPost スキーマ
@@ -41,6 +55,9 @@ export const ArticleDataSchema = <T extends ZodTypeAny>(schema: T) =>
 // TypeScriptの型を自動生成
 export type Category = z.infer<typeof CategorySchema>;
 export type Post = z.infer<typeof PostSchema>;
+export type PostResponse = z.infer<typeof PostResponseSchema>;
+export type PostListResponse = z.infer<typeof PostListResponseSchema>;
+
 export type NewPost = z.infer<typeof NewPostSchema>;
 export type ArticleData<T> = {
   data: T;
