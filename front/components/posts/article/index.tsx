@@ -29,9 +29,7 @@ export default function Article({ id }: { id: number }) {
     async function fetchData() {
       try {
         const post = await fetchPost({ id });
-        if (Array.isArray(post) && post.length > 0) {
-          setData(post[0]);
-        }
+        setData(post);
         const commentList = await fetchComments({ postId: id });
         setComments(commentList);
         setStatus("success");

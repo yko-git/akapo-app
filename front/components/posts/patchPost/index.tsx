@@ -21,17 +21,16 @@ const PatchPost = ({ id }: { id: number }) => {
     async function fetchData() {
       try {
         const post = await fetchPost({ id });
-        if (Array.isArray(post) && post.length > 0) {
-          const data = post[0];
-          setData(data);
-          setTitle(data.title);
-          setBody(data.body);
-          setStatus(data.status.toString());
-          setCategoryIds(data.categories.map((cat: Category) => cat.id));
-          setImageUrl(data.signedUrl || null);
-        } else {
-          console.error("データが見つかりませんでした");
+        if (!post) {
+          console.error("投稿が存在しません");
+          return;
         }
+        setData(post);
+        setTitle(post.title);
+        setBody(post.body);
+        setStatus(post.status.toString());
+        setCategoryIds(post.categories.map((cat: Category) => cat.id));
+        setImageUrl(post.signedUrl || null);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
       }
