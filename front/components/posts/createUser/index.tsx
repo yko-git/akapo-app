@@ -74,6 +74,19 @@ const CreateUser = () => {
           value={loginId}
           onChange={(e) => setLoginId(e.target.value)}
           className="border rounded p-2 w-full mt-2"
+          placeholder="本登録時に使用するIDです"
+        />
+      </div>
+      <div>
+        <label className="font-semibold text-lg tracking-widest">
+          <h3 className="font-bold">パスワード</h3>
+        </label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="border rounded p-2 w-full mt-2"
+          placeholder="本登録時に使用するパスワードです"
         />
       </div>
       <div>
@@ -93,17 +106,7 @@ const CreateUser = () => {
         </label>
         <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
-      <div>
-        <label className="font-semibold text-lg tracking-widest">
-          <h3 className="font-bold">パスワード</h3>
-        </label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border rounded p-2 w-full mt-2"
-        />
-      </div>
+
       <Button
         mode="Success"
         onClick={handleSubmit}
@@ -112,6 +115,9 @@ const CreateUser = () => {
       >
         {isSubmitting ? "登録中..." : submitMessage}
       </Button>
+      <p className="text-sm">
+        画像サイズが大きい場合、登録完了まで時間がかかることがありますので、しばらくお待ちください。
+      </p>
     </div>
   );
 };

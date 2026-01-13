@@ -132,7 +132,7 @@ const CreatePost = () => {
       >
         {isSubmitting ? "投稿送信中..." : submitMessage}
       </Button>
-      <p>
+      <p className="text-sm">
         画像サイズが大きい場合、投稿完了まで時間がかかることがありますので、しばらくお待ちください。
       </p>
       {imageUrl && (
