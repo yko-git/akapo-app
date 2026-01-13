@@ -8,12 +8,6 @@ describe("ログインフォームのテスト", () => {
     // cy.get("#loginSubmit", { timeout: 10000 }).should("be.visible");
   });
 
-  it("ログインフォームが表示される", () => {
-    cy.get('input[name="loginId"]').should("exist").and("be.visible");
-    cy.get('input[name="password"]').should("exist").and("be.visible");
-    // cy.get("#loginSubmit").should("contain.text", "ログインする");
-  });
-
   it("有効な認証情報でログインできる", () => {
     cy.get('input[name="loginId"]').should("be.visible").type("yko");
     cy.get('input[name="password"]').should("be.visible").type("yko");
