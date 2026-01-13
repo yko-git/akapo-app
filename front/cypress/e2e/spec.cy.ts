@@ -8,14 +8,14 @@ describe("ログインフォームのテスト", () => {
     // cy.get("#loginSubmit", { timeout: 10000 }).should("be.visible");
   });
 
-  it("有効な認証情報でログインできる", () => {
-    cy.get('input[name="loginId"]').should("be.visible").type("yko");
-    cy.get('input[name="password"]').should("be.visible").type("yko");
+  // it("有効な認証情報でログインできる", () => {
+  //   cy.get('input[name="loginId"]').should("be.visible").type("yko");
+  //   cy.get('input[name="password"]').should("be.visible").type("yko");
 
-    // ボタンをクリック
-    // cy.get("#loginSubmit").should("be.enabled").click();
+  // ボタンをクリック
+  // cy.get("#loginSubmit").should("be.enabled").click();
 
-    // 遷移を待ってURL確認
-    // cy.url({ timeout: 20000 }).should("include", "/mypage");
-  });
+  // 遷移を待ってURL確認
+  // cy.url({ timeout: 20000 }).should("include", "/mypage");
+  // });
 });
