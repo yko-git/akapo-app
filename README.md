@@ -85,6 +85,7 @@ akapo を通して、
 - Express
 - Sequelize
 - MySQL（RDS）
+- [Posts API レスポンス仕様](https://www.notion.so/Posts-API-2e80029c4d6c80508fe0da001f049021?source=copy_link)
 
 ### インフラ・その他
 - AWS（EC2 / RDS / S3）
