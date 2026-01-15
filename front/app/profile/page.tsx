@@ -35,7 +35,7 @@ export default function Profile() {
                   </span>
                   散歩やものづくりが好きなママです。
                   <br />
-                  「Akapo」は、自身の学習やインプットを目的に開発しており、React
+                  「akapo」は、自身の学習やインプットを目的に開発しており、React
                   / Next.js / TypeScript を使用しています。
                   <br />
                   バックエンドには AWS（EC2 / RDS / S3）や Cloudflare
