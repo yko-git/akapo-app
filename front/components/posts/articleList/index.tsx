@@ -66,7 +66,7 @@ export default function ArticleList() {
   if (isLoading) return <StatusInfo status="loading" data={null} />;
   if (error) return <StatusInfo status="service-down" data={null} />;
   if (!posts || posts.length === 0)
-    return <StatusInfo status="service-down" data={null} />;
+    return <StatusInfo status="empty" data={null} />;
 
   return (
     <ul className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-y-20 gap-x-5 max-w-[1400px] mx-auto md:mt-10 px-5">

@@ -2,12 +2,12 @@ import Image from "next/image";
 import { Post } from "@/schemas/post.schema";
 
 interface StatusInfoProps {
-  status: "loading" | "service-down" | "success";
+  status: "loading" | "service-down" | "success" | "empty";
   data: Post | Post[] | null | undefined;
 }
 
 export default function StatusInfo({ status, data }: StatusInfoProps) {
-  if (!data || status === "loading") {
+  if (status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
         <div className="text-center p-8 rounded-lg shadow-md bg-white my-20">
@@ -41,6 +41,17 @@ export default function StatusInfo({ status, data }: StatusInfoProps) {
           <hr className="my-4" />
           <p className="text-gray-600">
             Please access between 9:00 AM and 9:00 PM.
+          </p>
+        </div>
+      </div>
+    );
+  }
+  if (status === "empty") {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
+        <div className="text-center p-8 rounded-lg shadow-md bg-white my-20">
+          <p className="text-gray-800 text-lg font-medium mb-2">
+            投稿がまだありません。
           </p>
         </div>
       </div>
