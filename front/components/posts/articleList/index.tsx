@@ -6,6 +6,7 @@ import { fetchPosts, fetchComments } from "@/api/fetchData";
 import PhotoList from "@/components/shared/photoList";
 import TagList from "@/components/shared/tagList";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import StatusInfo from "@/components/shared/statusInfo";
 
 export default function ArticleList() {
   // Storeから必要なデータと関数を取得
@@ -62,32 +63,10 @@ export default function ArticleList() {
     fetchData();
   }, [isAuthChecked, setPosts, setLoading, setError]);
 
-  // ローディング表示
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <p className="text-lg">読み込み中...</p>
-      </div>
-    );
-  }
-
-  // エラー表示
-  if (error) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <p className="text-red-500">エラー: {error}</p>
-      </div>
-    );
-  }
-
-  // データが空の場合
-  if (!posts || posts.length === 0) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <p className="text-gray-500">投稿がありません</p>
-      </div>
-    );
-  }
+  if (isLoading) return <StatusInfo status="loading" data={null} />;
+  if (error) return <StatusInfo status="service-down" data={null} />;
+  if (!posts || posts.length === 0)
+    return <StatusInfo status="empty" data={null} />;
 
   return (
     <ul className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-y-20 gap-x-5 max-w-[1400px] mx-auto md:mt-10 px-5">
