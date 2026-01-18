@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Post } from "@/schemas/post.schema";
 import { UserProfile } from "@/schemas/user.schema";
 import { fetchUserPosts, fetchUserData } from "@/api/fetchData";
 import UserArticleList from "../userArticleList";
@@ -10,45 +9,50 @@ import { useRouter } from "next/navigation";
 import StatusInfo from "@/components/shared/statusInfo";
 import { jost } from "@/components/shared/font";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { usePostStore } from "@/stores/usePostStore";
 
 const UserPage = () => {
-  const [status, setStatus] = useState<"loading" | "service-down" | "success">(
-    "loading"
-  );
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [data, setData] = useState<Post[] | null>(null);
+  const { setUserPosts, isLoading, error, setLoading, setError } =
+    usePostStore();
   const router = useRouter();
   const isAuthChecked = useRequireAuth();
 
   useEffect(() => {
-    if (!isAuthChecked) return; // 認証チェックが完了していない場合はデータ取得をスキップ
+    if (!isAuthChecked) return;
 
     async function fetchData() {
       try {
+        setLoading(true);
+        setError(null);
+
         const userData = await fetchUserData();
         setUserProfile(userData);
 
         const posts = await fetchUserPosts();
-        setStatus("success");
-        setData(posts);
+        if (posts) {
+          setUserPosts(posts);
+        }
       } catch (error) {
-        console.error("データ取得中にエラー:", error);
-        setStatus("service-down");
+        console.error("投稿の取得でエラーが発生しました:", error);
+        setError(
+          error instanceof Error ? error.message : "投稿の取得に失敗しました"
+        );
+      } finally {
+        setLoading(false);
       }
     }
 
     fetchData();
-  }, [isAuthChecked]);
+  }, [isAuthChecked, setUserPosts, setLoading, setError]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     router.push("/login");
   };
 
-  // データが取得できていない場合の表示
-  if (status !== "success" || data === null) {
-    return <StatusInfo status={status} data={data} />;
-  }
+  if (isLoading) return <StatusInfo status="loading" data={null} />;
+  if (error) return <StatusInfo status="service-down" data={null} />;
 
   return (
     <div className="wrapper">
@@ -98,7 +102,7 @@ const UserPage = () => {
         </Link>
       </div>
       <div className="mt-8">
-        <UserArticleList data={data} setData={setData} />
+        <UserArticleList />
       </div>
     </div>
   );

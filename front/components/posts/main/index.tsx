@@ -46,28 +46,6 @@ export default function Main() {
           Gallery
         </h3>
       </div>
-      {/* <div className="bg-[#F5F8FD] mt-8">
-        <div className="wrapper">
-          <div className="lg:w-[850px] mx-auto flex justify-between items-center flex-col-reverse md:flex-row">
-            <h2>
-              <Image
-                src={logo}
-                loading="lazy"
-                alt="こどもの成長と思い出を、作品とともに記録するサイト"
-                width={369}
-                height={359}
-                className="md:min-w-[369px] mx-auto md:mt-0 mt-5 md:p-0 p-5"
-              />
-            </h2>
-            <ul className="md:w-[395px] relative">
-              <ArticleMain />
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div className="wrapper md:mt-20">
-        <h1 className="font-bold md:my-2 md:text-3xl text-xl">作品一覧</h1>
-      </div> */}
       <ArticleList />
     </>
   );
