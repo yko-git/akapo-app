@@ -1,25 +1,14 @@
 "use client";
 import Link from "next/link";
 import { deletePost } from "@/api/fetchData";
-import { Post } from "@/schemas/post.schema";
 import Button from "@/components/shared/button";
-import { Dispatch, SetStateAction } from "react";
 import toast from "react-hot-toast";
+import { usePostStore } from "@/stores/usePostStore";
 
-interface UserArticleListProps {
-  data: Post[] | null;
-  setData: Dispatch<SetStateAction<Post[] | null>>;
-}
+export default function UserArticleList() {
+  const { userPosts, removePost } = usePostStore();
 
-export default function UserArticleList({
-  data,
-  setData,
-}: UserArticleListProps) {
-  if (!data) {
-    return <p>投稿がありません。</p>;
-  }
-
-  const sortedPosts = (data ?? []).sort(
+  const sortedPosts = (userPosts ?? []).sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
   const handleDelete = async (id: number) => {
@@ -29,18 +18,22 @@ export default function UserArticleList({
     }
     try {
       await deletePost({ id });
-      setData(data.filter((data) => data.id !== id));
+      removePost(id);
       toast("記事を削除しました");
     } catch (error) {
       console.error("記事削除処理中にエラーが発生しました:", error);
     }
   };
 
+  if (!userPosts || userPosts.length === 0) {
+    return <p>投稿がありません。</p>;
+  }
+
   return (
     <>
       <div className="wrapper">
         <h1 className="font-bold my-2">ユーザー投稿一覧</h1>
-        <p>{data.length} 件</p>
+        <p>{userPosts.length} 件</p>
       </div>
       <div className="overflow-x-auto md:overflow-hidden">
         <table className="min-w-[900px] divide-y divide-gray-200 mt-5 md:w-full">
@@ -87,7 +80,7 @@ export default function UserArticleList({
           <tbody className="bg-white divide-y divide-gray-200">
             {sortedPosts ? (
               sortedPosts.map((item, index) => (
-                <tr key={index}>
+                <tr key={item.id}>
                   <td className="px-6 py-4 text-sm font-medium text-gray-900">
                     <div>
                       <Link href={`/posts/${item.id}`}>{item.title}</Link>
