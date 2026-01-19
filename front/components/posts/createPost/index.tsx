@@ -7,17 +7,17 @@ import { statusList, categories } from "@/components/shared/data";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useRouter } from "next/navigation";
 
 const CreatePost = () => {
   const [title, setTitle] = useState<string>("");
   const [body, setBody] = useState<string>("");
   const [categoryIds, setCategoryIds] = useState<number[]>([1]);
   const [file, setFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [status, setStatus] = useState<string>("0");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [submitMessage, setSubmitMessage] = useState<string>("投稿する");
   const checked = useRequireAuth();
+  const router = useRouter();
 
   // 認証チェック完了前は何も表示しない
   if (!checked) return null;
@@ -61,29 +61,24 @@ const CreatePost = () => {
       return;
     }
 
-    // 画像を圧縮
-    const options = { maxSizeMB: 1, maxWidthOrHeight: 1920 };
-    const compressedFile = await imageCompression(file, options);
-
-    setIsSubmitting(true);
-    const postData = { title, body, status, categoryIds };
     try {
-      const postImg = await createPost(compressedFile, postData);
-      if (postImg) {
-        setImageUrl(postImg);
-        toast.success("投稿が完了しました");
-        setSubmitMessage("投稿が完了しました");
-      } else {
-        toast.error("画像のアップロードまたは投稿に失敗しました");
-        setSubmitMessage("投稿に失敗しました");
-      }
+      // 画像を圧縮
+      setIsSubmitting(true);
+      const options = { maxSizeMB: 1, maxWidthOrHeight: 1920 };
+      const compressedFile = await imageCompression(file, options);
+
+      const postData = { title, body, status, categoryIds };
+      await createPost(compressedFile, postData);
+      toast.success("投稿が完了しました");
+
+      router.push("/mypage");
     } catch (error) {
       console.error("投稿処理中にエラーが発生しました:", error);
+      toast.error("投稿に失敗しました。時間をおいて再度お試しください。");
     } finally {
       setIsSubmitting(false);
     }
   };
-
   return (
     <div className="flex flex-col space-y-6 mt-10">
       <div>
@@ -130,17 +125,11 @@ const CreatePost = () => {
         disabled={isSubmitting}
         className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
       >
-        {isSubmitting ? "投稿送信中..." : submitMessage}
+        {isSubmitting ? "投稿送信中..." : "投稿する"}
       </Button>
       <p className="text-sm">
         画像サイズが大きい場合、投稿完了まで時間がかかることがありますので、しばらくお待ちください。
       </p>
-      {imageUrl && (
-        <div>
-          <h3>アップロードされた画像:</h3>
-          <img src={imageUrl} alt="Uploaded" width={100} height={100} />
-        </div>
-      )}
     </div>
   );
 };
