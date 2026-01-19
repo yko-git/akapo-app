@@ -21,7 +21,6 @@ interface PostState {
   setPosts: (posts: PostWithComments[]) => void;
   setCurrentPost: (post: Post | null) => void;
   setUserPosts: (posts: Post[]) => void;
-  addPost: (post: Post) => void;
   updatePost: (id: number, post: Post) => void;
   removePost: (id: number) => void;
   setLoading: (loading: boolean) => void;
@@ -45,15 +44,6 @@ export const usePostStore = create<PostState>((set) => ({
   setCurrentPost: (post) => set({ currentPost: post }),
 
   setUserPosts: (posts) => set({ userPosts: posts }),
-
-  addPost: (post) =>
-    set((state) => ({
-      posts: [
-        { ...post, commentCount: 0, hasNewComment: false },
-        ...state.posts,
-      ],
-      userPosts: [post, ...state.userPosts],
-    })),
 
   updatePost: (id, post) =>
     set((state) => ({
