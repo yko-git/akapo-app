@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { patchPost, fetchPost, uploadImage } from "@/api/fetchData";
-import { Post, NewPost } from "@/schemas/post.schema";
+import { NewPost } from "@/schemas/post.schema";
 import { Category } from "@/schemas/post.schema";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
@@ -153,9 +153,10 @@ const PatchPost = ({ id }: { id: number }) => {
       <Button
         mode="Success"
         onClick={handleSubmit}
+        disabled={isSubmitting}
         className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
       >
-        投稿する
+        {isSubmitting ? "投稿送信中..." : "投稿を編集する"}
       </Button>
     </div>
   );
