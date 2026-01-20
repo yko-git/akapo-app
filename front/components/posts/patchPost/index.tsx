@@ -84,14 +84,16 @@ const PatchPost = ({ id }: { id: number }) => {
         return;
       }
     }
-    const postData: NewPost = {
-      title,
-      body,
-      status,
-      categoryIds,
-    };
-
     try {
+      setIsSubmitting(true);
+
+      const postData: NewPost = {
+        title,
+        body,
+        status,
+        categoryIds,
+      };
+
       if (file) {
         // 新しい画像が選択されている場合のみ
         const newImageUrl = await uploadImage(file);
@@ -104,6 +106,9 @@ const PatchPost = ({ id }: { id: number }) => {
       router.push("/mypage");
     } catch (error) {
       console.error("投稿処理中にエラーが発生しました:", error);
+      toast.error("投稿の編集に失敗しました。時間をおいて再度お試しください。");
+    } finally {
+      setIsSubmitting(false);
     }
   };
   if (isLoading) return <StatusInfo status="loading" data={null} />;
