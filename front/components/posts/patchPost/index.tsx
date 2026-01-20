@@ -7,15 +7,16 @@ import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const PatchPost = ({ id }: { id: number }) => {
   const [title, setTitle] = useState<string>("");
   const [body, setBody] = useState<string>("");
   const [categoryIds, setCategoryIds] = useState<number[]>([1]);
   const [file, setFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const router = useRouter();
+
   const [status, setStatus] = useState<string>("0");
-  const [data, setData] = useState<Post | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -25,12 +26,10 @@ const PatchPost = ({ id }: { id: number }) => {
           console.error("投稿が存在しません");
           return;
         }
-        setData(post);
         setTitle(post.title);
         setBody(post.body);
         setStatus(post.status.toString());
         setCategoryIds(post.categories.map((cat: Category) => cat.id));
-        setImageUrl(post.signedUrl || null);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
       }
@@ -57,11 +56,6 @@ const PatchPost = ({ id }: { id: number }) => {
   };
 
   const handleSubmit = async () => {
-    if (!file && !imageUrl) {
-      alert("画像を選択してください");
-      return;
-    }
-
     const postData: NewPost = {
       title,
       body,
@@ -77,9 +71,9 @@ const PatchPost = ({ id }: { id: number }) => {
         postData.imageKey = newImageUrl?.safeFilePath;
       }
 
-      const existingImageUrl = await patchPost(id, postData);
-      setImageUrl(existingImageUrl);
+      await patchPost(id, postData);
       toast.success("編集が完了しました");
+      router.push("/mypage");
     } catch (error) {
       console.error("投稿処理中にエラーが発生しました:", error);
     }
@@ -133,12 +127,6 @@ const PatchPost = ({ id }: { id: number }) => {
       >
         投稿する
       </Button>
-      {imageUrl && (
-        <div>
-          <h3>アップロードされた画像:</h3>
-          <img src={imageUrl} alt="Uploaded" width={100} height={100} />
-        </div>
-      )}
     </div>
   );
 };
