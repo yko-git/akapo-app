@@ -8,12 +8,16 @@ import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import StatusInfo from "@/components/shared/statusInfo";
 
 const PatchPost = ({ id }: { id: number }) => {
   const [title, setTitle] = useState<string>("");
   const [body, setBody] = useState<string>("");
   const [categoryIds, setCategoryIds] = useState<number[]>([1]);
   const [file, setFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const [status, setStatus] = useState<string>("0");
@@ -21,6 +25,7 @@ const PatchPost = ({ id }: { id: number }) => {
   useEffect(() => {
     async function fetchData() {
       try {
+        setIsLoading(true);
         const post = await fetchPost({ id });
         if (!post) {
           console.error("投稿が存在しません");
@@ -31,12 +36,18 @@ const PatchPost = ({ id }: { id: number }) => {
         setStatus(post.status.toString());
         setCategoryIds(post.categories.map((cat: Category) => cat.id));
       } catch (error) {
-        console.error("投稿の取得でエラーが発生しました:", error);
+        setError(
+          error instanceof Error ? error.message : "投稿の取得に失敗しました"
+        );
+      } finally {
+        setIsLoading(false);
       }
     }
 
     fetchData();
   }, [id]);
+  if (isLoading) return <StatusInfo status="loading" data={null} />;
+  if (error) return <StatusInfo status="service-down" data={null} />;
 
   const handleSelect = (value: string | string[]) => {
     if (typeof value === "string") {
