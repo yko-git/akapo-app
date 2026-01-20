@@ -46,8 +46,6 @@ const PatchPost = ({ id }: { id: number }) => {
 
     fetchData();
   }, [id]);
-  if (isLoading) return <StatusInfo status="loading" data={null} />;
-  if (error) return <StatusInfo status="service-down" data={null} />;
 
   const handleSelect = (value: string | string[]) => {
     if (typeof value === "string") {
@@ -67,6 +65,25 @@ const PatchPost = ({ id }: { id: number }) => {
   };
 
   const handleSubmit = async () => {
+    if (file) {
+      // 許可するMIMEタイプ
+      const allowedTypes = [
+        "image/png",
+        "image/jpeg",
+        "image/webp",
+        "image/svg+xml",
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("PNG/JPEG/WEBP/SVG以外のファイル形式はご遠慮ください");
+        return; // ここで処理終了
+      }
+
+      const sizeMB = file.size / 1024 / 1024;
+      if (sizeMB > 5) {
+        toast.error("ファイルサイズは5MB以下でお願いいたします");
+        return;
+      }
+    }
     const postData: NewPost = {
       title,
       body,
@@ -89,6 +106,8 @@ const PatchPost = ({ id }: { id: number }) => {
       console.error("投稿処理中にエラーが発生しました:", error);
     }
   };
+  if (isLoading) return <StatusInfo status="loading" data={null} />;
+  if (error) return <StatusInfo status="service-down" data={null} />;
 
   return (
     <div className="flex flex-col space-y-6 mt-10">
