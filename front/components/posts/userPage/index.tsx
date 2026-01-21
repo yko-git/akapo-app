@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
-import { UserProfile } from "@/schemas/user.schema";
+import { useEffect } from "react";
 import { fetchUserPosts, fetchUserData } from "@/api/fetchData";
 import UserArticleList from "../userArticleList";
 import Link from "next/link";
@@ -10,9 +9,10 @@ import StatusInfo from "@/components/shared/statusInfo";
 import { jost } from "@/components/shared/font";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { usePostStore } from "@/stores/usePostStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const UserPage = () => {
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const { userProfile, setUserProfile, logout } = useAuthStore();
   const { setUserPosts, isLoading, error, setLoading, setError } =
     usePostStore();
   const router = useRouter();
@@ -26,8 +26,10 @@ const UserPage = () => {
         setLoading(true);
         setError(null);
 
-        const userData = await fetchUserData();
-        setUserProfile(userData);
+        if (!userProfile) {
+          const userData = await fetchUserData();
+          setUserProfile(userData);
+        }
 
         const posts = await fetchUserPosts();
         if (posts) {
@@ -44,10 +46,17 @@ const UserPage = () => {
     }
 
     fetchData();
-  }, [isAuthChecked, setUserPosts, setLoading, setError]);
+  }, [
+    isAuthChecked,
+    userProfile,
+    setUserProfile,
+    setUserPosts,
+    setLoading,
+    setError,
+  ]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logout();
     router.push("/login");
   };
 
