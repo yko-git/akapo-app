@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
-import { Comment } from "@/schemas/comment.schema";
 import { fetchPost, fetchComments } from "@/api/fetchData";
 import { jost } from "@/components/shared/font";
 import TagList from "@/components/shared/tagList";
@@ -11,9 +10,10 @@ import CreateComment from "@/components/posts/createComment";
 import StatusInfo from "@/components/shared/statusInfo";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { usePostStore } from "@/stores/usePostStore";
+import { useCommentStore } from "@/stores/useCommentStore";
 
 export default function Article({ id }: { id: number }) {
-  const [comments, setComments] = useState<Comment[]>([]);
+  const { comments, setComments, reset } = useCommentStore();
   const {
     currentPost,
     isLoading,
@@ -23,11 +23,6 @@ export default function Article({ id }: { id: number }) {
     setError,
   } = usePostStore();
 
-  // コメント追加後の処理
-  const handleCommentAdded = async () => {
-    const commentList = await fetchComments({ postId: id });
-    setComments(commentList);
-  };
   const isAuthChecked = useRequireAuth();
   useEffect(() => {
     if (!isAuthChecked) return; // 認証チェックが完了していない場合はデータ取得をスキップ
@@ -55,8 +50,9 @@ export default function Article({ id }: { id: number }) {
     // クリーンアップ関数でcurrentPostをリセット
     return () => {
       setCurrentPost(null);
+      reset();
     };
-  }, [id, isAuthChecked, setCurrentPost, setLoading, setError]);
+  }, [id, isAuthChecked, setCurrentPost, setLoading, setError, setComments]);
 
   if (isLoading) return <StatusInfo status="loading" data={null} />;
   if (error) return <StatusInfo status="service-down" data={null} />;
@@ -147,22 +143,9 @@ export default function Article({ id }: { id: number }) {
             COMMENTS
           </h2>
           <div className="text-left">
-            {!comments || comments.length === 0 ? (
-              <div className="mt-20">
-                <p className="text-center font-bold tracking-wider">
-                  コメントをとうこうしてね
-                </p>
-              </div>
-            ) : (
-              <CommentList
-                id={id}
-                comments={comments}
-                postUserId={currentPost.user.id}
-                setComments={setComments}
-              />
-            )}
+            <CommentList postId={id} postUserId={currentPost.user.id} />
 
-            <CreateComment postId={id} onCommentAdded={handleCommentAdded} />
+            <CreateComment postId={id} />
           </div>
         </div>
       </div>
