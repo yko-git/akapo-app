@@ -13,7 +13,7 @@ import { usePostStore } from "@/stores/usePostStore";
 import { useCommentStore } from "@/stores/useCommentStore";
 
 export default function Article({ id }: { id: number }) {
-  const { comments, setComments, reset } = useCommentStore();
+  const { setComments, reset } = useCommentStore();
   const {
     currentPost,
     isLoading,
