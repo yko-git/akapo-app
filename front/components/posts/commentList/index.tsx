@@ -1,23 +1,18 @@
 "use client";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Comment } from "@/schemas/comment.schema";
+import { useEffect, useState } from "react";
 import { UserProfile } from "@/schemas/user.schema";
 import { fetchUserData, deleteComments } from "@/api/fetchData";
+import { useCommentStore } from "@/stores/useCommentStore";
+import toast from "react-hot-toast";
 
 interface CommentListProps {
-  comments: Comment[];
   postUserId: number;
-  setComments: Dispatch<SetStateAction<Comment[]>>;
-  id: number;
+  postId: number;
 }
 
-export default function CommentList({
-  comments,
-  postUserId,
-  setComments,
-  id,
-}: CommentListProps) {
+export default function CommentList({ postUserId, postId }: CommentListProps) {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const { comments, removeComment } = useCommentStore();
 
   useEffect(() => {
     async function fetchData() {
@@ -43,13 +38,11 @@ export default function CommentList({
             if (!confirm) return;
 
             try {
-              await deleteComments({ commentId, postId: id });
-              setComments(
-                comments.filter((comment) => comment.id !== commentId)
-              );
-              alert("コメントを削除しました。");
+              await deleteComments({ commentId, postId });
+              removeComment(commentId);
+              toast.success("コメントを削除しました");
             } catch (error) {
-              console.error("コメント削除処理中にエラーが発生しました:", error);
+              toast.error("コメントの削除に失敗しました");
             }
           };
 
