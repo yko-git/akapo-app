@@ -11,6 +11,7 @@ import StatusInfo from "@/components/shared/statusInfo";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { usePostStore } from "@/stores/usePostStore";
 import { useCommentStore } from "@/stores/useCommentStore";
+import Image from "next/image";
 
 export default function Article({ id }: { id: number }) {
   const { setComments, reset } = useCommentStore();
@@ -92,7 +93,7 @@ export default function Article({ id }: { id: number }) {
             <div className="md:pl-10 tracking-[.2em] relative md:min-w-96">
               <div className="inline-block text-center md:absolute right-0 -top-2 md:mt-0 mt-4">
                 <div className="md:block flex items-center text-center">
-                  <img
+                  <Image
                     className="inline-block mr-2 rounded-full object-cover md:w-[90px] md:h-[90px] w-[40px] h-[40px]"
                     src={currentPost.user.iconSignedUrl}
                     alt=""

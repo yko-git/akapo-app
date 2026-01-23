@@ -4,6 +4,7 @@ import { deletePost } from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import toast from "react-hot-toast";
 import { usePostStore } from "@/stores/usePostStore";
+import Image from "next/image";
 
 export default function UserArticleList() {
   const { userPosts, removePost } = usePostStore();
@@ -90,7 +91,7 @@ export default function UserArticleList() {
                     <div>{item.body.slice(0, 25)}</div>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 text-center">
-                    <img
+                    <Image
                       src={item.signedUrl}
                       alt={item.title}
                       width={50}

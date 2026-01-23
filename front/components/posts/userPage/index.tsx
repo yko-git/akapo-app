@@ -10,6 +10,7 @@ import { jost } from "@/components/shared/font";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { usePostStore } from "@/stores/usePostStore";
 import { useAuthStore } from "@/stores/useAuthStore";
+import Image from "next/image";
 
 const UserPage = () => {
   const { userProfile, setUserProfile, logout } = useAuthStore();
@@ -76,7 +77,7 @@ const UserPage = () => {
         <>
           <div className="p-5 text-center mt-8">
             <div className="inline-block text-center">
-              <img
+              <Image
                 className="inline-block mr-2 rounded-full object-cover w-[140px] h-[140px] border-[#6C9FE0] border-4"
                 src={userProfile.iconSignedUrl}
                 alt=""

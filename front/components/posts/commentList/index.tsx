@@ -3,6 +3,7 @@ import { deleteComments } from "@/api/fetchData";
 import { useCommentStore } from "@/stores/useCommentStore";
 import toast from "react-hot-toast";
 import { useAuthStore } from "@/stores/useAuthStore";
+import Image from "next/image";
 
 interface CommentListProps {
   postUserId: number;
@@ -52,7 +53,7 @@ export default function CommentList({ postUserId, postId }: CommentListProps) {
               }`}
             >
               <div className="inline-block text-center md:w-auto w-full shrink-0 md:mb-0 mb-5">
-                <img
+                <Image
                   className="inline-block mr-2 rounded-full object-cover w-[90px] h-[90px] border-[#6C9FE0] border-4"
                   src={comment.user.iconSignedUrl}
                   alt={comment.user.name}

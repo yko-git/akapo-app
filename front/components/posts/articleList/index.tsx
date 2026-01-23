@@ -7,6 +7,7 @@ import PhotoList from "@/components/shared/photoList";
 import TagList from "@/components/shared/tagList";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import StatusInfo from "@/components/shared/statusInfo";
+import Image from "next/image";
 
 export default function ArticleList() {
   // Storeから必要なデータと関数を取得
@@ -99,7 +100,7 @@ export default function ArticleList() {
             <div className="font-semibold mt-4">{item.title}</div>
             <div className="flex items-center justify-between mt-2 text-[#807f7f]">
               <div className="flex items-center">
-                <img
+                <Image
                   className="inline-block mr-2 rounded-full object-cover w-[31px] h-[31px]"
                   src={item.user.iconSignedUrl}
                   alt=""
