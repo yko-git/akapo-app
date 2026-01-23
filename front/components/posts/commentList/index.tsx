@@ -1,9 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
-import { UserProfile } from "@/schemas/user.schema";
-import { fetchUserData, deleteComments } from "@/api/fetchData";
+import { deleteComments } from "@/api/fetchData";
 import { useCommentStore } from "@/stores/useCommentStore";
 import toast from "react-hot-toast";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 interface CommentListProps {
   postUserId: number;
@@ -11,40 +10,39 @@ interface CommentListProps {
 }
 
 export default function CommentList({ postUserId, postId }: CommentListProps) {
-  const [user, setUser] = useState<UserProfile | null>(null);
   const { comments, removeComment } = useCommentStore();
+  const { userProfile } = useAuthStore();
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const userData = await fetchUserData();
-        setUser(userData);
-      } catch (error) {
-        console.error("データ取得中にエラー:", error);
-      }
+  const handleDelete = async (commentId: number) => {
+    const confirm = window.confirm("コメントを削除しますか？");
+    if (!confirm) return;
+
+    try {
+      await deleteComments({ commentId, postId });
+      removeComment(commentId);
+      toast.success("コメントを削除しました");
+    } catch (error) {
+      toast.error("コメントの削除に失敗しました");
     }
+  };
 
-    fetchData();
-  }, []);
+  // 空チェック
+  if (!comments || comments.length === 0) {
+    return (
+      <div className="mt-20">
+        <p className="text-center font-bold tracking-wider">
+          コメントをとうこうしてね
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="my-10">
       <ul>
         {comments.map((comment) => {
           const isOwn = comment.userId === postUserId;
-          const userComment = comment.userId === user?.id;
-
-          const handleDelete = async (commentId: number) => {
-            const confirm = window.confirm("コメントを削除しますか？");
-            if (!confirm) return;
-
-            try {
-              await deleteComments({ commentId, postId });
-              removeComment(commentId);
-              toast.success("コメントを削除しました");
-            } catch (error) {
-              toast.error("コメントの削除に失敗しました");
-            }
-          };
+          const userComment = comment.userId === userProfile?.id;
 
           return (
             <li
@@ -83,7 +81,7 @@ export default function CommentList({ postUserId, postId }: CommentListProps) {
                   }`}
                 >
                   {comment.body}
-                  {userComment && (
+                  {comments && (
                     <div
                       className="absolute right-2 bottom-2 p-1 border-1 border border-gray-300"
                       onClick={() => handleDelete(comment.id)}
