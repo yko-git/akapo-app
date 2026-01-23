@@ -76,7 +76,7 @@ export default function CommentList({ postUserId, postId }: CommentListProps) {
                   }`}
                 />
                 <div
-                  className={`py-5 px-4 border-2 border-[#6C9FE0] shadow-md rounded-md bg-white font-bold md:text-center text-sm tracking-widest ${
+                  className={`py-5 px-4 border-2 border-[#6C9FE0] shadow-md rounded-md bg-white font-bold md:text-center text-sm tracking-widest whitespace-pre-wrap ${
                     isOwn ? "md:mr-auto" : "md:ml-auto"
                   }`}
                 >
