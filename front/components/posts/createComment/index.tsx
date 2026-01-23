@@ -1,27 +1,24 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { createComment } from "@/api/fetchData";
-import { Comment } from "@/schemas/comment.schema";
 import Button from "@/components/shared/button";
+import { useCommentStore } from "@/stores/useCommentStore";
 
 interface CreateComment {
   postId: number;
-  onCommentAdded: (comment: Comment) => void;
 }
 
-export default function CreateComment({
-  postId,
-  onCommentAdded,
-}: CreateComment) {
+export default function CreateComment({ postId }: CreateComment) {
   const [body, setBody] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { addComment } = useCommentStore();
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
     const postData = { body, postId };
     try {
       const newComment = await createComment(postId, postData);
-      onCommentAdded(newComment);
+      addComment(newComment);
       setBody("");
     } catch (error) {
       console.error("投稿処理中にエラーが発生しました:", error);
