@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { usePostForm } from "@/hooks/usePostForm";
 import { NewPost } from "@/schemas/post.schema";
 import { Controller } from "react-hook-form";
+import imageCompression from "browser-image-compression";
 
 const CreatePost = () => {
   const { register, handleSubmit, control, errors } = usePostForm();
@@ -51,7 +52,12 @@ const CreatePost = () => {
     try {
       // 画像を圧縮
       setIsSubmitting(true);
-      await createPost(file, data);
+      const compressedFile = await imageCompression(file, {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      });
+      await createPost(compressedFile, data);
       toast.success("投稿が完了しました");
       router.push("/mypage");
     } catch (error) {
