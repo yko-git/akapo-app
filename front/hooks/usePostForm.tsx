@@ -1,20 +1,25 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NewPost, NewPostSchema } from "@/schemas/post.schema";
+
 // 投稿フォーム用のカスタムフック
-export const usePostForm = () => {
+export const usePostForm = (defaultValues?: Partial<NewPost>) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    control,
+    reset,
   } = useForm<NewPost>({
     resolver: zodResolver(NewPostSchema),
+    mode: "onBlur",
+    defaultValues: defaultValues || {
+      title: "",
+      body: "",
+      status: "0",
+      categoryIds: [1],
+    },
   });
 
-  // dataはhandleSubmitがバリデーションを通過した後の値
-  const onSubmit = (data: NewPost) => {
-    console.log(data);
-  };
-
-  return { register, onSubmit: handleSubmit(onSubmit), errors };
+  return { register, handleSubmit, control, errors, reset };
 };
