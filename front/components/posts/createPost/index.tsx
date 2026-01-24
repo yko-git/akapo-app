@@ -5,16 +5,16 @@ import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
 import toast from "react-hot-toast";
-import imageCompression from "browser-image-compression";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useRouter } from "next/navigation";
+import { usePostForm } from "@/hooks/usePostForm";
+import { NewPost } from "@/schemas/post.schema";
+import { Controller } from "react-hook-form";
+import imageCompression from "browser-image-compression";
 
 const CreatePost = () => {
-  const [title, setTitle] = useState<string>("");
-  const [body, setBody] = useState<string>("");
-  const [categoryIds, setCategoryIds] = useState<number[]>([1]);
+  const { register, handleSubmit, control, errors } = usePostForm();
   const [file, setFile] = useState<File | null>(null);
-  const [status, setStatus] = useState<string>("0");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const checked = useRequireAuth();
   const router = useRouter();
@@ -22,22 +22,10 @@ const CreatePost = () => {
   // 認証チェック完了前は何も表示しない
   if (!checked) return null;
 
-  const handleSelect = (value: string | string[]) => {
-    if (typeof value === "string") {
-      setStatus(value);
-    }
-  };
-
-  const handleMultipleSelect = (value: string | string[]) => {
-    if (Array.isArray(value)) {
-      setCategoryIds(value.map(Number));
-    }
-  };
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFile(event.target.files ? event.target.files[0] : null);
   };
-  const handleSubmit = async () => {
+  const onSubmit = async (data: NewPost) => {
     if (!file) {
       toast.error("画像を選択してください");
       return;
@@ -64,64 +52,79 @@ const CreatePost = () => {
     try {
       // 画像を圧縮
       setIsSubmitting(true);
-      const options = { maxSizeMB: 1, maxWidthOrHeight: 1920 };
-      const compressedFile = await imageCompression(file, options);
-
-      const postData = { title, body, status, categoryIds };
-      await createPost(compressedFile, postData);
+      const compressedFile = await imageCompression(file, {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      });
+      await createPost(compressedFile, data);
       toast.success("投稿が完了しました");
-
       router.push("/mypage");
     } catch (error) {
-      console.error("投稿処理中にエラーが発生しました:", error);
       toast.error("投稿に失敗しました。時間をおいて再度お試しください。");
     } finally {
       setIsSubmitting(false);
     }
   };
   return (
-    <div className="flex flex-col space-y-6 mt-10">
+    <form
+      className="flex flex-col space-y-6 mt-10"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <div>
         <label>タイトル</label>
         <input
           type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          {...register("title")}
           className="border rounded p-2 w-full"
         />
+        {errors.title && (
+          <p className="text-red-500 my-1 text-sm">{errors.title?.message}</p>
+        )}
       </div>
       <div>
         <label>本文</label>
-        <textarea
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          className="border rounded p-2 w-full"
-        />
+        <textarea {...register("body")} className="border rounded p-2 w-full" />
+        {errors.body && (
+          <p className="text-red-500 my-1 text-sm">{errors.body?.message}</p>
+        )}
       </div>
       <div>
         <label>ステータス</label>
-        <SelectBox
-          options={statusList}
-          value={status}
-          onChange={handleSelect}
+        <Controller
+          name="status"
+          control={control}
+          render={({ field }) => (
+            <SelectBox
+              options={statusList}
+              value={field.value}
+              onChange={(value) => field.onChange(value)}
+            />
+          )}
         />
       </div>
       <div>
         <label>カテゴリ</label>
-        <SelectBox
-          options={categories}
-          multiple
-          value={categoryIds.map(String)}
-          onChange={handleMultipleSelect}
+        <Controller
+          name="categoryIds"
+          control={control}
+          render={({ field }) => (
+            <SelectBox
+              multiple
+              options={categories}
+              value={field.value?.map(String) || []}
+              onChange={(value) => field.onChange(value)}
+            />
+          )}
         />
       </div>
+
       <div>
         <label>画像</label>
         <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
       <Button
         mode="Success"
-        onClick={handleSubmit}
         disabled={isSubmitting}
         className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
       >
@@ -130,7 +133,7 @@ const CreatePost = () => {
       <p className="text-sm">
         画像サイズが大きい場合、投稿完了まで時間がかかることがありますので、しばらくお待ちください。
       </p>
-    </div>
+    </form>
   );
 };
 

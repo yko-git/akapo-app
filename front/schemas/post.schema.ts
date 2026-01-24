@@ -37,12 +37,10 @@ export const PostListResponseSchema = z.object({
 
 // NewPost スキーマ
 export const NewPostSchema = z.object({
-  title: z.string().min(1, "タイトルは必須です"),
-  body: z.string().min(1, "本文は必須です"),
-  status: z.string().min(1, "ステータスは必須です"),
-  categoryIds: z
-    .array(z.number())
-    .min(1, "カテゴリを少なくとも1つ選択してください"),
+  title: z.string().nonempty("タイトルは必須です"),
+  body: z.string().nonempty("本文は必須です"),
+  status: z.string().nonempty("ステータスは必須です"),
+  categoryIds: z.array(z.number()).optional(),
   imageKey: z.string().optional(),
 });
 
