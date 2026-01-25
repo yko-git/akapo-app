@@ -2,69 +2,58 @@
 import React, { useState, useEffect } from "react";
 import { patchPost, fetchPost, uploadImage } from "@/api/fetchData";
 import { NewPost } from "@/schemas/post.schema";
-import { Category } from "@/schemas/post.schema";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import StatusInfo from "@/components/shared/statusInfo";
+import { usePostForm } from "@/hooks/usePostForm";
+import imageCompression from "browser-image-compression";
+import { Controller } from "react-hook-form";
 
 const PatchPost = ({ id }: { id: number }) => {
-  const [title, setTitle] = useState<string>("");
-  const [body, setBody] = useState<string>("");
-  const [categoryIds, setCategoryIds] = useState<number[]>([1]);
+  const { register, handleSubmit, control, errors, reset } = usePostForm();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-
-  const [status, setStatus] = useState<string>("0");
 
   useEffect(() => {
     async function fetchData() {
       try {
         setIsLoading(true);
+        setError("");
         const post = await fetchPost({ id });
         if (!post) {
-          console.error("投稿が存在しません");
+          setError("投稿が見つかりません");
           return;
         }
-        setTitle(post.title);
-        setBody(post.body);
-        setStatus(post.status.toString());
-        setCategoryIds(post.categories.map((cat: Category) => cat.id));
+        reset({
+          title: post.title,
+          body: post.body,
+          status: post.status.toString(),
+          categoryIds: post.categories.map((cat) => cat.id),
+        });
       } catch (error) {
-        setError(
-          error instanceof Error ? error.message : "投稿の取得に失敗しました"
-        );
+        setError("投稿の取得に失敗しました");
       } finally {
         setIsLoading(false);
       }
     }
 
     fetchData();
-  }, [id]);
-
-  const handleSelect = (value: string | string[]) => {
-    if (typeof value === "string") {
-      setStatus(value);
-    }
-  };
-
-  const handleMultipleSelect = (value: string | string[]) => {
-    if (Array.isArray(value)) {
-      setCategoryIds(value.map(Number));
-    }
-  };
+  }, [id, reset]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files ? event.target.files[0] : null;
     setFile(selectedFile);
   };
 
-  const handleSubmit = async () => {
+  const onSubmit = async (data: NewPost) => {
+    // 新しいファイルが選択されている場合のみバリデーション
     if (file) {
       // 許可するMIMEタイプ
       const allowedTypes = [
@@ -85,28 +74,23 @@ const PatchPost = ({ id }: { id: number }) => {
       }
     }
     try {
+      // 画像を圧縮
       setIsSubmitting(true);
-
-      const postData: NewPost = {
-        title,
-        body,
-        status,
-        categoryIds,
-      };
-
       if (file) {
-        // 新しい画像が選択されている場合のみ
-        const newImageUrl = await uploadImage(file);
-        // 新しい画像の `imageKey` を設定
-        postData.imageKey = newImageUrl?.safeFilePath;
+        const compressedFile = await imageCompression(file, {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1920,
+          useWebWorker: true,
+        });
+        const newImageUrl = await uploadImage(compressedFile);
+        data.imageKey = newImageUrl?.safeFilePath;
       }
 
-      await patchPost(id, postData);
-      toast.success("編集が完了しました");
+      await patchPost(id, data);
+      toast.success("投稿が完了しました");
       router.push("/mypage");
     } catch (error) {
-      console.error("投稿処理中にエラーが発生しました:", error);
-      toast.error("投稿の編集に失敗しました。時間をおいて再度お試しください。");
+      toast.error("投稿に失敗しました。時間をおいて再度お試しください。");
     } finally {
       setIsSubmitting(false);
     }
@@ -115,40 +99,63 @@ const PatchPost = ({ id }: { id: number }) => {
   if (error) return <StatusInfo status="service-down" data={null} />;
 
   return (
-    <div className="flex flex-col space-y-6 mt-10">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col space-y-6 mt-10"
+    >
       <div>
         <label>タイトル</label>
         <input
           type="text"
-          value={title}
-          placeholder={title}
-          onChange={(e) => setTitle(e.target.value)}
+          {...register("title")}
           className="border rounded p-2 w-full"
         />
+        {errors.title && (
+          <p className="text-red-500 my-1 text-sm">{errors.title?.message}</p>
+        )}
       </div>
       <div>
         <label>本文</label>
-        <textarea
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          className="border rounded p-2 w-full"
-        />
+        <textarea {...register("body")} className="border rounded p-2 w-full" />
+        {errors.body && (
+          <p className="text-red-500 my-1 text-sm">{errors.body?.message}</p>
+        )}
       </div>
       <div>
         <label>ステータス</label>
-        <SelectBox
-          options={statusList}
-          value={status}
-          onChange={handleSelect}
+        <Controller
+          name="status"
+          control={control}
+          render={({ field }) => (
+            <SelectBox
+              options={statusList}
+              value={field.value}
+              onChange={(value) => {
+                if (typeof value === "string") {
+                  field.onChange(value);
+                }
+              }}
+            />
+          )}
         />
       </div>
       <div>
         <label>カテゴリ</label>
-        <SelectBox
-          options={categories}
-          multiple
-          value={categoryIds.map(String)}
-          onChange={handleMultipleSelect}
+        <Controller
+          name="categoryIds"
+          control={control}
+          render={({ field }) => (
+            <SelectBox
+              multiple
+              options={categories}
+              value={field.value?.map(String) || []}
+              onChange={(value) => {
+                if (Array.isArray(value)) {
+                  field.onChange(value.map(Number));
+                }
+              }}
+            />
+          )}
         />
       </div>
       <div>
@@ -157,13 +164,12 @@ const PatchPost = ({ id }: { id: number }) => {
       </div>
       <Button
         mode="Success"
-        onClick={handleSubmit}
         disabled={isSubmitting}
         className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
       >
         {isSubmitting ? "投稿送信中..." : "投稿を編集する"}
       </Button>
-    </div>
+    </form>
   );
 };
 
