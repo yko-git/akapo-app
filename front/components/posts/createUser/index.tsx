@@ -5,21 +5,20 @@ import Button from "@/components/shared/button";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression";
+import { useUserForm } from "@/hooks/useUserForm";
+import { NewUser } from "@/schemas/user.schema";
 
 const CreateUser = () => {
-  const [loginId, setLoginId] = useState<string>("");
-  const [name, setName] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const { register, handleSubmit, errors } = useUserForm();
   const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [submitMessage, setSubmitMessage] = useState<string>("登録する");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFile(event.target.files ? event.target.files[0] : null);
   };
 
-  const handleSubmit = async () => {
+  const onSubmit = async (data: NewUser) => {
     if (!file) {
       toast.error("画像を選択してください");
       return;
@@ -43,18 +42,15 @@ const CreateUser = () => {
       return;
     }
 
-    // 画像を圧縮
-    const options = { maxSizeMB: 1, maxWidthOrHeight: 1920 };
-    const compressedFile = await imageCompression(file, options);
-    const userData = { loginId, name, password };
-
     try {
-      const postImg = await createUser(compressedFile, userData);
-      if (!postImg) {
-        alert("画像のアップロードまたは投稿に失敗しました");
-      }
+      setIsSubmitting(true);
+      const compressedFile = await imageCompression(file, {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      });
+      await createUser(compressedFile, data);
       toast.success("ユーザー登録が完了しました。ログインしてください。");
-      setSubmitMessage("ユーザー登録が完了しました");
       router.push("/login");
     } catch (error) {
       console.error("登録処理中にエラーが発生しました:", error);
@@ -64,18 +60,23 @@ const CreateUser = () => {
   };
 
   return (
-    <div className="flex flex-col space-y-6 mt-10">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col space-y-6 mt-10"
+    >
       <div>
         <label className="font-semibold text-lg tracking-widest">
           <h3 className="font-bold">ログインID</h3>
         </label>
         <input
           type="text"
-          value={loginId}
-          onChange={(e) => setLoginId(e.target.value)}
           className="border rounded p-2 w-full mt-2"
           placeholder="本登録時に使用するIDです"
+          {...register("loginId")}
         />
+        {errors.loginId && (
+          <p className="text-red-500 my-1 text-sm">{errors.loginId?.message}</p>
+        )}
       </div>
       <div>
         <label className="font-semibold text-lg tracking-widest">
@@ -83,11 +84,15 @@ const CreateUser = () => {
         </label>
         <input
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
           className="border rounded p-2 w-full mt-2"
           placeholder="本登録時に使用するパスワードです"
+          {...register("password")}
         />
+        {errors.password && (
+          <p className="text-red-500 my-1 text-sm">
+            {errors.password?.message}
+          </p>
+        )}
       </div>
       <div>
         <label className="font-semibold text-lg tracking-widest">
@@ -95,10 +100,12 @@ const CreateUser = () => {
         </label>
         <input
           type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          {...register("name")}
           className="border rounded p-2 w-full mt-2"
         />
+        {errors.name && (
+          <p className="text-red-500 my-1 text-sm">{errors.name?.message}</p>
+        )}
       </div>
       <div>
         <label className="font-semibold text-lg tracking-widest">
@@ -109,16 +116,15 @@ const CreateUser = () => {
 
       <Button
         mode="Success"
-        onClick={handleSubmit}
         disabled={isSubmitting}
         className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
       >
-        {isSubmitting ? "登録中..." : submitMessage}
+        {isSubmitting ? "登録中..." : "登録する"}
       </Button>
       <p className="text-sm">
         画像サイズが大きい場合、登録完了まで時間がかかることがありますので、しばらくお待ちください。
       </p>
-    </div>
+    </form>
   );
 };
 

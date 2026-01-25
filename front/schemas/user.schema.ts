@@ -12,7 +12,7 @@ export const UserSchema = z.object({
 export const NewUserSchema = z.object({
   loginId: z.string().min(1, "ログインIDは必須です"),
   name: z.string().min(1, "アカウント名は必須です"),
-  password: z.string().min(6, "パスワードは6文字以上である必要があります"),
+  password: z.string().min(1, "パスワードは1文字以上である必要があります"),
 });
 
 // NewLogin スキーマ
