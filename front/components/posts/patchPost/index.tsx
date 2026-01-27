@@ -19,6 +19,7 @@ const PatchPost = ({ id }: { id: number }) => {
   const [error, setError] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -50,6 +51,16 @@ const PatchPost = ({ id }: { id: number }) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files ? event.target.files[0] : null;
     setFile(selectedFile);
+
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(selectedFile);
+    } else {
+      setPreview(null);
+    }
   };
 
   const onSubmit = async (data: NewPost) => {
@@ -162,6 +173,15 @@ const PatchPost = ({ id }: { id: number }) => {
         <label>画像</label>
         <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
+      {preview && (
+        <div className="mt-4 text-center">
+          <img
+            src={preview}
+            alt="画像プレビュー"
+            className="w-32 h-32 object-cover inline-block mx-auto"
+          />
+        </div>
+      )}
       <Button
         mode="Success"
         disabled={isSubmitting}
