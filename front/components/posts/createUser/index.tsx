@@ -5,17 +5,29 @@ import Button from "@/components/shared/button";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression";
-import { useUserForm } from "@/hooks/useUserForm";
 import { NewUser } from "@/schemas/user.schema";
+import { useUserForm } from "@/hooks/useUserForm";
 
 const CreateUser = () => {
   const { register, handleSubmit, errors } = useUserForm();
   const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [preview, setPreview] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(event.target.files ? event.target.files[0] : null);
+    const selectedFile = event.target.files ? event.target.files[0] : null;
+    setFile(selectedFile);
+
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(selectedFile);
+    } else {
+      setPreview(null);
+    }
   };
 
   const onSubmit = async (data: NewUser) => {
@@ -53,7 +65,7 @@ const CreateUser = () => {
       toast.success("ユーザー登録が完了しました。ログインしてください。");
       router.push("/login");
     } catch (error) {
-      console.error("登録処理中にエラーが発生しました:", error);
+      toast.error("投稿に失敗しました。時間をおいて再度お試しください。");
     } finally {
       setIsSubmitting(false);
     }
@@ -70,9 +82,9 @@ const CreateUser = () => {
         </label>
         <input
           type="text"
+          {...register("loginId")}
           className="border rounded p-2 w-full mt-2"
           placeholder="本登録時に使用するIDです"
-          {...register("loginId")}
         />
         {errors.loginId && (
           <p className="text-red-500 my-1 text-sm">{errors.loginId?.message}</p>
@@ -84,9 +96,9 @@ const CreateUser = () => {
         </label>
         <input
           type="password"
+          {...register("password")}
           className="border rounded p-2 w-full mt-2"
           placeholder="本登録時に使用するパスワードです"
-          {...register("password")}
         />
         {errors.password && (
           <p className="text-red-500 my-1 text-sm">
@@ -113,6 +125,15 @@ const CreateUser = () => {
         </label>
         <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
+      {preview && (
+        <div className="mt-4 text-center">
+          <img
+            src={preview}
+            alt="画像プレビュー"
+            className="w-32 h-32 object-cover rounded-full border inline-block mx-auto"
+          />
+        </div>
+      )}
 
       <Button
         mode="Success"
