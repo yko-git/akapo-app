@@ -20,6 +20,7 @@ const PatchPost = ({ id }: { id: number }) => {
   const [file, setFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -38,6 +39,12 @@ const PatchPost = ({ id }: { id: number }) => {
           status: post.status.toString(),
           categoryIds: post.categories.map((cat) => cat.id),
         });
+
+        // 既存の画像URLを設定
+        if (post.signedUrl) {
+          setExistingImageUrl(post.signedUrl);
+          setPreview(post.signedUrl);
+        }
       } catch (error) {
         setError("投稿の取得に失敗しました");
       } finally {
@@ -59,7 +66,8 @@ const PatchPost = ({ id }: { id: number }) => {
       };
       reader.readAsDataURL(selectedFile);
     } else {
-      setPreview(null);
+      // ファイル選択をクリアした場合、既存画像に戻す
+      setPreview(existingImageUrl);
     }
   };
 
@@ -75,7 +83,7 @@ const PatchPost = ({ id }: { id: number }) => {
       ];
       if (!allowedTypes.includes(file.type)) {
         toast.error("PNG/JPEG/WEBP/SVG以外のファイル形式はご遠慮ください");
-        return; // ここで処理終了
+        return;
       }
 
       const sizeMB = file.size / 1024 / 1024;
@@ -98,7 +106,7 @@ const PatchPost = ({ id }: { id: number }) => {
       }
 
       await patchPost(id, data);
-      toast.success("投稿が完了しました");
+      toast.success("投稿を更新しました");
       router.push("/mypage");
     } catch (error) {
       toast.error("投稿に失敗しました。時間をおいて再度お試しください。");
@@ -115,25 +123,37 @@ const PatchPost = ({ id }: { id: number }) => {
       className="flex flex-col space-y-6 mt-10"
     >
       <div>
-        <label>タイトル</label>
+        <label htmlFor="title" className="font-semibold">
+          タイトル
+        </label>
         <input
+          id="title"
           type="text"
           {...register("title")}
-          className="border rounded p-2 w-full"
+          className="border rounded p-2 w-full mt-2"
         />
         {errors.title && (
           <p className="text-red-500 my-1 text-sm">{errors.title?.message}</p>
         )}
       </div>
       <div>
-        <label>本文</label>
-        <textarea {...register("body")} className="border rounded p-2 w-full" />
+        <label htmlFor="body" className="font-semibold">
+          本文
+        </label>
+        <textarea
+          id="body"
+          {...register("body")}
+          className="border rounded p-2 w-full mt-2"
+          rows={6}
+        />
         {errors.body && (
           <p className="text-red-500 my-1 text-sm">{errors.body?.message}</p>
         )}
       </div>
       <div>
-        <label>ステータス</label>
+        <label htmlFor="status" className="font-semibold">
+          ステータス
+        </label>
         <Controller
           name="status"
           control={control}
@@ -151,7 +171,9 @@ const PatchPost = ({ id }: { id: number }) => {
         />
       </div>
       <div>
-        <label>カテゴリ</label>
+        <label htmlFor="categoryIds" className="font-semibold">
+          カテゴリ
+        </label>
         <Controller
           name="categoryIds"
           control={control}
@@ -170,15 +192,29 @@ const PatchPost = ({ id }: { id: number }) => {
         />
       </div>
       <div>
-        <label>画像</label>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <label htmlFor="image" className="font-semibold">
+          画像
+        </label>
+        <input
+          id="image"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/svg+xml"
+          onChange={handleFileChange}
+          className="mt-2"
+        />
+        <p className="text-sm text-gray-500 mt-1">
+          新しい画像を選択しない場合は、既存の画像が保持されます
+        </p>
       </div>
       {preview && (
-        <div className="mt-4 text-center">
+        <div className="inline-block mx-auto">
+          <p className="text-sm font-semibold mb-2">
+            {file ? "新しい画像プレビュー" : "現在の画像"}
+          </p>
           <img
             src={preview}
             alt="画像プレビュー"
-            className="w-32 h-32 object-cover inline-block mx-auto"
+            className="w-64 h-64 object-cover rounded border"
           />
         </div>
       )}
