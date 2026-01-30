@@ -41,6 +41,18 @@ export const createPosts = async (req: any, res: Response) => {
 
     await post.upsert(categoryIds);
     res.json({ post });
+
+    try {
+      await fetch(process.env.SLACK_WEBHOOK_URL!, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: `:tada: 新しい投稿があったよ！\n投稿: ${post.title}`,
+        }),
+      });
+    } catch (e) {
+      console.error("Slack通知に失敗", e);
+    }
   } catch (err) {
     console.log(err);
     return res.status(500).json({ errorMessage: "投稿の作成に失敗しました" });
@@ -204,6 +216,18 @@ export const createComment = async (req: any, res: Response) => {
       userId: user.id,
       postId: req.params.id,
     });
+
+    try {
+      await fetch(process.env.SLACK_WEBHOOK_URL!, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: `:tada: 新しいコメントがきたよ！\n投稿: ${post.title}：${comment.body}`,
+        }),
+      });
+    } catch (e) {
+      console.error("Slack通知に失敗", e);
+    }
 
     // ユーザーの署名付きURLを更新
     const updatedUser = await updateIconSignedUrls(user);
