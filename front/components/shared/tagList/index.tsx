@@ -1,4 +1,4 @@
-import { TagListProps } from "@/schemas/post.schema";
+import { TagListProps } from "@/types";
 
 export default function TagList({ categories = [] }: TagListProps) {
   return (
