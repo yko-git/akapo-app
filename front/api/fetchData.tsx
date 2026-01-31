@@ -122,7 +122,7 @@ export async function createUser(
   });
 
   // ユーザー情報をサーバーに送信
-  const userResponse = await instance.post("auth/signup", {
+  const userResponse = await instance.post(API_ENDPOINTS.SIGNUP, {
     user: {
       loginId,
       name,
@@ -143,7 +143,7 @@ export async function createUser(
 
 // 新規ログイン用関数
 export async function createLogin(postData: NewLogin): Promise<string> {
-  const response = await instance.post("auth/login", postData);
+  const response = await instance.post(API_ENDPOINTS.LOGIN, postData);
 
   // レスポンスデータのバリデーション
   if (!response.data.token) {
