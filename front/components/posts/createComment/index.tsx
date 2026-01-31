@@ -3,12 +3,9 @@ import React, { useState } from "react";
 import { createComment } from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import { useCommentStore } from "@/stores/useCommentStore";
+import { CreateCommentProps } from "@/types";
 
-interface CreateComment {
-  postId: number;
-}
-
-export default function CreateComment({ postId }: CreateComment) {
+export default function CreateComment({ postId }: CreateCommentProps) {
   const [body, setBody] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addComment } = useCommentStore();
