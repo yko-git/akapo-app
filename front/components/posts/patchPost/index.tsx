@@ -11,12 +11,8 @@ import StatusInfo from "@/components/shared/statusInfo";
 import { usePostForm } from "@/hooks/usePostForm";
 import imageCompression from "browser-image-compression";
 import { Controller } from "react-hook-form";
-import {
-  ALLOWED_IMAGE_TYPES,
-  IMAGE_COMPRESSION_OPTIONS,
-  FILE_SIZE_BYTES_TO_MB,
-  MAX_FILE_SIZE_MB,
-} from "@/constants/image";
+import { IMAGE_COMPRESSION_OPTIONS } from "@/constants/image";
+import { validateImageFile } from "@/lib/validateImageFile";
 
 const PatchPost = ({ id }: { id: number }) => {
   const { register, handleSubmit, control, errors, reset } = usePostForm();
@@ -79,24 +75,7 @@ const PatchPost = ({ id }: { id: number }) => {
 
   const onSubmit = async (data: NewPost) => {
     // 新しいファイルが選択されている場合のみバリデーション
-    if (file) {
-      if (
-        !ALLOWED_IMAGE_TYPES.includes(
-          file.type as (typeof ALLOWED_IMAGE_TYPES)[number]
-        )
-      ) {
-        toast.error("PNG/JPEG/WEBP/SVG以外のファイル形式はご遠慮ください");
-        return; // ここで処理終了
-      }
-
-      const sizeMB = file.size / FILE_SIZE_BYTES_TO_MB;
-      if (sizeMB > MAX_FILE_SIZE_MB) {
-        toast.error(
-          `ファイルサイズは${MAX_FILE_SIZE_MB}MB以下でお願いいたします`
-        );
-        return;
-      }
-    }
+    if (!validateImageFile(file, false)) return;
     try {
       // 画像を圧縮
       setIsSubmitting(true);
