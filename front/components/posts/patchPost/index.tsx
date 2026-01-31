@@ -162,13 +162,15 @@ const PatchPost = ({ id }: { id: number }) => {
           control={control}
           render={({ field }) => (
             <SelectBox
-              multiple
               options={categories}
-              value={field.value?.map(String) || []}
+              multiple
+              value={(field.value ?? []).map(String)}
               onChange={(value) => {
-                if (Array.isArray(value)) {
-                  field.onChange(value.map(Number));
-                }
+                const ids = Array.isArray(value)
+                  ? value.map(Number)
+                  : [Number(value)];
+
+                field.onChange(ids);
               }}
             />
           )}

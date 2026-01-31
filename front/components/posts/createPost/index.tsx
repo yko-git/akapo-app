@@ -103,10 +103,16 @@ const CreatePost = () => {
           control={control}
           render={({ field }) => (
             <SelectBox
-              multiple
               options={categories}
-              value={field.value?.map(String) || []}
-              onChange={(value) => field.onChange(value)}
+              multiple
+              value={(field.value ?? []).map(String)}
+              onChange={(value) => {
+                const ids = Array.isArray(value)
+                  ? value.map(Number)
+                  : [Number(value)];
+
+                field.onChange(ids);
+              }}
             />
           )}
         />
