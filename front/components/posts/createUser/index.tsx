@@ -7,12 +7,8 @@ import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression";
 import { NewUser } from "@/schemas/user.schema";
 import { useUserForm } from "@/hooks/useUserForm";
-import {
-  ALLOWED_IMAGE_TYPES,
-  IMAGE_COMPRESSION_OPTIONS,
-  FILE_SIZE_BYTES_TO_MB,
-  MAX_FILE_SIZE_MB,
-} from "@/constants/image";
+import { IMAGE_COMPRESSION_OPTIONS } from "@/constants/image";
+import { validateImageFile } from "@/lib/validateImageFile";
 
 const CreateUser = () => {
   const { register, handleSubmit, errors } = useUserForm();
@@ -37,32 +33,12 @@ const CreateUser = () => {
   };
 
   const onSubmit = async (data: NewUser) => {
-    if (!file) {
-      toast.error("画像を選択してください");
-      return;
-    }
-
-    if (
-      !ALLOWED_IMAGE_TYPES.includes(
-        file.type as (typeof ALLOWED_IMAGE_TYPES)[number]
-      )
-    ) {
-      toast.error("PNG/JPEG/WEBP/SVG以外のファイル形式はご遠慮ください");
-      return; // ここで処理終了
-    }
-
-    const sizeMB = file.size / FILE_SIZE_BYTES_TO_MB;
-    if (sizeMB > MAX_FILE_SIZE_MB) {
-      toast.error(
-        `ファイルサイズは${MAX_FILE_SIZE_MB}MB以下でお願いいたします`
-      );
-      return;
-    }
+    if (!validateImageFile(file)) return;
 
     try {
       setIsSubmitting(true);
       const compressedFile = await imageCompression(
-        file,
+        file!,
         IMAGE_COMPRESSION_OPTIONS
       );
       await createUser(compressedFile, data);
