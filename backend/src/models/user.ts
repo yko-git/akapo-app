@@ -7,8 +7,8 @@ import {
   HasManyGetAssociationsMixin,
 } from "sequelize";
 
-import { Post } from "./post";
 import { sequelize } from ".";
+import { Post } from "./post";
 import Category from "./category";
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
@@ -17,6 +17,8 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare authorizeToken: string;
   declare name: string;
   declare iconUrl: string;
+  declare iconSignedUrl: string;
+  declare iconUrlExpiresAt: CreationOptional<Date>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare getPosts: HasManyGetAssociationsMixin<Post>;
@@ -30,10 +32,18 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     }
     return this.getPosts({
       where,
-      include: {
-        model: Category,
-        through: { attributes: [] },
-      },
+      include: [
+        {
+          model: Category,
+          as: "categories",
+          through: { attributes: [] },
+        },
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "name", "iconUrl", "iconSignedUrl"],
+        },
+      ],
     });
   }
 }
@@ -71,6 +81,13 @@ User.init(
         },
       },
     },
+    iconSignedUrl: {
+      allowNull: false,
+      type: DataTypes.TEXT,
+    },
+    iconUrlExpiresAt: {
+      type: DataTypes.DATE,
+    },
     createdAt: {
       type: DataTypes.DATE,
     },
@@ -82,6 +99,6 @@ User.init(
 );
 
 User.hasMany(Post, { foreignKey: "userId" });
-Post.belongsTo(User, { foreignKey: "userId" });
+Post.belongsTo(User, { as: "user", foreignKey: "userId" });
 
 export { User };

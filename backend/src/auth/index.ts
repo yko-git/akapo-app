@@ -49,7 +49,15 @@ passport.use(
           user.dataValues.authorizeToken
         );
         if (userMatch) {
-          const { id, loginId, name, iconUrl, createdAt, updatedAt } = user;
+          const {
+            id,
+            loginId,
+            name,
+            iconUrl,
+            iconSignedUrl,
+            createdAt,
+            updatedAt,
+          } = user;
           return done(
             null,
             {
@@ -57,6 +65,7 @@ passport.use(
               loginId,
               name,
               iconUrl,
+              iconSignedUrl,
               createdAt,
               updatedAt,
             },

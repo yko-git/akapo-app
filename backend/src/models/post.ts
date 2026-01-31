@@ -20,9 +20,12 @@ class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
   declare body: string;
   declare status: number;
   declare imageKey: string;
+  declare signedUrl: string;
+  declare urlExpiresAt: CreationOptional<Date>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare setCategories: BelongsToManySetAssociationsMixin<Category, number>;
+  declare user?: User;
 
   async upsert(categoryIds: number[]) {
     const result = await sequelize.transaction(async (t) => {
@@ -100,6 +103,13 @@ Post.init(
         },
       },
     },
+    signedUrl: {
+      allowNull: false,
+      type: DataTypes.TEXT,
+    },
+    urlExpiresAt: {
+      type: DataTypes.DATE,
+    },
     createdAt: {
       type: DataTypes.DATE,
     },
@@ -110,7 +120,7 @@ Post.init(
   { sequelize, modelName: "Post", tableName: "posts" }
 );
 
-Post.belongsToMany(Category, { through: "post_categories" });
+Post.belongsToMany(Category, { as: "categories", through: "post_categories" });
 Category.belongsToMany(Post, { through: "post_categories" });
 
 export { Post };
