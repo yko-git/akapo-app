@@ -1,0 +1,44 @@
+name: Generate Screen Docs
+
+on:
+  push:
+    paths:
+      - "src/**/*.tsx"
+      - "scripts/**/*.ts"
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate screen docs
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          npx tsx scripts/generate-create-post-doc.ts
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          if git status --porcelain | grep docs/screens; then
+            git add docs/screens
+            git commit -m "docs: auto update screen specs"
+            git push
+          else
+            echo "No doc changes"
+          fi
