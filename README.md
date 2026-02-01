@@ -95,6 +95,28 @@ akapo を通して、
 
 ---
 
+## ドキュメント自動生成（画面仕様）
+
+本リポジトリでは、**フロントエンドの実装コードを起点に画面仕様ドキュメントを自動生成**する仕組みを検証・導入しています。
+
+### 目的
+- 実装と仕様書の乖離を防ぐ
+- 仕様書のメンテナンスコストを下げる
+- コードを Single Source of Truth とした運用
+
+### 仕組み概要
+- 対象：React（Next.js）の画面コンポーネント
+- 画面実装コードを解析し、AI（Claude API）を利用して画面仕様（Markdown）を生成
+- GitHub Actions により、対象ファイル変更時に自動実行
+- 生成された仕様書はリポジトリ内にコミットされます
+
+### 出力例
+- [front/docs/screens/create-post.md](https://github.com/yko-git/akapo-app/blob/feature/feature-docs/01/front/docs/screens/create-post.md)
+
+この仕組みにより、**画面実装が更新されると、仕様書も自動で更新される**運用を実現しています。
+
+---
+
 ## 今後の予定
 - UI/UXの改善
 - 検索機能（条件検索・ページング）
