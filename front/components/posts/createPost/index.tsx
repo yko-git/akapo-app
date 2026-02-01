@@ -83,7 +83,7 @@ const CreatePost = () => {
         )}
       </div>
       <div>
-        <label>下書き/本番</label>
+        <label>下書き用/本番反映</label>
         <Controller
           name="status"
           control={control}
