@@ -3,7 +3,8 @@ name: Generate Screen Docs
 on:
   push:
     paths:
-      - "src/**/*.tsx"
+      - "front/components/posts/createPost/**/*.tsx"
+      - "front/app/posts/new/**/page.tsx"
       - "scripts/**/*.ts"
 
 jobs:
