@@ -45,6 +45,14 @@ export const createAuth = async (req: Request, res: Response) => {
         iconSignedUrl: userData.iconSignedUrl,
       },
     });
+
+    await fetch(process.env.SLACK_WEBHOOK_URL!, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text: `👦: 新しいユーザーが増えたよ！: ${user.name}`,
+      }),
+    });
   } catch (error) {
     console.log(error);
     return res
