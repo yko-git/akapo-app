@@ -119,7 +119,7 @@ const CreatePost = () => {
       </div>
 
       <div>
-        <label>作品画像</label>
+        <label>画像</label>
         <input type="file" accept="image/*" onChange={handleFileChange} />
       </div>
       {preview && (
