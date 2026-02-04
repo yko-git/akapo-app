@@ -97,7 +97,7 @@ const CreatePost = () => {
         />
       </div>
       <div>
-        <label>カテゴリ</label>
+        <label>カテゴリー</label>
         <Controller
           name="categoryIds"
           control={control}
