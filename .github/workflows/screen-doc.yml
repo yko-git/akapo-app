@@ -6,8 +6,8 @@ permissions:
 on:
   push:
     paths:
-      - "front/components/posts/createPost/**/*.tsx"
-      - "front/app/posts/new/**/page.tsx"
+      - "front/components/**/**/**/*.tsx"
+      - "front/app/**/*.tsx"
       - "front/scripts/**/*.ts"
 
 jobs:
