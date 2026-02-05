@@ -1,14 +1,14 @@
 name: Generate Screen Docs
 
-permissions:
-  contents: write
-
 on:
   push:
     paths:
-      - "front/components/**/**/**/*.tsx"
-      - "front/app/**/*.tsx"
+      - "front/**/*.tsx"
+      - "front/screens.config.ts"
       - "front/scripts/**/*.ts"
+
+permissions:
+  contents: write
 
 jobs:
   generate-docs:
@@ -33,7 +33,7 @@ jobs:
         working-directory: front
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: npx tsx scripts/generate-create-post-doc.ts
+        run: npx tsx scripts/generate-screen-docs.ts
 
       - name: Commit and push if changed
         working-directory: front
