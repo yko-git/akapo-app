@@ -1,0 +1,45 @@
+export type ScreenConfig = {
+  id: string;
+  name: string;
+  files: string[];
+  output: string;
+};
+
+export const screens: ScreenConfig[] = [
+  {
+    id: "create-post",
+    name: "投稿作成",
+    files: [
+      "components/posts/createPost/index.tsx",
+      "app/posts/new/[id]/page.tsx",
+    ],
+    output: "docs/screens/create-post.md",
+  },
+  {
+    id: "patch-post",
+    name: "投稿編集",
+    files: ["components/posts/patchPost/index.tsx", "app/posts/[id]/page.tsx"],
+    output: "docs/screens/patch-post.md",
+  },
+
+  {
+    id: "login",
+    name: "ログイン",
+    files: ["components/posts/loginUser/index.tsx", "app/login/page.tsx"],
+    output: "docs/screens/login.md",
+  },
+
+  {
+    id: "post-detail",
+    name: "投稿詳細",
+    files: ["components/posts/article/index.tsx", "app/posts/[id]/page.tsx"],
+    output: "docs/screens/post-detail.md",
+  },
+
+  {
+    id: "mypage",
+    name: "マイページ",
+    files: ["components/posts/userPage/index.tsx", "app/mypage/page.tsx"],
+    output: "docs/screens/mypage.md",
+  },
+];
