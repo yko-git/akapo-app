@@ -3,6 +3,7 @@ import path from "path";
 import dotenv from "dotenv";
 import Anthropic from "@anthropic-ai/sdk";
 import { screens } from "./screens.config";
+import { execSync } from "child_process";
 
 dotenv.config();
 
@@ -12,6 +13,19 @@ const client = new Anthropic({
 
 if (!process.env.ANTHROPIC_API_KEY) {
   throw new Error("ANTHROPIC_API_KEY is not set");
+}
+
+// git diffを取るユーティリティ
+function hasDiff(files: string[]): boolean {
+  const fileList = files.join(" ");
+  try {
+    const diff = execSync(`git diff --name-only HEAD~1 -- ${fileList}`, {
+      encoding: "utf-8",
+    }).trim();
+    return diff.length > 0;
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -35,6 +49,14 @@ function readSourceFiles(files: string[]) {
 
 async function generateScreenDoc() {
   for (const screen of screens) {
+    console.log(`\n📄 Checking: ${screen.id}`);
+
+    // diffがなければcontinueする
+    if (!hasDiff(screen.files)) {
+      console.log(`⏭ No changes: ${screen.id}`);
+      continue;
+    }
+
     console.log(`\n📄 Generating: ${screen.id}`);
 
     const sourceCode = readSourceFiles(screen.files);
@@ -42,8 +64,35 @@ async function generateScreenDoc() {
       console.warn(`⚠️ No source files for ${screen.id}, skipped`);
       continue;
     }
+    const outputPath = path.resolve(process.cwd(), screen.output);
 
-    const prompt = `
+    // フル生成 / 差分生成のモード分岐
+    const isDiffMode = fs.existsSync(outputPath);
+
+    // 既存 md を読む
+    const existingDoc = isDiffMode ? fs.readFileSync(outputPath, "utf-8") : "";
+
+    const prompt = isDiffMode
+      ? `
+あなたはフロントエンドエンジニアです。
+
+以下は **既存の画面仕様書** です。
+この内容をベースに、
+**実装コードの変更点のみを反映して更新してください。**
+
+## 既存の画面仕様書
+${existingDoc}
+
+## 実装コード（変更後）
+${sourceCode}
+
+# 更新ルール
+- 変更がない記述は残す
+- 変更・追加された仕様のみを更新する
+- 削除された挙動があれば反映する
+- 不明な点は「コード上では不明」と明記する
+`
+      : `
 あなたはフロントエンドエンジニアです。
 以下の React / Next.js の実装コードを解析し、
 「画面仕様書」を **日本語のMarkdown** で生成してください。
@@ -89,7 +138,6 @@ ${sourceCode}
       .map((c: any) => c.text)
       .join("");
 
-    const outputPath = path.resolve(process.cwd(), screen.output);
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     fs.writeFileSync(outputPath, markdown);
 
