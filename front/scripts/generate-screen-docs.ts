@@ -15,16 +15,42 @@ if (!process.env.ANTHROPIC_API_KEY) {
   throw new Error("ANTHROPIC_API_KEY is not set");
 }
 
+function getBaseRef(): string {
+  // GitHub Actions (PR)
+  if (process.env.GITHUB_BASE_REF) {
+    return `origin/${process.env.GITHUB_BASE_REF}`;
+  }
+
+  // ローカル・CI（develop があればそれ）
+  try {
+    execSync("git show-ref --verify --quiet refs/remotes/origin/develop");
+    return "origin/develop";
+  } catch {}
+
+  // 最後の保険
+  return "HEAD~1";
+}
+
 // git diffを取るユーティリティ
 function hasDiff(files: string[]): boolean {
+  const baseRef = getBaseRef();
   const fileList = files.join(" ");
+
   try {
-    const diff = execSync(`git diff --name-only HEAD~1 -- ${fileList}`, {
-      encoding: "utf-8",
-    }).trim();
+    const diff = execSync(
+      `git diff --name-only ${baseRef}...HEAD -- ${fileList}`,
+      { encoding: "utf-8" },
+    ).trim();
+
+    if (diff) {
+      console.log(`📝 Diff detected against ${baseRef}`);
+      console.log(diff);
+    }
+
     return diff.length > 0;
-  } catch {
-    return false;
+  } catch (err) {
+    console.warn(`⚠️ git diff failed, fallback skipped`);
+    return true; // 失敗時は安全側（生成する）
   }
 }
 
@@ -91,6 +117,7 @@ ${sourceCode}
 - 変更・追加された仕様のみを更新する
 - 削除された挙動があれば反映する
 - 不明な点は「コード上では不明」と明記する
+- 既存仕様書の見出し構造は維持する
 `
       : `
 あなたはフロントエンドエンジニアです。
