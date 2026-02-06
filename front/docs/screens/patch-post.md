@@ -1,47 +1,220 @@
-# 画面概要
-投稿の編集を行う画面です。投稿詳細情報の取得、編集フォームの表示、投稿内容の更新を行います。
+## 実装コード（変更後）
 
-# URL
-`/posts/[id]`
+// ===== components/posts/patchPost/index.tsx =====
+"use client";
+import React, { useState, useEffect } from "react";
+import { patchPost, fetchPost, uploadImage } from "@/api/fetchData";
+import { NewPost } from "@/schemas/post.schema";
+import Button from "@/components/shared/button";
+import SelectBox from "@/components/shared/selectBox";
+import { statusList, categories } from "@/components/shared/data";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import StatusInfo from "@/components/shared/statusInfo";
+import { usePostForm } from "@/hooks/usePostForm";
+import imageCompression from "browser-image-compression";
+import { Controller } from "react-hook-form";
+import { IMAGE_COMPRESSION_OPTIONS } from "@/constants/image";
+import { validateImageFile } from "@/lib/validateImageFile";
 
-# 使用コンポーネント
-- `PatchPost`: 投稿の編集フォームを表示するコンポーネント
-- `Article`: 投稿の詳細情報を表示するコンポーネント
-- `Button`: 投稿更新ボタンを表示するコンポーネント
-- `SelectBox`: 投稿ステータスやカテゴリの選択を行うコンポーネント
-- `StatusInfo`: 読み込み中や エラー時の表示を行うコンポーネント
+const PatchPost = ({ id }: { id: number }) => {
+  const { register, handleSubmit, control, errors, reset } = usePostForm();
 
-# フォーム項目・表示要素
-- タイトル
-- 本文
-- ステータス
-- カテゴリ
-- 画像
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
+  const router = useRouter();
 
-# 初期表示・デフォルト値
-- 投稿ID(`id`)をクエリパラメータから取得し、該当する投稿の情報を取得する
-- 取得した投稿の情報をフォームに設定する
-- 既存の画像がある場合は、プレビュー表示する
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        setError("");
+        const post = await fetchPost({ id });
+        if (!post) {
+          setError("投稿が見つかりません");
+          return;
+        }
+        reset({
+          title: post.title,
+          body: post.body,
+          status: post.status.toString(),
+          categoryIds: post.categories.map((cat) => cat.id),
+        });
 
-# ユーザー操作
-- 各フォーム項目を編集する
-- 新しい画像ファイルを選択する
-- 「投稿を編集する」ボタンをクリックする
+        // 既存の画像URLを設定
+        if (post.signedUrl) {
+          setExistingImageUrl(post.signedUrl);
+          setPreview(post.signedUrl);
+        }
+      } catch (error) {
+        setError("投稿の取得に失敗しました");
+      } finally {
+        setIsLoading(false);
+      }
+    }
 
-# API連携
-- `fetchPost()`: 投稿の詳細情報を取得する
-- `patchPost()`: 投稿の情報を更新する
-- `uploadImage()`: 新しい画像をアップロードする
+    fetchData();
+  }, [id, reset]);
 
-# バリデーション・エラーハンドリング
-- フォーム項目のバリデーション
-  - タイトル: 必須
-  - 本文: 必須
-  - カテゴリ: 必須
-  - 画像: 選択されている場合は、画像ファイルとして有効かチェックする
-- エラーメッセージはコンポーネント内で表示する
-- 投稿の取得または更新時にエラーが発生した場合は、エラーメッセージを表示する
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files ? event.target.files[0] : null;
+    setFile(selectedFile);
 
-# 補足・制約
-- 新しい画像が選択されていない場合は、既存の画像が保持される
-- 投稿の更新中は、ボタンの表示を「投稿送信中...」に変更する
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(selectedFile);
+    } else {
+      // ファイル選択をクリアした場合、既存画像に戻す
+      setPreview(existingImageUrl);
+    }
+  };
+
+  const onSubmit = async (data: NewPost) => {
+    // 新しいファイルが選択されている場合のみバリデーション
+    if (!validateImageFile(file, false)) return;
+    try {
+      // 画像を圧縮
+      setIsSubmitting(true);
+      if (file) {
+        const compressedFile = await imageCompression(
+          file,
+          IMAGE_COMPRESSION_OPTIONS,
+        );
+        const newImageUrl = await uploadImage(compressedFile);
+        data.imageKey = newImageUrl?.safeFilePath;
+      }
+
+      await patchPost(id, data);
+      toast.success("投稿を更新しました");
+      router.push("/mypage");
+    } catch (error) {
+      toast.error("投稿に失敗しました。時間をおいて再度お試しください。");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  if (isLoading) return <StatusInfo status="loading" data={null} />;
+  if (error) return <StatusInfo status="service-down" data={null} />;
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col space-y-6 mt-10"
+    >
+      <div>
+        <label htmlFor="title" className="font-semibold">
+          タイトル
+        </label>
+        <input
+          id="title"
+          type="text"
+          {...register("title")}
+          className="border rounded p-2 w-full mt-2"
+        />
+        {errors.title && (
+          <p className="text-red-500 my-1 text-sm">{errors.title?.message}</p>
+        )}
+      </div>
+      <div>
+        <label htmlFor="body" className="font-semibold">
+          本文
+        </label>
+        <textarea
+          id="body"
+          {...register("body")}
+          className="border rounded p-2 w-full mt-2"
+          rows={6}
+        />
+        {errors.body && (
+          <p className="text-red-500 my-1 text-sm">{errors.body?.message}</p>
+        )}
+      </div>
+      <div>
+        <label htmlFor="status" className="font-semibold">
+          ステータス
+        </label>
+        <Controller
+          name="status"
+          control={control}
+          render={({ field }) => (
+            <SelectBox
+              options={statusList}
+              value={field.value}
+              onChange={(value) => {
+                if (typeof value === "string") {
+                  field.onChange(value);
+                }
+              }}
+            />
+          )}
+        />
+      </div>
+      <div>
+        <label htmlFor="categoryIds" className="font-semibold">
+          カテゴリー
+        </label>
+        <Controller
+          name="categoryIds"
+          control={control}
+          render={({ field }) => (
+            <SelectBox
+              options={categories}
+              multiple
+              value={(field.value ?? []).map(String)}
+              onChange={(value) => {
+                const ids = Array.isArray(value)
+                  ? value.map(Number)
+                  : [Number(value)];
+
+                field.onChange(ids);
+              }}
+            />
+          )}
+        />
+      </div>
+      <div>
+        <label htmlFor="image" className="font-semibold">
+          画像
+        </label>
+        <input
+          id="image"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/svg+xml"
+          onChange={handleFileChange}
+          className="mt-2"
+        />
+        <p className="text-sm text-gray-500 mt-1">
+          新しい画像を選択しない場合は、既存の画像が保持されます
+        </p>
+      </div>
+      {preview && (
+        <div className="inline-block mx-auto">
+          <p className="text-sm font-semibold mb-2">
+            {file ? "新しい画像プレビュー" : "現在の画像"}
+          </p>
+          <img
+            src={preview}
+            alt="画像プレビュー"
+            className="w-64 h-64 object-cover rounded border"
+          />
+        </div>
+      )}
+      <Button
+        mode="Success"
+        disabled={isSubmitting}
+        className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
+      >
+        {isSubmitting ? "投稿送信中..." : "投稿を編集"}
+      </Button>
+    </form>
+  );
+};
+
+export default PatchPost;
