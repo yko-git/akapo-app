@@ -39,7 +39,7 @@ const UserPage = () => {
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
         setError(
-          error instanceof Error ? error.message : "投稿の取得に失敗しました"
+          error instanceof Error ? error.message : "投稿の取得に失敗しました",
         );
       } finally {
         setLoading(false);
@@ -90,7 +90,7 @@ const UserPage = () => {
           </div>
         </>
       ) : (
-        <p>ユーザー情報を読み込んでいます...</p>
+        <p>ユーザー情報を読み込み中です...</p>
       )}
       <div className="mt-8 md:text-right text-center">
         <Button
