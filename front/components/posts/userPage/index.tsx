@@ -90,7 +90,7 @@ const UserPage = () => {
           </div>
         </>
       ) : (
-        <p>ユーザー情報を読み込み中です...</p>
+        <p>ユーザー情報を読み込み中...</p>
       )}
       <div className="mt-8 md:text-right text-center">
         <Button
