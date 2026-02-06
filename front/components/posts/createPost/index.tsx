@@ -48,7 +48,7 @@ const CreatePost = () => {
       setIsSubmitting(true);
       const compressedFile = await imageCompression(
         file!,
-        IMAGE_COMPRESSION_OPTIONS
+        IMAGE_COMPRESSION_OPTIONS,
       );
       await createPost(compressedFile, data);
       toast.success("投稿が完了しました");
@@ -65,7 +65,7 @@ const CreatePost = () => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div>
-        <label>タイトル</label>
+        <label>題名</label>
         <input
           type="text"
           {...register("title")}
