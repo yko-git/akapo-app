@@ -82,7 +82,7 @@ const PatchPost = ({ id }: { id: number }) => {
       if (file) {
         const compressedFile = await imageCompression(
           file,
-          IMAGE_COMPRESSION_OPTIONS
+          IMAGE_COMPRESSION_OPTIONS,
         );
         const newImageUrl = await uploadImage(compressedFile);
         data.imageKey = newImageUrl?.safeFilePath;
@@ -155,7 +155,7 @@ const PatchPost = ({ id }: { id: number }) => {
       </div>
       <div>
         <label htmlFor="categoryIds" className="font-semibold">
-          カテゴリ
+          カテゴリー
         </label>
         <Controller
           name="categoryIds"
@@ -208,7 +208,7 @@ const PatchPost = ({ id }: { id: number }) => {
         disabled={isSubmitting}
         className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
       >
-        {isSubmitting ? "投稿送信中..." : "投稿を編集する"}
+        {isSubmitting ? "投稿送信中..." : "投稿を編集"}
       </Button>
     </form>
   );
