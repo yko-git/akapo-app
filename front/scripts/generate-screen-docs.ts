@@ -7,21 +7,24 @@ import { execSync } from "child_process";
 
 dotenv.config();
 
-const client = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
-
 if (!process.env.ANTHROPIC_API_KEY) {
   throw new Error("ANTHROPIC_API_KEY is not set");
 }
 
+const client = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+});
+
+/**
+ * git diff の比較元を決定
+ */
 function getBaseRef(): string {
   // GitHub Actions (PR)
   if (process.env.GITHUB_BASE_REF) {
     return `origin/${process.env.GITHUB_BASE_REF}`;
   }
 
-  // ローカル・CI（develop があればそれ）
+  // ローカル・CI（origin/develop があればそれ）
   try {
     execSync("git show-ref --verify --quiet refs/remotes/origin/develop");
     return "origin/develop";
@@ -31,8 +34,10 @@ function getBaseRef(): string {
   return "HEAD~1";
 }
 
-// git diffを取るユーティリティ
-function hasDiff(files: string[]): boolean {
+/**
+ * 差分があったファイル一覧を取得
+ */
+function getDiffFiles(files: string[]): string[] {
   const baseRef = getBaseRef();
   const fileList = files.join(" ");
 
@@ -40,62 +45,68 @@ function hasDiff(files: string[]): boolean {
     const diff = execSync(
       `git diff --name-only ${baseRef}...HEAD -- ${fileList}`,
       { encoding: "utf-8" },
-    ).trim();
+    )
+      .trim()
+      .split("\n")
+      .filter(Boolean);
 
-    if (diff) {
+    if (diff.length > 0) {
       console.log(`📝 Diff detected against ${baseRef}`);
-      console.log(diff);
+      diff.forEach((f) => console.log(` - ${f}`));
     }
 
-    return diff.length > 0;
-  } catch (err) {
-    console.warn(`⚠️ git diff failed, fallback skipped`);
-    return true; // 失敗時は安全側（生成する）
+    return diff;
+  } catch {
+    console.warn("⚠️ git diff failed, fallback generate");
+    return ["__UNKNOWN__"];
   }
 }
 
 /**
  * ファイルを安全に読む（存在しない場合はスキップ）
  */
-function readSourceFiles(files: string[]) {
+function readSourceFiles(files: string[]): string {
   return files
     .map((filePath) => {
       const fullPath = path.resolve(process.cwd(), filePath);
 
-      // ファイル存在チェック（開発途中・リファクタ途中にCIが落ちないように）
       if (!fs.existsSync(fullPath)) {
         console.warn(`⚠️ File not found, skipped: ${filePath}`);
         return null;
       }
+
       return `// ===== ${filePath} =====\n${fs.readFileSync(fullPath, "utf-8")}`;
     })
     .filter(Boolean)
     .join("\n\n");
 }
 
+function today(): string {
+  return new Date().toISOString().split("T")[0];
+}
+
 async function generateScreenDoc() {
   for (const screen of screens) {
     console.log(`\n📄 Checking: ${screen.id}`);
 
-    // diffがなければcontinueする
-    if (!hasDiff(screen.files)) {
+    const diffFiles = getDiffFiles(screen.files);
+
+    // 差分がなければスキップ
+    if (diffFiles.length === 0) {
       console.log(`⏭ No changes: ${screen.id}`);
       continue;
     }
 
-    console.log(`\n📄 Generating: ${screen.id}`);
+    console.log(`📄 Generating: ${screen.id}`);
 
     const sourceCode = readSourceFiles(screen.files);
     if (!sourceCode) {
       console.warn(`⚠️ No source files for ${screen.id}, skipped`);
       continue;
     }
+
     const outputPath = path.resolve(process.cwd(), screen.output);
-
-    // フル生成 / 差分生成のモード分岐
     const isDiffMode = fs.existsSync(outputPath);
-
-    // 既存 md を読む
     const existingDoc = isDiffMode ? fs.readFileSync(outputPath, "utf-8") : "";
 
     const prompt = isDiffMode
@@ -118,29 +129,47 @@ ${sourceCode}
 - 削除された挙動があれば反映する
 - 不明な点は「コード上では不明」と明記する
 - 既存仕様書の見出し構造は維持する
+- META ブロック内の「最終更新日」は必ず今日の日付に更新する
+- META ブロック以外は、変更点がある箇所のみ更新する
 `
       : `
 あなたはフロントエンドエンジニアです。
 以下の React / Next.js の実装コードを解析し、
 「画面仕様書」を **日本語のMarkdown** で生成してください。
 
-# 画面名
-${screen.name}
+# 画面仕様書：${screen.name}
+
+<!-- META -->
+- 画面ID: ${screen.id}
+- 最終更新日: ${today()}
+<!-- /META -->
+
+---
+
+## 画面概要
+
+## URL
+
+## 使用コンポーネント
+
+## フォーム項目・表示要素
+
+## 初期表示・デフォルト値
+
+## ユーザー操作
+
+## API連携
+
+## バリデーション・エラーハンドリング
+
+## 補足・制約
 
 # 出力ルール
-- Markdown形式
-- 見出し構成は以下を必ず含める
-  1. 画面概要
-  2. URL
-  3. 使用コンポーネント
-  4. フォーム項目・表示要素
-  5. 初期表示・デフォルト値
-  6. ユーザー操作
-  7. API連携
-  8. バリデーション・エラーハンドリング
-  9. 補足・制約
 - 推測ではなく、コードから読み取れる内容を元に記述する
 - 不明な点は「コード上では不明」と明記する
+
+## 変更があったファイル
+${diffFiles.map((f) => `- ${f}`).join("\n")}
 
 # 実装コード
 ${sourceCode}
@@ -159,7 +188,6 @@ ${sourceCode}
       ],
     });
 
-    // Claude SDKの型エラー対策
     const markdown = response.content
       .filter((c) => c.type === "text")
       .map((c: any) => c.text)
