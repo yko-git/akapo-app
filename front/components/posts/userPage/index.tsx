@@ -58,7 +58,7 @@ const UserPage = () => {
 
   const handleLogout = () => {
     logout();
-    router.push("/login");
+    router.push("/mypage");
   };
 
   if (isLoading) return <StatusInfo status="loading" data={null} />;
