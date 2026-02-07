@@ -2,6 +2,8 @@ name: Generate Screen Docs
 
 on:
   push:
+    branches:
+      - develop
     paths:
       - "front/**/*.tsx"
       - "front/screens.config.ts"
@@ -35,16 +37,15 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: npx tsx scripts/generate-screen-docs.ts
 
-      - name: Commit and push if changed
+      - name: Commit and push docs
         working-directory: front
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-
           if git status --porcelain | grep docs/screens; then
+            git config user.name "github-actions"
+            git config user.email "github-actions@github.com"
             git add docs/screens
-            git commit -m "docs: auto update screen specs"
+            git commit -m "docs: update screen specs"
             git push
           else
-            echo "No doc changes"
+            echo "No screen doc changes"
           fi
