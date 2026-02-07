@@ -65,7 +65,7 @@ const CreatePost = () => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div>
-        <label>タイトル</label>
+        <label>題名</label>
         <input
           type="text"
           {...register("title")}
