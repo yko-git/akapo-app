@@ -26,7 +26,7 @@ export default function Login() {
           <div className="text-center md:mt-20 mt-12">
             <h2 className="font-bold tracking-wide text-[#161616]">
               <Link href="/signup" className="underline">
-                まだアカウントをお持ちでない方はこちら
+                新規アカウント登録はこちら
               </Link>
             </h2>
           </div>
