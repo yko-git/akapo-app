@@ -90,7 +90,7 @@ const UserPage = () => {
           </div>
         </>
       ) : (
-        <p>ユーザー情報を読み込み中...</p>
+        <p>ユーザー情報を読み込み中です...</p>
       )}
       <div className="mt-8 md:text-right text-center">
         <Button
@@ -98,7 +98,7 @@ const UserPage = () => {
           onClick={handleLogout}
           className="py-5 px-10 text-white text-sm font-semibold tracking-widest rounded-lg"
         >
-          ログアウトする
+          ログアウト
         </Button>
       </div>
       <div className="mt-10 text-center">
@@ -107,7 +107,7 @@ const UserPage = () => {
             mode="Info"
             className="py-5 px-10 text-white text-sm font-semibold tracking-widest rounded-lg"
           >
-            新しい投稿を作成する
+            新しい投稿を作成
           </Button>
         </Link>
       </div>
