@@ -1,12 +1,6 @@
 import React from "react";
 import Image from "next/image";
-
-export interface PhotoListProps {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
-}
+import { PhotoListProps } from "@/types";
 
 export default function PhotoList({ src, alt, width, height }: PhotoListProps) {
   return (

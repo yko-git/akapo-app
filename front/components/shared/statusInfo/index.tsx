@@ -1,10 +1,5 @@
+import { StatusInfoProps } from "@/types";
 import Image from "next/image";
-import { Post } from "@/schemas/post.schema";
-
-interface StatusInfoProps {
-  status: "loading" | "service-down" | "success" | "empty";
-  data: Post | Post[] | null | undefined;
-}
 
 export default function StatusInfo({ status, data }: StatusInfoProps) {
   if (status === "loading") {

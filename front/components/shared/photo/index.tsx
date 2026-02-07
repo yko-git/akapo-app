@@ -1,9 +1,5 @@
+import { PhotoProps } from "@/types";
 import Image from "next/image";
-
-export interface PhotoProps {
-  src: string;
-  alt: string;
-}
 
 export default function Photo({ src, alt }: PhotoProps) {
   return (

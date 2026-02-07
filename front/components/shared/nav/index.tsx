@@ -4,13 +4,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useContext } from "react";
 import { LoginContext } from "../loginContext";
-
-export interface Nav {
-  login: boolean;
-}
-interface NavProps {
-  onLinkClick?: () => void;
-}
+import { NavProps } from "@/types";
 
 export const Nav = ({ onLinkClick }: NavProps) => {
   const isLoggedIn = useContext(LoginContext);

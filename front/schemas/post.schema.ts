@@ -55,11 +55,4 @@ export type Category = z.infer<typeof CategorySchema>;
 export type Post = z.infer<typeof PostSchema>;
 export type PostResponse = z.infer<typeof PostResponseSchema>;
 export type PostListResponse = z.infer<typeof PostListResponseSchema>;
-
 export type NewPost = z.infer<typeof NewPostSchema>;
-export type ArticleData<T> = {
-  data: T;
-};
-export type TagListProps = {
-  categories: Pick<Category, "name">[];
-};

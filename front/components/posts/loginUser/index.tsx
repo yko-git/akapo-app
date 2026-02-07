@@ -79,7 +79,7 @@ const LoginUser = () => {
             disabled={isSubmitting}
             className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
           >
-            {isSubmitting ? "ログイン中..." : "ログイン"}
+            {isSubmitting ? "ログイン中です..." : "ログイン"}
           </Button>
         </div>
       </form>

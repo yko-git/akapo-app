@@ -48,7 +48,7 @@ const CreatePost = () => {
       setIsSubmitting(true);
       const compressedFile = await imageCompression(
         file!,
-        IMAGE_COMPRESSION_OPTIONS
+        IMAGE_COMPRESSION_OPTIONS,
       );
       await createPost(compressedFile, data);
       toast.success("投稿が完了しました");
@@ -65,7 +65,7 @@ const CreatePost = () => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div>
-        <label>タイトル</label>
+        <label>題名</label>
         <input
           type="text"
           {...register("title")}
@@ -83,7 +83,7 @@ const CreatePost = () => {
         )}
       </div>
       <div>
-        <label>ステータス</label>
+        <label>下書き/本番</label>
         <Controller
           name="status"
           control={control}
@@ -97,7 +97,7 @@ const CreatePost = () => {
         />
       </div>
       <div>
-        <label>カテゴリ</label>
+        <label>カテゴリー</label>
         <Controller
           name="categoryIds"
           control={control}
@@ -136,7 +136,7 @@ const CreatePost = () => {
         disabled={isSubmitting}
         className="py-4 px-6 text-white text-sm font-semibold tracking-widest rounded-lg"
       >
-        {isSubmitting ? "投稿送信中..." : "投稿する"}
+        {isSubmitting ? "投稿送信中..." : "投稿"}
       </Button>
       <p className="text-sm">
         画像サイズが大きい場合、投稿完了まで時間がかかることがありますので、しばらくお待ちください。
