@@ -1,3 +1,6 @@
+// screens.config.ts を唯一の入力としてReact 実装 → 画面仕様書（Markdown）を自動生成するバッチ
+
+// ローカル実行 / CI のどちらでもANTHROPIC_API_KEY を同じコードで扱えるようにする
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -6,18 +9,23 @@ import path from "path";
 import Anthropic from "@anthropic-ai/sdk";
 import { screens } from "./screens.config";
 
+// 「設定ミスなのに黙って失敗」を防ぐ
 if (!process.env.ANTHROPIC_API_KEY) {
   throw new Error("ANTHROPIC_API_KEY is not set");
 }
 
+// Claude クライアント初期化
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+// 「画面に紐づく複数ファイルを、Claude が読みやすい“教材”形式に整形する関数」
 function readSourceFiles(files: string[]) {
   return files
     .map((filePath) => {
       const absolutePath = path.resolve(process.cwd(), filePath);
+
+      // 開発途中でファイル構成が揺れても CIを落とさない
       if (!fs.existsSync(absolutePath)) {
         console.warn(`⚠️ File not found: ${filePath}`);
         return null;
@@ -39,12 +47,14 @@ async function run() {
   for (const screen of screens) {
     console.log(`\n📄 Generating: ${screen.id}`);
 
+    // ソースコード取得
     const sourceCode = readSourceFiles(screen.files);
     if (!sourceCode) {
       console.warn(`⚠️ No source files for ${screen.id}, skipped`);
       continue;
     }
 
+    // 日付生成
     const today = new Date().toISOString().split("T")[0];
 
     const prompt = `
@@ -95,14 +105,16 @@ ${sourceCode}
       ],
     });
 
+    // text だけを安全に結合
     const markdown = response.content
       .filter((block) => block.type === "text")
       .map((block) => block.text)
       .join("\n");
 
     const outputPath = path.resolve(process.cwd(), screen.output);
-    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-    fs.writeFileSync(outputPath, markdown);
+    // ファイル出力
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true }); // 初回生成でも落ちない
+    fs.writeFileSync(outputPath, markdown); // 既存ファイルは完全に上書き
 
     console.log(`✅ Screen spec updated: ${screen.output}`);
   }
