@@ -15,6 +15,8 @@ const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+const FORCE_REGENERATE = process.env.FORCE_REGENERATE === "true";
+
 /**
  * 差分比較の base ref を決定
  */
@@ -81,7 +83,7 @@ async function generateScreenDoc() {
     console.log(`\n📄 Checking: ${screen.id}`);
 
     // Git 差分がなければ即スキップ
-    if (!hasGitDiff(screen.files)) {
+    if (!FORCE_REGENERATE && !hasGitDiff(screen.files)) {
       console.log(`⏭ No git changes: ${screen.id}`);
       continue;
     }
@@ -210,8 +212,9 @@ ${screen.name}
 5. ユーザー操作
 6. バリデーション・エラーハンドリング
 7. 画面遷移
-8. 使用している Hooks / Stores
-9. 補足・制約
+8. 使用しているコンポーネント
+9. 使用している Hooks / Stores
+10. 補足・制約
 
 <!-- META -->
 - 画面ID: ${screen.id}
