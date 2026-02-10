@@ -1,5 +1,5 @@
 "use client";
-import PatchPost from "@/components/posts/patchPost";
+import PatchPost from "./components/PatchPost";
 import Link from "next/link";
 import Button from "@/components/shared/button";
 import { useParams } from "next/navigation";
