@@ -1,1 +1,1 @@
-export { default } from "@/feature/posts/create/page";
+export { default } from "@/features/posts/create/page";
