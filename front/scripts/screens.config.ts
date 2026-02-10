@@ -10,8 +10,10 @@ export const screens: ScreenConfig[] = [
     id: "create-post",
     name: "投稿作成",
     files: [
-      "components/posts/createPost/index.tsx",
-      "app/posts/new/[id]/page.tsx",
+      "app/posts/new/page.tsx",
+      "features/posts/create/components/CreatePost.tsx",
+      "features/posts/create/hooks/usePostForm.tsx",
+      "features/posts/create/api/createPost.ts",
     ],
     output: "docs/screens/create-post.md",
   },
