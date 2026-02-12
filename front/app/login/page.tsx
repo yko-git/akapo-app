@@ -1,1 +1,1 @@
-export { default } from "@/features/auth/login/LoginPage.tsx";
+export { default } from "@/features/auth/login/LoginPage";
