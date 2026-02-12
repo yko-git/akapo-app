@@ -36,7 +36,13 @@ export const screens: ScreenConfig[] = [
   {
     id: "login",
     name: "ログイン",
-    files: ["components/posts/loginUser/index.tsx", "app/login/page.tsx"],
+    files: [
+      "app/login/page.tsx",
+      "features/auth/login/LoginPage.tsx",
+      "features/auth/login/components/LoginForm.tsx",
+      "features/auth/login/hooks/useLoginForm.tsx",
+      "features/auth/login/api/createLogin.ts",
+    ],
     output: "docs/screens/login.md",
   },
 

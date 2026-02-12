@@ -4,7 +4,7 @@ import Link from "next/link";
 import Button from "@/components/shared/button";
 import { useParams } from "next/navigation";
 
-export default function PatchPage() {
+export default function PatchPostPage() {
   const params = useParams();
   const id = Number(params.id);
   return (

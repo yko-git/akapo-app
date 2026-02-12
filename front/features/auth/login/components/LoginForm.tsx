@@ -1,14 +1,15 @@
 "use client";
 import React, { useState } from "react";
 import Button from "@/components/shared/button";
-import { createLogin, fetchUserData } from "@/api/fetchData";
+import { fetchUserData } from "@/api/fetchData";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useLoginForm } from "@/hooks/useLoginForm";
 import { NewLogin } from "@/schemas/user.schema";
+import { useLoginForm } from "../hooks";
+import { createLogin } from "../api";
 
-const LoginUser = () => {
+const LoginForm = () => {
   const { register, handleSubmit, errors } = useLoginForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -87,4 +88,4 @@ const LoginUser = () => {
   );
 };
 
-export default LoginUser;
+export default LoginForm;
