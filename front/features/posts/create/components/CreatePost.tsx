@@ -13,7 +13,7 @@ import { Controller } from "react-hook-form";
 import imageCompression from "browser-image-compression";
 import { IMAGE_COMPRESSION_OPTIONS } from "@/constants/image";
 import { validateImageFile } from "@/lib/validateImageFile";
-import { usePostForm } from "../hooks";
+import { usePostForm } from "../../shared/hooks";
 
 const CreatePost = () => {
   const { register, handleSubmit, control, errors } = usePostForm();

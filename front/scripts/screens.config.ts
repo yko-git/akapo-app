@@ -11,8 +11,9 @@ export const screens: ScreenConfig[] = [
     name: "投稿作成",
     files: [
       "app/posts/new/page.tsx",
+      "features/posts/create/CreatePostPage.tsx",
       "features/posts/create/components/CreatePost.tsx",
-      "features/posts/create/hooks/usePostForm.tsx",
+      "features/posts/shared/hooks/usePostForm.tsx",
       "features/posts/create/api/createPost.ts",
     ],
     output: "docs/screens/create-post.md",
@@ -20,7 +21,15 @@ export const screens: ScreenConfig[] = [
   {
     id: "patch-post",
     name: "投稿編集",
-    files: ["components/posts/patchPost/index.tsx", "app/posts/[id]/page.tsx"],
+    files: [
+      "app/posts/new/[id]/page.tsx",
+      "features/posts/patch/PatchPostPage.tsx",
+      "features/posts/patch/components/PatchPost.tsx",
+      "features/posts/shared/hooks/usePostForm.tsx",
+      "features/posts/patch/api/patchPost.ts",
+      "features/posts/patch/api/fetchPost.ts",
+      "features/posts/patch/api/uploadImage.ts",
+    ],
     output: "docs/screens/patch-post.md",
   },
 

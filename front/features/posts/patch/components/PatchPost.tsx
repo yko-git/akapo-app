@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { patchPost, fetchPost, uploadImage } from "@/api/fetchData";
+import { patchPost, fetchPost, uploadImage } from "../api";
 import { NewPost } from "@/schemas/post.schema";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
@@ -8,7 +8,7 @@ import { statusList, categories } from "@/components/shared/data";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import StatusInfo from "@/components/shared/statusInfo";
-import { usePostForm } from "@/hooks/usePostForm";
+import { usePostForm } from "../../shared/hooks";
 import imageCompression from "browser-image-compression";
 import { Controller } from "react-hook-form";
 import { IMAGE_COMPRESSION_OPTIONS } from "@/constants/image";
