@@ -23,7 +23,7 @@ export default function LoginPage() {
           <div className="max-w-[448px] mx-auto">
             <LoginForm />
           </div>
-          <div className="text-center md:mt-20 mt-12">
+          <div className="mt-10 text-center">
             <h2 className="font-bold tracking-wide text-[#161616]">
               <Link href="/signup" className="underline">
                 新規アカウント登録はこちら
