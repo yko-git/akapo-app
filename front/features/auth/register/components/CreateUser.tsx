@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import { createUser } from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression";
 import { NewUser } from "@/schemas/user.schema";
-import { useUserForm } from "@/hooks/useUserForm";
+import { useUserForm } from "../hooks";
 import { IMAGE_COMPRESSION_OPTIONS } from "@/constants/image";
 import { validateImageFile } from "@/lib/validateImageFile";
+import { createUser } from "../api";
 
 const CreateUser = () => {
   const { register, handleSubmit, errors } = useUserForm();
@@ -39,7 +39,7 @@ const CreateUser = () => {
       setIsSubmitting(true);
       const compressedFile = await imageCompression(
         file!,
-        IMAGE_COMPRESSION_OPTIONS
+        IMAGE_COMPRESSION_OPTIONS,
       );
       await createUser(compressedFile, data);
       toast.success("ユーザー登録が完了しました。ログインしてください。");

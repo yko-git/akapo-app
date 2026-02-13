@@ -15,6 +15,7 @@ export const screens: ScreenConfig[] = [
       "features/posts/create/components/CreatePost.tsx",
       "features/posts/shared/hooks/usePostForm.tsx",
       "features/posts/create/api/createPost.ts",
+      "features/posts/create/api/index.ts",
     ],
     output: "docs/screens/create-post.md",
   },
@@ -29,6 +30,7 @@ export const screens: ScreenConfig[] = [
       "features/posts/patch/api/patchPost.ts",
       "features/posts/patch/api/fetchPost.ts",
       "features/posts/patch/api/uploadImage.ts",
+      "features/posts/patch/api/index.ts",
     ],
     output: "docs/screens/patch-post.md",
   },
@@ -42,8 +44,23 @@ export const screens: ScreenConfig[] = [
       "features/auth/login/components/LoginForm.tsx",
       "features/auth/login/hooks/useLoginForm.tsx",
       "features/auth/login/api/createLogin.ts",
+      "features/auth/login/api/index.ts",
     ],
     output: "docs/screens/login.md",
+  },
+
+  {
+    id: "register",
+    name: "新規ユーザー作成",
+    files: [
+      "app/signup/page.tsx",
+      "features/auth/register/CreateUserPage.tsx",
+      "features/auth/register/components/CreateUser.tsx",
+      "features/auth/register/hooks/useUserForm.tsx",
+      "features/auth/register/api/createUser.ts",
+      "features/auth/register/api/index.ts",
+    ],
+    output: "docs/screens/register.md",
   },
 
   {
