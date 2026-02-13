@@ -5,7 +5,7 @@ import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
 import { statusList, categories } from "@/components/shared/data";
 import toast from "react-hot-toast";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useRequireAuth } from "@/features/posts/shared/hooks/useRequireAuth";
 import { useRouter } from "next/navigation";
 
 import { NewPost } from "@/schemas/post.schema";
