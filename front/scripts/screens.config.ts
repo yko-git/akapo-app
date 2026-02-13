@@ -70,13 +70,11 @@ export const screens: ScreenConfig[] = [
       "app/posts/[id]/page.tsx",
       "features/posts/detail/PostDetailPage.tsx",
       "features/posts/detail/components/PostDetail.tsx",
-      "features/posts/shared/hooks/usePostForm.tsx",
-      "features/posts/shared/hooks/useRequrireAuth.tsx",
+      "features/posts/shared/hooks/useRequireAuth.tsx",
       "features/posts/shared/api/fetchPost.ts",
       "features/posts/shared/api/fetchComments.ts",
-      "features/posts/detail/api/index.ts",
     ],
-    output: "docs/screens/detail-post.md",
+    output: "docs/screens/post-detail.md",
   },
 
   {
