@@ -66,8 +66,17 @@ export const screens: ScreenConfig[] = [
   {
     id: "post-detail",
     name: "投稿詳細",
-    files: ["components/posts/article/index.tsx", "app/posts/[id]/page.tsx"],
-    output: "docs/screens/post-detail.md",
+    files: [
+      "app/posts/[id]/page.tsx",
+      "features/posts/detail/PostDetailPage.tsx",
+      "features/posts/detail/components/PostDetail.tsx",
+      "features/posts/shared/hooks/usePostForm.tsx",
+      "features/posts/shared/hooks/useRequrireAuth.tsx",
+      "features/posts/shared/api/fetchPost.ts",
+      "features/posts/shared/api/fetchComments.ts",
+      "features/posts/detail/api/index.ts",
+    ],
+    output: "docs/screens/detail-post.md",
   },
 
   {
