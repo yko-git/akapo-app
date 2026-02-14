@@ -2,9 +2,9 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePostStore, PostWithComments } from "@/stores/usePostStore";
-import PhotoList from "@/components/shared/photoList";
-import TagList from "@/components/shared/tagList";
-import StatusInfo from "@/components/shared/statusInfo";
+import PhotoList from "@/shared/components/photoList";
+import TagList from "@/shared/components/tagList";
+import StatusInfo from "@/shared/components/statusInfo";
 import Image from "next/image";
 import { useRequireAuth } from "../../shared/hooks";
 import { fetchComments } from "../../shared/api/fetchComments";

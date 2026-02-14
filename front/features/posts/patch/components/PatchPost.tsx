@@ -2,17 +2,17 @@
 import React, { useState, useEffect } from "react";
 import { patchPost, uploadImage } from "../api";
 import { NewPost } from "@/schemas/post.schema";
-import Button from "@/components/shared/button";
-import SelectBox from "@/components/shared/selectBox";
-import { statusList, categories } from "@/components/shared/data";
+import Button from "@/shared/components/button";
+import SelectBox from "@/shared/components/selectBox";
+import { statusList, categories } from "@/shared/components/data";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import StatusInfo from "@/components/shared/statusInfo";
+import StatusInfo from "@/shared/components/statusInfo";
 import { usePostForm } from "../../shared/hooks";
 import imageCompression from "browser-image-compression";
 import { Controller } from "react-hook-form";
-import { IMAGE_COMPRESSION_OPTIONS } from "@/constants/image";
-import { validateImageFile } from "@/lib/validateImageFile";
+import { IMAGE_COMPRESSION_OPTIONS } from "@/shared/constants/image";
+import { validateImageFile } from "@/shared/lib/validateImageFile";
 import { fetchPost } from "../../shared/api";
 
 const PatchPost = ({ id }: { id: number }) => {

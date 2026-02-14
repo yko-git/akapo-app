@@ -1,4 +1,4 @@
-import { jost } from "@/components/shared/font";
+import { jost } from "@/shared/components/font";
 import Link from "next/link";
 import LoginForm from "./components/LoginForm";
 

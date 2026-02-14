@@ -1,4 +1,4 @@
-import { deleteComments as deleteCommentsApi } from "@/api/fetchData";
+import { deleteComments as deleteCommentsApi } from "@/shared/api/fetchData";
 
 export const deleteComments = ({
   postId,

@@ -1,4 +1,4 @@
-import { uploadImage as uploadImageApi } from "@/api/fetchData";
+import { uploadImage as uploadImageApi } from "@/shared/api/fetchData";
 
 export const uploadImage = (file: File) => {
   return uploadImageApi(file);

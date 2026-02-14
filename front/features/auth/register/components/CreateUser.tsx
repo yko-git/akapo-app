@@ -1,13 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import Button from "@/components/shared/button";
+import Button from "@/shared/components/button";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression";
 import { NewUser } from "@/schemas/user.schema";
 import { useUserForm } from "../hooks";
-import { IMAGE_COMPRESSION_OPTIONS } from "@/constants/image";
-import { validateImageFile } from "@/lib/validateImageFile";
+import { IMAGE_COMPRESSION_OPTIONS } from "@/shared/constants/image";
+import { validateImageFile } from "@/shared/lib/validateImageFile";
 import { createUser } from "../api";
 
 const CreateUser = () => {

@@ -1,4 +1,4 @@
-import { jost } from "@/components/shared/font";
+import { jost } from "@/shared/components/font";
 
 export function Footer() {
   const date = new Date();

@@ -2,12 +2,12 @@ import {
   ALLOWED_IMAGE_TYPES,
   FILE_SIZE_BYTES_TO_MB,
   MAX_FILE_SIZE_MB,
-} from "@/constants/image";
+} from "@/shared/constants/image";
 import toast from "react-hot-toast";
 
 export const validateImageFile = (
   file: File | null,
-  required: boolean = true
+  required: boolean = true,
 ): boolean => {
   if (!file) {
     if (required) {
@@ -18,7 +18,7 @@ export const validateImageFile = (
   }
   if (
     !ALLOWED_IMAGE_TYPES.includes(
-      file.type as (typeof ALLOWED_IMAGE_TYPES)[number]
+      file.type as (typeof ALLOWED_IMAGE_TYPES)[number],
     )
   ) {
     toast.error("PNG/JPEG/WEBP/SVG以外のファイル形式はご遠慮ください");

@@ -1,4 +1,4 @@
-import { createPost as createPostApi } from "@/api/fetchData";
+import { createPost as createPostApi } from "@/shared/api/fetchData";
 import { NewPost } from "@/schemas/post.schema";
 
 export const createPost = (file: File, data: NewPost) => {

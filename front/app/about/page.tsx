@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { jost } from "@/components/shared/font";
+import { jost } from "@/shared/components/font";
 import logo from "@/public/common/logo.svg";
-import Button from "@/components/shared/button";
+import Button from "@/shared/components/button";
 
 export default function About() {
   return (

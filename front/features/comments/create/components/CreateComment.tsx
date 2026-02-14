@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Button from "@/components/shared/button";
+import Button from "@/shared/components/button";
 import { useCommentStore } from "@/stores/useCommentStore";
 import { CreateCommentProps } from "@/types";
 import { createComment } from "../api";

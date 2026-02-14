@@ -1,10 +1,10 @@
 "use client";
 import { useEffect } from "react";
 import Link from "next/link";
-import { jost } from "@/components/shared/font";
-import TagList from "@/components/shared/tagList";
-import Photo from "@/components/shared/photo";
-import StatusInfo from "@/components/shared/statusInfo";
+import { jost } from "@/shared/components/font";
+import TagList from "@/shared/components/tagList";
+import Photo from "@/shared/components/photo";
+import StatusInfo from "@/shared/components/statusInfo";
 import { usePostStore } from "@/stores/usePostStore";
 import { useCommentStore } from "@/stores/useCommentStore";
 import Image from "next/image";
