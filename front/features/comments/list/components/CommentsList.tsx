@@ -1,5 +1,5 @@
 "use client";
-import { deleteComments } from "@/shared/api/fetchData";
+import { deleteComments } from "./api";
 import { useCommentStore } from "@/stores/useCommentStore";
 import toast from "react-hot-toast";
 import { useAuthStore } from "@/stores/useAuthStore";
