@@ -31,23 +31,23 @@
 - ログアウトボタンをクリックすると、ログイン画面(/login)に遷移します。
 - 「新しい投稿を作成」ボタンをクリックすると、新規投稿ページ(/posts/new)に遷移します。
 
-## 8. 使用しているコンポーネント
+## 8. 使用している コンポーネント
 - User
 - Button
 - StatusInfo
 - Image
 - UserPostListPage
 
-## 9. 使用しているHooks / Stores
+## 9. 使用している Hooks / Stores
 - useAuthStore
 - usePostStore
 - useRequireAuth
-- useRouter
 - useEffect
+- useRouter
 
 ## 10. 補足・制約
 - ログイン状態でのみアクセスできる画面です。
-- ユーザー情報とユーザーの投稿一覧は、API経由で取得しています。
+- ユーザー情報とユーザーの投稿一覧は非同期で取得されます。
 
 <!-- META -->
 - 画面ID: user-page
