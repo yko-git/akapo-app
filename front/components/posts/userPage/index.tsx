@@ -1,16 +1,16 @@
 "use client";
 import { useEffect } from "react";
 import { fetchUserPosts, fetchUserData } from "@/api/fetchData";
-import UserArticleList from "../userArticleList";
 import Link from "next/link";
 import Button from "@/components/shared/button";
 import { useRouter } from "next/navigation";
 import StatusInfo from "@/components/shared/statusInfo";
 import { jost } from "@/components/shared/font";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { usePostStore } from "@/stores/usePostStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import Image from "next/image";
+import UserPostListPage from "@/features/posts/user-list/UserPostListPage";
+import { useRequireAuth } from "@/features/posts/shared/hooks";
 
 const UserPage = () => {
   const { userProfile, setUserProfile, logout } = useAuthStore();
@@ -112,7 +112,7 @@ const UserPage = () => {
         </Link>
       </div>
       <div className="mt-8">
-        <UserArticleList />
+        <UserPostListPage />
       </div>
     </div>
   );
