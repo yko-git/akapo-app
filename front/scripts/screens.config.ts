@@ -56,7 +56,7 @@ export const screens: ScreenConfig[] = [
       "features/posts/patch/components/PatchPost.tsx",
       "features/posts/shared/hooks/usePostForm.tsx",
       "features/posts/patch/api/patchPost.ts",
-      "features/posts/patch/api/fetchPost.ts",
+      "features/posts/shared/api/fetchPost.ts",
       "features/posts/patch/api/uploadImage.ts",
       "features/posts/patch/api/index.ts",
     ],
