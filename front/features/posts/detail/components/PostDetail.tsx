@@ -1,19 +1,20 @@
 "use client";
 import { useEffect } from "react";
 import Link from "next/link";
-import { fetchPost, fetchComments } from "@/api/fetchData";
 import { jost } from "@/components/shared/font";
 import TagList from "@/components/shared/tagList";
 import Photo from "@/components/shared/photo";
 import CommentList from "@/components/posts/commentList";
 import CreateComment from "@/components/posts/createComment";
 import StatusInfo from "@/components/shared/statusInfo";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { usePostStore } from "@/stores/usePostStore";
 import { useCommentStore } from "@/stores/useCommentStore";
 import Image from "next/image";
+import { useRequireAuth } from "@/features/posts/shared/hooks";
+import { fetchPost } from "../../shared/api";
+import { fetchComments } from "../../shared/api/fetchComments";
 
-export default function Article({ id }: { id: number }) {
+export default function PostDetail({ id }: { id: number }) {
   const { setComments, reset } = useCommentStore();
   const {
     currentPost,
@@ -39,7 +40,7 @@ export default function Article({ id }: { id: number }) {
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
         setError(
-          error instanceof Error ? error.message : "投稿の取得に失敗しました"
+          error instanceof Error ? error.message : "投稿の取得に失敗しました",
         );
       } finally {
         setLoading(false);
