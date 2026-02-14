@@ -91,10 +91,16 @@ export const screens: ScreenConfig[] = [
   },
 
   {
-    id: "mypage",
-    name: "マイページ",
-    files: ["components/posts/userPage/index.tsx", "app/mypage/page.tsx"],
-    output: "docs/screens/mypage.md",
+    id: "user-page",
+    name: "ユーザー投稿一覧",
+    files: [
+      "app/mypage/page.tsx",
+      "features/users/mypage/UsersPage.tsx",
+      "features/users/mypage/components/User.tsx",
+      "features/users/mypage/api/fetchUserData.ts",
+      "features/users/mypage/api/fetchUserPosts.ts",
+    ],
+    output: "docs/screens/user-page.md",
   },
 
   {
