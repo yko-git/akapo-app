@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { patchPost, fetchPost, uploadImage } from "../api";
+import { patchPost, uploadImage } from "../api";
 import { NewPost } from "@/schemas/post.schema";
 import Button from "@/components/shared/button";
 import SelectBox from "@/components/shared/selectBox";
@@ -13,11 +13,11 @@ import imageCompression from "browser-image-compression";
 import { Controller } from "react-hook-form";
 import { IMAGE_COMPRESSION_OPTIONS } from "@/constants/image";
 import { validateImageFile } from "@/lib/validateImageFile";
+import { fetchPost } from "../../shared/api";
 
 const PatchPost = ({ id }: { id: number }) => {
   const { register, handleSubmit, control, errors, reset } = usePostForm();
 
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,7 +28,6 @@ const PatchPost = ({ id }: { id: number }) => {
   useEffect(() => {
     async function fetchData() {
       try {
-        setIsLoading(true);
         setError("");
         const post = await fetchPost({ id });
         if (!post) {
@@ -49,8 +48,6 @@ const PatchPost = ({ id }: { id: number }) => {
         }
       } catch (error) {
         setError("投稿の取得に失敗しました");
-      } finally {
-        setIsLoading(false);
       }
     }
 
@@ -97,7 +94,6 @@ const PatchPost = ({ id }: { id: number }) => {
       setIsSubmitting(false);
     }
   };
-  if (isLoading) return <StatusInfo status="loading" data={null} />;
   if (error) return <StatusInfo status="service-down" data={null} />;
 
   return (
