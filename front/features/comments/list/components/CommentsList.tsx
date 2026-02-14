@@ -6,7 +6,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import Image from "next/image";
 import { CommentListProps } from "@/types";
 
-export default function CommentList({ postUserId, postId }: CommentListProps) {
+export default function CommentsList({ postUserId, postId }: CommentListProps) {
   const { comments, removeComment } = useCommentStore();
   const { userProfile } = useAuthStore();
 
