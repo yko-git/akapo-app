@@ -1,4 +1,4 @@
-import { jost } from "@/components/shared/font";
+import { jost } from "@/shared/components/font";
 import CreateUser from "./components/CreateUser";
 
 export default function CreateUserPage() {

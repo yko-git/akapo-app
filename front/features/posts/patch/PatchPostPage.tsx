@@ -1,7 +1,7 @@
 "use client";
 import PatchPost from "./components/PatchPost";
 import Link from "next/link";
-import Button from "@/components/shared/button";
+import Button from "@/shared/components/button";
 import { useParams } from "next/navigation";
 
 export default function PatchPostPage() {

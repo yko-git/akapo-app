@@ -1,10 +1,10 @@
 "use client";
 import { useEffect } from "react";
 import Link from "next/link";
-import Button from "@/components/shared/button";
+import Button from "@/shared/components/button";
 import { useRouter } from "next/navigation";
-import StatusInfo from "@/components/shared/statusInfo";
-import { jost } from "@/components/shared/font";
+import StatusInfo from "@/shared/components/statusInfo";
+import { jost } from "@/shared/components/font";
 import { usePostStore } from "@/stores/usePostStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import Image from "next/image";

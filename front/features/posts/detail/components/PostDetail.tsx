@@ -1,11 +1,10 @@
 "use client";
 import { useEffect } from "react";
 import Link from "next/link";
-import { jost } from "@/components/shared/font";
-import TagList from "@/components/shared/tagList";
-import Photo from "@/components/shared/photo";
-import CommentList from "@/components/posts/commentList";
-import StatusInfo from "@/components/shared/statusInfo";
+import { jost } from "@/shared/components/font";
+import TagList from "@/shared/components/tagList";
+import Photo from "@/shared/components/photo";
+import StatusInfo from "@/shared/components/statusInfo";
 import { usePostStore } from "@/stores/usePostStore";
 import { useCommentStore } from "@/stores/useCommentStore";
 import Image from "next/image";
@@ -13,6 +12,7 @@ import { useRequireAuth } from "@/features/posts/shared/hooks";
 import { fetchPost } from "../../shared/api";
 import { fetchComments } from "../../shared/api/fetchComments";
 import CreateComment from "@/features/comments/create/components/CreateComment";
+import CommentsList from "@/features/comments/list/components/CommentsList";
 
 export default function PostDetail({ id }: { id: number }) {
   const { setComments, reset } = useCommentStore();
@@ -145,7 +145,7 @@ export default function PostDetail({ id }: { id: number }) {
             COMMENTS
           </h2>
           <div className="text-left">
-            <CommentList postId={id} postUserId={currentPost.user.id} />
+            <CommentsList postId={id} postUserId={currentPost.user.id} />
 
             <CreateComment postId={id} />
           </div>

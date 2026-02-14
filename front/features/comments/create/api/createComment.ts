@@ -1,4 +1,4 @@
-import { createComment as createCommentApi } from "@/api/fetchData";
+import { createComment as createCommentApi } from "@/shared/api/fetchData";
 import { Comment, NewComment } from "@/types";
 
 export const createComment = (

@@ -4,7 +4,7 @@ import Image from "next/image";
 import logo from "@/public/common/logo.svg";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import { Nav } from "@/components/shared/nav";
+import { Nav } from "@/shared/components/nav";
 
 export default function Header() {
   // visibleの値を変えることでメニューを表示・非表示させる

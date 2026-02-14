@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import Button from "@/components/shared/button";
-import { fetchUserData } from "@/api/fetchData";
+import Button from "@/shared/components/button";
+import { fetchUserData } from "@/shared/api/fetchData";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useAuthStore } from "@/stores/useAuthStore";

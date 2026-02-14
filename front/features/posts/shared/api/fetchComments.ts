@@ -1,4 +1,4 @@
-import { fetchComments as fetchCommentsApi } from "@/api/fetchData";
+import { fetchComments as fetchCommentsApi } from "@/shared/api/fetchData";
 
 export const fetchComments = ({ postId }: { postId: number }) => {
   return fetchCommentsApi({ postId });

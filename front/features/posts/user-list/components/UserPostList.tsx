@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import Button from "@/components/shared/button";
+import Button from "@/shared/components/button";
 import toast from "react-hot-toast";
 import { usePostStore } from "@/stores/usePostStore";
 import { deletePost } from "../api";

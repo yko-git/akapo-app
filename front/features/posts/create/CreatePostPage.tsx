@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Button from "@/components/shared/button";
+import Button from "@/shared/components/button";
 import CreatePost from "./components/CreatePost";
 
 export default function CreatePostPage() {
