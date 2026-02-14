@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { createComment } from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import { useCommentStore } from "@/stores/useCommentStore";
 import { CreateCommentProps } from "@/types";
+import { createComment } from "../api";
 
 export default function CreateComment({ postId }: CreateCommentProps) {
   const [body, setBody] = useState<string>("");

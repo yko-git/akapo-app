@@ -5,7 +5,6 @@ import { jost } from "@/components/shared/font";
 import TagList from "@/components/shared/tagList";
 import Photo from "@/components/shared/photo";
 import CommentList from "@/components/posts/commentList";
-import CreateComment from "@/components/posts/createComment";
 import StatusInfo from "@/components/shared/statusInfo";
 import { usePostStore } from "@/stores/usePostStore";
 import { useCommentStore } from "@/stores/useCommentStore";
@@ -13,6 +12,7 @@ import Image from "next/image";
 import { useRequireAuth } from "@/features/posts/shared/hooks";
 import { fetchPost } from "../../shared/api";
 import { fetchComments } from "../../shared/api/fetchComments";
+import CreateComment from "@/features/comments/create/components/CreateComment";
 
 export default function PostDetail({ id }: { id: number }) {
   const { setComments, reset } = useCommentStore();
