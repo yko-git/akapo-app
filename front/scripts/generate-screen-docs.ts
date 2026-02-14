@@ -7,7 +7,7 @@ dotenv.config();
 import fs from "fs";
 import path from "path";
 import Anthropic from "@anthropic-ai/sdk";
-import { screens } from "./screens.config";
+import { ScreenConfig, screens } from "./screens.config";
 
 // 「設定ミスなのに黙って失敗」を防ぐ
 if (!process.env.ANTHROPIC_API_KEY) {
@@ -18,6 +18,9 @@ if (!process.env.ANTHROPIC_API_KEY) {
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
+
+// 日付生成
+const today = new Date().toISOString().split("T")[0];
 
 // 「画面に紐づく複数ファイルを、Claude が読みやすい“教材”形式に整形する関数」
 function readSourceFiles(files: string[]) {
@@ -43,6 +46,29 @@ ${code}
     .join("\n");
 }
 
+// すべての画面生成が終わったあと、index.md も更新する
+function generateIndexMarkdown(screens: ScreenConfig[]) {
+  const lines = [
+    "# 画面仕様一覧",
+    "",
+    "本ディレクトリには、各画面の仕様書を格納しています。",
+    "",
+    "## 画面一覧",
+    "",
+    ...screens.map(
+      (screen) => `- [${screen.name}](./${path.basename(screen.output)})`,
+    ),
+    "",
+    "<!-- META -->",
+    "- 自動生成: scripts/generate-screen-docs.ts",
+    `- 最終更新日: ${today}`,
+    "<!-- /META -->",
+    "",
+  ];
+
+  return lines.join("\n");
+}
+
 async function run() {
   for (const screen of screens) {
     console.log(`\n📄 Generating: ${screen.id}`);
@@ -53,9 +79,6 @@ async function run() {
       console.warn(`⚠️ No source files for ${screen.id}, skipped`);
       continue;
     }
-
-    // 日付生成
-    const today = new Date().toISOString().split("T")[0];
 
     const prompt = `
 あなたはシニアなフロントエンドエンジニアです。
@@ -119,6 +142,15 @@ ${sourceCode}
 
     console.log(`✅ Screen spec updated: ${screen.output}`);
   }
+
+  // すべての画面生成が終わったあと
+  const indexPath = path.resolve(process.cwd(), "front/docs/screens/index.md");
+  const indexMarkdown = generateIndexMarkdown(screens);
+
+  fs.mkdirSync(path.dirname(indexPath), { recursive: true });
+  fs.writeFileSync(indexPath, indexMarkdown);
+
+  console.log("📘 Screen index updated: front/docs/screens/index.md");
 }
 
 run().catch((err) => {
