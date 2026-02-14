@@ -114,4 +114,18 @@ export const screens: ScreenConfig[] = [
     ],
     output: "docs/screens/user-post-list.md",
   },
+
+  {
+    id: "about",
+    name: "About",
+    files: ["app/about/page.tsx", "features/about/AboutPage.tsx"],
+    output: "docs/screens/about.md",
+  },
+
+  {
+    id: "profile",
+    name: "Profile",
+    files: ["app/profile/page.tsx", "features/profile/ProfilePage.tsx"],
+    output: "docs/screens/profile.md",
+  },
 ];
