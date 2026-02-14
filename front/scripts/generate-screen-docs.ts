@@ -144,13 +144,13 @@ ${sourceCode}
   }
 
   // すべての画面生成が終わったあと
-  const indexPath = path.resolve(process.cwd(), "front/docs/screens/index.md");
+  const indexPath = path.resolve(process.cwd(), "docs/screens/index.md");
   const indexMarkdown = generateIndexMarkdown(screens);
 
   fs.mkdirSync(path.dirname(indexPath), { recursive: true });
   fs.writeFileSync(indexPath, indexMarkdown);
 
-  console.log("📘 Screen index updated: front/docs/screens/index.md");
+  console.log("📘 Screen index updated: docs/screens/index.md");
 }
 
 run().catch((err) => {
