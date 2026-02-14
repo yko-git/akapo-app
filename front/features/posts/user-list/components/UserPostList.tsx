@@ -1,16 +1,16 @@
 "use client";
 import Link from "next/link";
-import { deletePost } from "@/api/fetchData";
 import Button from "@/components/shared/button";
 import toast from "react-hot-toast";
 import { usePostStore } from "@/stores/usePostStore";
+import { deletePost } from "../api";
 import Image from "next/image";
 
-export default function UserArticleList() {
+export default function UserPostList() {
   const { userPosts, removePost } = usePostStore();
 
   const sortedPosts = (userPosts ?? []).sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
   const handleDelete = async (id: number) => {
     const confirm = window.confirm("記事を削除しますか？");
