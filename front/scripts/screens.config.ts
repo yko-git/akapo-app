@@ -7,6 +7,34 @@ export type ScreenConfig = {
 
 export const screens: ScreenConfig[] = [
   {
+    id: "register",
+    name: "新規ユーザー作成",
+    files: [
+      "app/signup/page.tsx",
+      "features/auth/register/CreateUserPage.tsx",
+      "features/auth/register/components/CreateUser.tsx",
+      "features/auth/register/hooks/useUserForm.tsx",
+      "features/auth/register/api/createUser.ts",
+      "features/auth/register/api/index.ts",
+    ],
+    output: "docs/screens/register.md",
+  },
+
+  {
+    id: "login",
+    name: "ログイン",
+    files: [
+      "app/login/page.tsx",
+      "features/auth/login/LoginPage.tsx",
+      "features/auth/login/components/LoginForm.tsx",
+      "features/auth/login/hooks/useLoginForm.tsx",
+      "features/auth/login/api/createLogin.ts",
+      "features/auth/login/api/index.ts",
+    ],
+    output: "docs/screens/login.md",
+  },
+
+  {
     id: "create-post",
     name: "投稿作成",
     files: [
@@ -34,35 +62,6 @@ export const screens: ScreenConfig[] = [
     ],
     output: "docs/screens/patch-post.md",
   },
-
-  {
-    id: "login",
-    name: "ログイン",
-    files: [
-      "app/login/page.tsx",
-      "features/auth/login/LoginPage.tsx",
-      "features/auth/login/components/LoginForm.tsx",
-      "features/auth/login/hooks/useLoginForm.tsx",
-      "features/auth/login/api/createLogin.ts",
-      "features/auth/login/api/index.ts",
-    ],
-    output: "docs/screens/login.md",
-  },
-
-  {
-    id: "register",
-    name: "新規ユーザー作成",
-    files: [
-      "app/signup/page.tsx",
-      "features/auth/register/CreateUserPage.tsx",
-      "features/auth/register/components/CreateUser.tsx",
-      "features/auth/register/hooks/useUserForm.tsx",
-      "features/auth/register/api/createUser.ts",
-      "features/auth/register/api/index.ts",
-    ],
-    output: "docs/screens/register.md",
-  },
-
   {
     id: "post-detail",
     name: "投稿詳細",
@@ -75,6 +74,20 @@ export const screens: ScreenConfig[] = [
       "features/posts/shared/api/fetchComments.ts",
     ],
     output: "docs/screens/post-detail.md",
+  },
+
+  {
+    id: "post-list",
+    name: "投稿一覧",
+    files: [
+      "app/page.tsx",
+      "features/posts/list/PostListPage.tsx",
+      "features/posts/list/components/PostList.tsx",
+      "features/posts/list/api/fetchPosts.ts",
+      "features/posts/shared/api/fetchComments.ts",
+      "features/posts/shared/hooks/useRequireAuth.tsx",
+    ],
+    output: "docs/screens/post-list.md",
   },
 
   {

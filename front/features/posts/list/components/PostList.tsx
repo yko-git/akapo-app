@@ -2,14 +2,15 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePostStore, PostWithComments } from "@/stores/usePostStore";
-import { fetchPosts, fetchComments } from "@/api/fetchData";
 import PhotoList from "@/components/shared/photoList";
 import TagList from "@/components/shared/tagList";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
 import StatusInfo from "@/components/shared/statusInfo";
 import Image from "next/image";
+import { useRequireAuth } from "../../shared/hooks";
+import { fetchComments } from "../../shared/api/fetchComments";
+import { fetchPosts } from "../api";
 
-export default function ArticleList() {
+export default function PostList() {
   // Storeから必要なデータと関数を取得
   const { posts, isLoading, error, setPosts, setLoading, setError } =
     usePostStore();
@@ -28,7 +29,7 @@ export default function ArticleList() {
         // 日付でソート
         const sortedPosts = (postsData ?? []).sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         );
 
         // コメント情報を追加
@@ -48,13 +49,13 @@ export default function ArticleList() {
               commentCount: comments?.length || 0,
               hasNewComment,
             };
-          })
+          }),
         );
         setPosts(postsWithComments);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
         setError(
-          error instanceof Error ? error.message : "投稿の取得に失敗しました"
+          error instanceof Error ? error.message : "投稿の取得に失敗しました",
         );
       } finally {
         setLoading(false);
