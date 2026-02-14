@@ -7,39 +7,125 @@ export type ScreenConfig = {
 
 export const screens: ScreenConfig[] = [
   {
+    id: "register",
+    name: "新規ユーザー作成",
+    files: [
+      "app/signup/page.tsx",
+      "features/auth/register/CreateUserPage.tsx",
+      "features/auth/register/components/CreateUser.tsx",
+      "features/auth/register/hooks/useUserForm.tsx",
+      "features/auth/register/api/createUser.ts",
+      "features/auth/register/api/index.ts",
+    ],
+    output: "docs/screens/register.md",
+  },
+
+  {
+    id: "login",
+    name: "ログイン",
+    files: [
+      "app/login/page.tsx",
+      "features/auth/login/LoginPage.tsx",
+      "features/auth/login/components/LoginForm.tsx",
+      "features/auth/login/hooks/useLoginForm.tsx",
+      "features/auth/login/api/createLogin.ts",
+      "features/auth/login/api/index.ts",
+    ],
+    output: "docs/screens/login.md",
+  },
+
+  {
     id: "create-post",
     name: "投稿作成",
     files: [
-      "components/posts/createPost/index.tsx",
-      "app/posts/new/[id]/page.tsx",
+      "app/posts/new/page.tsx",
+      "features/posts/create/CreatePostPage.tsx",
+      "features/posts/create/components/CreatePost.tsx",
+      "features/posts/shared/hooks/usePostForm.tsx",
+      "features/posts/create/api/createPost.ts",
+      "features/posts/create/api/index.ts",
     ],
     output: "docs/screens/create-post.md",
   },
   {
     id: "patch-post",
     name: "投稿編集",
-    files: ["components/posts/patchPost/index.tsx", "app/posts/[id]/page.tsx"],
+    files: [
+      "app/posts/new/[id]/page.tsx",
+      "features/posts/patch/PatchPostPage.tsx",
+      "features/posts/patch/components/PatchPost.tsx",
+      "features/posts/shared/hooks/usePostForm.tsx",
+      "features/posts/patch/api/patchPost.ts",
+      "features/posts/patch/api/fetchPost.ts",
+      "features/posts/patch/api/uploadImage.ts",
+      "features/posts/patch/api/index.ts",
+    ],
     output: "docs/screens/patch-post.md",
   },
-
-  {
-    id: "login",
-    name: "ログイン",
-    files: ["components/posts/loginUser/index.tsx", "app/login/page.tsx"],
-    output: "docs/screens/login.md",
-  },
-
   {
     id: "post-detail",
     name: "投稿詳細",
-    files: ["components/posts/article/index.tsx", "app/posts/[id]/page.tsx"],
+    files: [
+      "app/posts/[id]/page.tsx",
+      "features/posts/detail/PostDetailPage.tsx",
+      "features/posts/detail/components/PostDetail.tsx",
+      "features/posts/shared/hooks/useRequireAuth.tsx",
+      "features/posts/shared/api/fetchPost.ts",
+      "features/posts/shared/api/fetchComments.ts",
+    ],
     output: "docs/screens/post-detail.md",
   },
 
   {
-    id: "mypage",
-    name: "マイページ",
-    files: ["components/posts/userPage/index.tsx", "app/mypage/page.tsx"],
-    output: "docs/screens/mypage.md",
+    id: "post-list",
+    name: "投稿一覧",
+    files: [
+      "app/page.tsx",
+      "features/posts/list/PostListPage.tsx",
+      "features/posts/list/components/PostList.tsx",
+      "features/posts/list/api/fetchPosts.ts",
+      "features/posts/shared/api/fetchComments.ts",
+      "features/posts/shared/hooks/useRequireAuth.tsx",
+    ],
+    output: "docs/screens/post-list.md",
+  },
+
+  {
+    id: "user-page",
+    name: "ユーザー投稿一覧",
+    files: [
+      "app/mypage/page.tsx",
+      "features/users/mypage/UsersPage.tsx",
+      "features/users/mypage/components/User.tsx",
+      "features/users/mypage/api/fetchUserData.ts",
+      "features/users/mypage/api/fetchUserPosts.ts",
+    ],
+    output: "docs/screens/user-page.md",
+  },
+
+  {
+    id: "user-post-list",
+    name: "ユーザー投稿一覧",
+    files: [
+      "app/mypage/page.tsx",
+      "features/posts/user-list/UserPostListPage.tsx",
+      "features/posts/user-list/components/UserPostList.tsx",
+      "features/posts/user-list/api/deletePosts.ts",
+    ],
+    output: "docs/screens/user-post-list.md",
+  },
+
+  {
+    id: "about",
+    name: "About",
+    files: ["app/about/page.tsx", "features/about/AboutPage.tsx"],
+    output: "docs/screens/about.md",
+  },
+
+  {
+    id: "profile",
+    name: "Profile",
+    files: ["app/profile/page.tsx", "features/profile/ProfilePage.tsx"],
+    output: "docs/screens/profile.md",
   },
 ];

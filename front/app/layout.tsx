@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { LoginContext } from "@/components/shared/loginContext";
+import { LoginContext } from "@/shared/components/loginContext";
 import { jwtDecode } from "jwt-decode";
 import { Inter } from "next/font/google";
-import Header from "@/components/shared/header";
-import { Footer } from "@/components/shared/footer";
+import Header from "@/shared/components/header";
+import { Footer } from "@/shared/components/footer";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-import { MySuccessIcon } from "@/components/shared/icons/good";
+import { MySuccessIcon } from "@/shared/components/icons/good";
 
 const inter = Inter({ subsets: ["latin"] });
 
