@@ -42,8 +42,8 @@
 - useAuthStore
 - usePostStore
 - useRequireAuth
-- useRouter
 - useEffect
+- useRouter
 
 ## 10. 補足・制約
 - ログイン状態でのみアクセスできる画面です。
