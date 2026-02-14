@@ -78,6 +78,20 @@ export const screens: ScreenConfig[] = [
   },
 
   {
+    id: "post-list",
+    name: "投稿一覧",
+    files: [
+      "app/page.tsx",
+      "features/posts/list/PostListPage.tsx",
+      "features/posts/list/components/PostList.tsx",
+      "features/posts/list/api/fetchPosts.ts",
+      "features/posts/shared/api/fetchComments.ts",
+      "features/posts/shared/hooks/useRequireAuth.tsx",
+    ],
+    output: "docs/screens/post-list.md",
+  },
+
+  {
     id: "mypage",
     name: "マイページ",
     files: ["components/posts/userPage/index.tsx", "app/mypage/page.tsx"],
