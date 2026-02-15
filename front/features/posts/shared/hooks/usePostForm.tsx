@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NewPost, NewPostSchema } from "@/schemas/post.schema";
+import { NewPost, NewPostSchema } from "@/shared/schemas";
 
 // 投稿フォーム用のカスタムフック
 export const usePostForm = (defaultValues?: Partial<NewPost>) => {

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Comment } from "@/schemas/comment.schema";
+import { Comment } from "@/shared/schemas";
 
 interface CommentState {
   // 現在の投稿のコメントだけ管理

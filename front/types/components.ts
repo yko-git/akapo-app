@@ -1,4 +1,4 @@
-import { Category } from "@/schemas/post.schema";
+import { Category } from "@/shared/schemas";
 
 // Navigation
 export interface NavProps {

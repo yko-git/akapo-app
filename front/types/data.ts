@@ -1,4 +1,4 @@
-import { Post } from "@/schemas/post.schema";
+import { Post } from "@/shared/schemas";
 
 export interface ArticleData<T> {
   data: T;

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { patchPost, uploadImage } from "../api";
-import { NewPost } from "@/schemas/post.schema";
+import { NewPost } from "@/shared/schemas";
 import Button from "@/shared/components/button";
 import SelectBox from "@/shared/components/selectBox";
 import { statusList, categories } from "@/shared/components/data";
