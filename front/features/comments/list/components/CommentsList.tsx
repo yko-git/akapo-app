@@ -4,7 +4,7 @@ import { useCommentStore } from "@/shared/stores";
 import toast from "react-hot-toast";
 import { useAuthStore } from "@/shared/stores";
 import Image from "next/image";
-import { CommentListProps } from "@/types";
+import { CommentListProps } from "@/shared/types";
 
 export default function CommentsList({ postUserId, postId }: CommentListProps) {
   const { comments, removeComment } = useCommentStore();

@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { PhotoListProps } from "@/types";
+import { PhotoListProps } from "@/shared/types";
 
 export default function PhotoList({ src, alt, width, height }: PhotoListProps) {
   return (

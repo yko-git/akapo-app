@@ -1,4 +1,4 @@
-import { SelectBoxProps } from "@/types";
+import { SelectBoxProps } from "@/shared/types";
 
 const SelectBox = ({
   options,
@@ -9,7 +9,7 @@ const SelectBox = ({
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (multiple) {
       const values = Array.from(e.target.selectedOptions).map(
-        (opt: HTMLOptionElement) => opt.value
+        (opt: HTMLOptionElement) => opt.value,
       );
       onChange(values);
     } else {
