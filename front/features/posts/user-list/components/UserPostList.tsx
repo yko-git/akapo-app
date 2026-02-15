@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Button from "@/shared/components/button";
 import toast from "react-hot-toast";
-import { usePostStore } from "@/stores/usePostStore";
+import { usePostStore } from "@/shared/stores";
 import { deletePost } from "../api";
 import Image from "next/image";
 

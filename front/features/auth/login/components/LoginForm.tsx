@@ -4,7 +4,7 @@ import Button from "@/shared/components/button";
 import { fetchUserData } from "@/shared/api/fetchData";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { useAuthStore } from "@/stores/useAuthStore";
+import { useAuthStore } from "@/shared/stores";
 import { NewLogin } from "@/schemas/user.schema";
 import { useLoginForm } from "../hooks";
 import { createLogin } from "../api";

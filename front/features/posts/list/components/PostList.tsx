@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import Link from "next/link";
-import { usePostStore, PostWithComments } from "@/stores/usePostStore";
+import { usePostStore, PostWithComments } from "@/shared/stores/usePostStore";
 import PhotoList from "@/shared/components/photoList";
 import TagList from "@/shared/components/tagList";
 import StatusInfo from "@/shared/components/statusInfo";
