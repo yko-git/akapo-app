@@ -1,4 +1,4 @@
-import { PhotoProps } from "@/types";
+import { PhotoProps } from "@/shared/types";
 import Image from "next/image";
 
 export default function Photo({ src, alt }: PhotoProps) {

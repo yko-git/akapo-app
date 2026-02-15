@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Button from "@/shared/components/button";
 import { useCommentStore } from "@/shared/stores";
-import { CreateCommentProps } from "@/types";
+import { CreateCommentProps } from "@/shared/types";
 import { createComment } from "../api";
 
 export default function CreateComment({ postId }: CreateCommentProps) {
