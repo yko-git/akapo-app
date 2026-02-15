@@ -8,6 +8,13 @@ export * from "./data";
 export * from "./ui";
 
 // Schema types
-export type { User, NewUser, UserProfile } from "@/schemas/user.schema";
-export type { Post, NewPost, Category } from "@/schemas/post.schema";
-export type { Comment, NewComment } from "@/schemas/comment.schema";
+export type {
+  User,
+  NewUser,
+  UserProfile,
+  Post,
+  NewPost,
+  Category,
+  Comment,
+  NewComment,
+} from "@/shared/schemas";

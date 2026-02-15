@@ -5,7 +5,7 @@ import { fetchUserData } from "@/shared/api/fetchData";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useAuthStore } from "@/shared/stores";
-import { NewLogin } from "@/schemas/user.schema";
+import { NewLogin } from "@/shared/schemas";
 import { useLoginForm } from "../hooks";
 import { createLogin } from "../api";
 

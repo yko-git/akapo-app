@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { useRequireAuth } from "@/features/posts/shared/hooks/useRequireAuth";
 import { useRouter } from "next/navigation";
 
-import { NewPost } from "@/schemas/post.schema";
+import { NewPost } from "@/shared/schemas";
 import { Controller } from "react-hook-form";
 import imageCompression from "browser-image-compression";
 import { IMAGE_COMPRESSION_OPTIONS } from "@/shared/constants/image";

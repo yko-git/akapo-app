@@ -4,16 +4,16 @@ import {
   NewLogin,
   UserProfile,
   UserProfileSchema,
-} from "@/schemas/user.schema";
-import {
   Post,
   NewPost,
   PostSchema,
   NewPostSchema,
   PostResponseSchema,
   PostListResponseSchema,
-} from "@/schemas/post.schema";
-import { Comment, CommentSchema, NewComment } from "@/schemas/comment.schema";
+  Comment,
+  CommentSchema,
+  NewComment,
+} from "@/shared/schemas";
 import z from "zod";
 import { API_BASE_URL, API_ENDPOINTS, API_TIMEOUT } from "@/config/api";
 require("dotenv").config();
@@ -43,7 +43,7 @@ instance.interceptors.response.use(
       window.location.href = "/login"; // ログイン画面へ遷移
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 // 個別投稿データ取得関数
@@ -71,7 +71,7 @@ export async function fetchPosts(): Promise<Post[]> {
 // 記事投稿関数
 export async function createPost(
   file: File,
-  postData: NewPost
+  postData: NewPost,
 ): Promise<string> {
   // バリデーション
   const validation = NewPostSchema.safeParse(postData);
@@ -105,7 +105,7 @@ export async function createPost(
 // 新規ユーザー登録
 export async function createUser(
   file: File,
-  userData: NewUser
+  userData: NewUser,
 ): Promise<string> {
   const { loginId, name, password } = userData;
   // S3の署名付きURLを取得
@@ -189,7 +189,7 @@ export async function deletePost({ id }: { id: number }): Promise<void> {
 // 記事編集関数
 export async function patchPost(
   id: number,
-  postData: NewPost
+  postData: NewPost,
 ): Promise<string> {
   const validation = NewPostSchema.safeParse(postData);
   if (!validation.success) {
@@ -205,7 +205,7 @@ export async function patchPost(
 
 // 記事編集関数（画像）
 export async function uploadImage(
-  file: File
+  file: File,
 ): Promise<{ signedUrl: string; safeFilePath: string }> {
   const signedUrlResponse = await instance.get("signedurl", {
     params: { filename: file.name },
@@ -226,7 +226,7 @@ export async function fetchComments({
   postId: number;
 }): Promise<Comment[]> {
   const response = await instance.get(
-    API_ENDPOINTS.POSTS + `/${postId}/comments`
+    API_ENDPOINTS.POSTS + `/${postId}/comments`,
   );
 
   // レスポンスデータのバリデーション
@@ -241,11 +241,11 @@ export async function fetchComments({
 // コメント投稿関数
 export async function createComment(
   postId: number,
-  postData: NewComment
+  postData: NewComment,
 ): Promise<Comment> {
   const response = await instance.post(
     API_ENDPOINTS.POSTS + `/${postId}/comments`,
-    postData
+    postData,
   );
 
   // レスポンスデータのバリデーション
@@ -266,6 +266,6 @@ export async function deleteComments({
   commentId: number;
 }): Promise<void> {
   return await instance.delete(
-    API_ENDPOINTS.POSTS + `/${postId}/comments/${commentId}`
+    API_ENDPOINTS.POSTS + `/${postId}/comments/${commentId}`,
   );
 }
