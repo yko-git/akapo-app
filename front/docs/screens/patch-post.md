@@ -41,13 +41,15 @@
 - SelectBox
 - StatusInfo
 
-## 9. 使用しているHooks / Stores
+## 9. 使用しているHooks / Stores / API / Schema
 - usePostForm
-- useParams
-- useRouter
+- patchPost
+- uploadImage
+- fetchPost
+- NewPostSchema
 
 ## 10. 補足・制約
-- 画像は圧縮処理を行う
+- 画像は圧縮処理を行ってから保存される
 - 既存の画像が存在する場合は、新しい画像を選択しない限り既存の画像が保持される
 
 <!-- META -->
