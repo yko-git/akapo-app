@@ -100,7 +100,7 @@ akapo を通して、
 
 ## ドキュメント自動生成（画面仕様）
 
-本リポジトリでは、**フロントエンドの実装コードを起点に画面仕様ドキュメントを自動生成**する仕組みを検証・導入しています。
+本リポジトリでは、**フロントエンドの実装コードを起点に画面仕様ドキュメントをAIで自動生成**する仕組みを検証・導入しています。
 
 ### 目的
 
@@ -117,7 +117,7 @@ akapo を通して、
 
 ### 出力例
 
-- [front/docs/screens/create-post.md](https://github.com/yko-git/akapo-app/blob/feature/feature-docs/01/front/docs/screens/create-post.md)
+- [front/docs/screens/index.md](https://github.com/yko-git/akapo-app/blob/main/front/docs/screens/index.md)
 
 この仕組みにより、**画面実装が更新されると、仕様書も自動で更新される**運用を実現しています。
 
