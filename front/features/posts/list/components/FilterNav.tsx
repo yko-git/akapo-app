@@ -9,23 +9,20 @@ export default function FilterNav() {
 
   return (
     <nav>
-      {CATEGORIES_TYPES.map((category) => (
-        <Link
-          key={category.value}
-          href={
-            categoryFilter.category === category.value
-              ? "/"
-              : `/?category=${category.label}`
-          }
-          className={`text-xs inline-block mt-1 text-white mr-2 px-3 py-1 text-[10px] font-semibold rounded-sm ${
-            categoryFilter.category === category.label
-              ? "bg-[#FC7840]"
-              : "bg-[#6C9FE0]"
-          }`}
-        >
-          {category.label}
-        </Link>
-      ))}
+      {CATEGORIES_TYPES.map((category) => {
+        const isActive = categoryFilter.category === category.value;
+        return (
+          <Link
+            key={category.value}
+            href={isActive ? "/" : `/?category=${category.value}`}
+            className={`text-xs inline-block mt-1 text-white mr-2 px-3 py-1 text-[10px] font-semibold rounded-sm ${
+              isActive ? "bg-[#FC7840]" : "bg-[#6C9FE0]"
+            }`}
+          >
+            {category.label}
+          </Link>
+        );
+      })}
       <Link
         key="99"
         href="/"
