@@ -58,7 +58,7 @@ export default function PostList() {
         // カテゴリーフィルターの適用
         if (category !== null) {
           const filteredPosts = postsWithComments.filter((post) =>
-            post.categories.some((cat) => cat.name === category),
+            post.categories.some((cat) => String(cat.id) === category),
           );
           setPosts(filteredPosts);
           return;
