@@ -9,12 +9,15 @@ import Image from "next/image";
 import { useRequireAuth } from "../../shared/hooks";
 import { fetchComments } from "../../shared/api/fetchComments";
 import { fetchPosts } from "../api";
+import { useCategoryFilter } from "../hooks";
 
 export default function PostList() {
   // Storeから必要なデータと関数を取得
   const { posts, isLoading, error, setPosts, setLoading, setError } =
     usePostStore();
   const isAuthChecked = useRequireAuth();
+  // URLクエリからカテゴリーフィルターの状態を取得
+  const { category } = useCategoryFilter();
 
   useEffect(() => {
     if (!isAuthChecked) return;
@@ -51,6 +54,15 @@ export default function PostList() {
             };
           }),
         );
+
+        // カテゴリーフィルターの適用
+        if (category !== null) {
+          const filteredPosts = postsWithComments.filter((post) =>
+            post.categories.some((cat) => String(cat.id) === category),
+          );
+          setPosts(filteredPosts);
+          return;
+        }
         setPosts(postsWithComments);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
@@ -63,7 +75,7 @@ export default function PostList() {
     }
 
     fetchData();
-  }, [isAuthChecked, setPosts, setLoading, setError]);
+  }, [isAuthChecked, category, setPosts, setLoading, setError]);
 
   if (isLoading) return <StatusInfo status="loading" data={null} />;
   if (error) return <StatusInfo status="service-down" data={null} />;

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { createPost } from "../api";
 import Button from "@/shared/components/button";
 import SelectBox from "@/shared/components/selectBox";
-import { statusList, categories } from "@/shared/components/data";
 import toast from "react-hot-toast";
 import { useRequireAuth } from "@/features/posts/shared/hooks/useRequireAuth";
 import { useRouter } from "next/navigation";
@@ -14,6 +13,8 @@ import imageCompression from "browser-image-compression";
 import { IMAGE_COMPRESSION_OPTIONS } from "@/shared/constants/image";
 import { validateImageFile } from "@/shared/lib/validateImageFile";
 import { usePostForm } from "../../shared/hooks";
+import { CATEGORIES_TYPES } from "@/shared/constants/categories";
+import { STATUS_LIST } from "@/shared/constants/status";
 
 const CreatePost = () => {
   const { register, handleSubmit, control, errors } = usePostForm();
@@ -90,7 +91,7 @@ const CreatePost = () => {
           control={control}
           render={({ field }) => (
             <SelectBox
-              options={statusList}
+              options={STATUS_LIST}
               value={field.value}
               onChange={(value) => field.onChange(value)}
             />
@@ -104,7 +105,7 @@ const CreatePost = () => {
           control={control}
           render={({ field }) => (
             <SelectBox
-              options={categories}
+              options={CATEGORIES_TYPES}
               multiple
               value={(field.value ?? []).map(String)}
               onChange={(value) => {
