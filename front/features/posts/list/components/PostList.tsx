@@ -1,87 +1,11 @@
 "use client";
-import { useEffect } from "react";
 import Link from "next/link";
-import { usePostStore, PostWithComments } from "@/shared/stores/usePostStore";
 import PhotoList from "@/shared/components/photoList";
 import TagList from "@/shared/components/tagList";
-import StatusInfo from "@/shared/components/statusInfo";
 import Image from "next/image";
-import { useRequireAuth } from "../../shared/hooks";
-import { fetchComments } from "../../shared/api/fetchComments";
-import { fetchPosts } from "../api";
-import { useCategoryFilter } from "../hooks";
+import { PostListProps } from "@/shared/types";
 
-export default function PostList() {
-  // Storeから必要なデータと関数を取得
-  const { posts, isLoading, error, setPosts, setLoading, setError } =
-    usePostStore();
-  const isAuthChecked = useRequireAuth();
-  // URLクエリからカテゴリーフィルターの状態を取得
-  const { category } = useCategoryFilter();
-
-  useEffect(() => {
-    if (!isAuthChecked) return;
-
-    async function fetchData() {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const postsData = await fetchPosts();
-
-        // 日付でソート
-        const sortedPosts = (postsData ?? []).sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-        );
-
-        // コメント情報を追加
-        const postsWithComments: PostWithComments[] = await Promise.all(
-          sortedPosts.map(async (post) => {
-            const comments = await fetchComments({ postId: post.id });
-            const now = new Date();
-
-            const hasNewComment = comments.some((comment) => {
-              const commentDate = new Date(comment.createdAt);
-              const diffMSec = now.getTime() - commentDate.getTime();
-              const diffHour = diffMSec / (60 * 60 * 1000);
-              return diffHour < 24;
-            });
-            return {
-              ...post,
-              commentCount: comments?.length || 0,
-              hasNewComment,
-            };
-          }),
-        );
-
-        // カテゴリーフィルターの適用
-        if (category !== null) {
-          const filteredPosts = postsWithComments.filter((post) =>
-            post.categories.some((cat) => String(cat.id) === category),
-          );
-          setPosts(filteredPosts);
-          return;
-        }
-        setPosts(postsWithComments);
-      } catch (error) {
-        console.error("投稿の取得でエラーが発生しました:", error);
-        setError(
-          error instanceof Error ? error.message : "投稿の取得に失敗しました",
-        );
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, [isAuthChecked, category, setPosts, setLoading, setError]);
-
-  if (isLoading) return <StatusInfo status="loading" data={null} />;
-  if (error) return <StatusInfo status="service-down" data={null} />;
-  if (!posts || posts.length === 0)
-    return <StatusInfo status="empty" data={null} />;
-
+export default function PostList({ posts }: PostListProps) {
   return (
     <ul className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-y-20 gap-x-5 max-w-[1400px] mx-auto md:mt-10 px-5">
       {posts.map((item, index) => (
