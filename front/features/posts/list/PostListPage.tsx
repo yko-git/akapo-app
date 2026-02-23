@@ -18,7 +18,7 @@ export default function PostListPage() {
   // URLクエリからカテゴリーフィルターの状態を取得
   const { category } = useCategoryFilter();
   // 投稿の取得と状態管理
-  const { userId } = usePostsFilter();
+  const { userName } = usePostsFilter();
 
   useEffect(() => {
     if (!isAuthChecked) return;
@@ -66,9 +66,9 @@ export default function PostListPage() {
         }
 
         // ユーザーフィルターの適用
-        if (userId !== null) {
+        if (userName !== null) {
           const filteredPosts = postsWithComments.filter(
-            (post) => post.userId === Number(userId),
+            (post) => post.user.name === userName,
           );
           setPosts(filteredPosts);
           return;
@@ -86,7 +86,7 @@ export default function PostListPage() {
     }
 
     fetchData();
-  }, [isAuthChecked, category, userId, setPosts, setLoading, setError]);
+  }, [isAuthChecked, category, userName, setPosts, setLoading, setError]);
 
   if (isLoading) return <StatusInfo status="loading" data={null} />;
   if (error) return <StatusInfo status="service-down" data={null} />;

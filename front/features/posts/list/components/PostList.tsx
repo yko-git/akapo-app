@@ -38,7 +38,7 @@ export default function PostList({ posts }: PostListProps) {
             <div className="flex items-center justify-between mt-2 text-[#807f7f]">
               <div className="flex items-center">
                 <Link
-                  href={`/?user=${item.user.id}`}
+                  href={`/?user=${item.user.name}`}
                   className="flex items-center"
                 >
                   <Image

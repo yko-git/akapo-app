@@ -3,13 +3,14 @@ import { useSearchParams } from "next/navigation";
 // ユーザー別投稿一覧のフィルタリングを管理するカスタムフック
 export const usePostsFilter = () => {
   const searchParams = useSearchParams();
-  const userId = searchParams.get("user");
+  const userName = searchParams.get("user");
 
   // ユーザーが null または空文字の場合は null に変換
-  const normalizedUserPosts = userId === null || userId === "" ? null : userId;
+  const normalizedUserPosts =
+    userName === null || userName === "" ? null : userName;
   // フィルタリングが適用されているかどうかを判定
   return {
-    userId: normalizedUserPosts,
+    userName: normalizedUserPosts,
     isFiltered: normalizedUserPosts !== null,
   };
 };
