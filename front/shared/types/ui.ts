@@ -12,5 +12,4 @@ export type PostListProps = {
 
 export type FilterNavProps = {
   categoryFilter: string | null;
-  userNameFilter: string | null;
 };
