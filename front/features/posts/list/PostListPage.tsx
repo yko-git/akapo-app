@@ -98,7 +98,12 @@ export default function PostListPage() {
         ) : (
           <>
             <div className="text-center mb-5">
-              <FilterNav categoryFilter={category} userNameFilter={userName} />
+              {userName && (
+                <p className="mb-5">
+                  <span className="font-bold">{userName}</span> の投稿一覧
+                </p>
+              )}
+              {!userName && <FilterNav categoryFilter={category} />}
             </div>
             <PostList posts={posts} />
           </>
