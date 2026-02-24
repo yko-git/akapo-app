@@ -39,9 +39,8 @@
 ## 9. 使用しているHooks / Stores / API / Schema
 - `useLoginForm`: ログインフォームのカスタムフック
 - `useAuthStore`: ユーザー認証に関するストア
-- `fetchUserData`: ユーザーデータを取得するAPI
-- `createLogin`: ログイン処理を行うAPI
-- `NewLogin`, `NewLoginSchema`: ログイン情報に関するスキーマ
+- `createLogin`: ログイン処理のAPI呼び出し
+- `NewLogin`, `NewLoginSchema`: ログイン情報のスキーマ
 
 ## 10. 補足・制約
 - ログイン・新規ユーザー登録は午前9時〜午後9時の間のみ利用可能です。
