@@ -52,5 +52,10 @@
 
 ## 10. 補足・制約
 - 画像ファイルの圧縮は `browser-image-compression` ライブラリを使用して行っている
-- 画像ファイルのバリデーションは `validateImageFile` 関数を使用して行っている
+- 画像ファイルのバリデーションは `validateImageFile` 関数で行っている
 - 投稿完了後は `mypage` ページに遷移する
+
+<!-- META -->
+- 画面ID: create-post
+- 最終更新日: 2026-02-24
+<!-- /META -->
