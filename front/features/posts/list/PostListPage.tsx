@@ -98,7 +98,7 @@ export default function PostListPage() {
         ) : (
           <>
             <div className="text-center mb-5">
-              <FilterNav />
+              <FilterNav categoryFilter={category} userNameFilter={userName} />
             </div>
             <PostList posts={posts} />
           </>
