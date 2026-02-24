@@ -16,7 +16,7 @@ export default function FilterNav({ categoryFilter }: FilterNavProps) {
               isActive ? "bg-[#FC7840]" : "bg-[#6C9FE0]"
             }`}
           >
-            {cat.label}1
+            {cat.label}
           </Link>
         );
       })}
