@@ -4,7 +4,7 @@ import FilterNav from "./components/FilterNav";
 import PostList from "./components/PostList";
 import StatusInfo from "@/shared/components/statusInfo";
 import { useRequireAuth } from "../shared/hooks";
-import { useCategoryFilter } from "./hooks";
+import { useCategoryFilter, usePostsFilter } from "./hooks";
 import { useEffect } from "react";
 import { fetchComments, fetchPosts } from "@/shared/api/fetchData";
 
@@ -17,6 +17,8 @@ export default function PostListPage() {
   const isAuthChecked = useRequireAuth();
   // URLクエリからカテゴリーフィルターの状態を取得
   const { category } = useCategoryFilter();
+  // 投稿の取得と状態管理
+  const { userName } = usePostsFilter();
 
   useEffect(() => {
     if (!isAuthChecked) return;
@@ -62,6 +64,16 @@ export default function PostListPage() {
           setPosts(filteredPosts);
           return;
         }
+
+        // ユーザーフィルターの適用
+        if (userName !== null) {
+          const filteredPosts = postsWithComments.filter(
+            (post) => post.user.name === userName,
+          );
+          setPosts(filteredPosts);
+          return;
+        }
+
         setPosts(postsWithComments);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
@@ -74,7 +86,7 @@ export default function PostListPage() {
     }
 
     fetchData();
-  }, [isAuthChecked, category, setPosts, setLoading, setError]);
+  }, [isAuthChecked, category, userName, setPosts, setLoading, setError]);
 
   if (isLoading) return <StatusInfo status="loading" data={null} />;
   if (error) return <StatusInfo status="service-down" data={null} />;
@@ -86,7 +98,7 @@ export default function PostListPage() {
         ) : (
           <>
             <div className="text-center mb-5">
-              <FilterNav />
+              <FilterNav categoryFilter={category} userNameFilter={userName} />
             </div>
             <PostList posts={posts} />
           </>

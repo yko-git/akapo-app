@@ -9,3 +9,8 @@ export type SelectOption = {
 export type PostListProps = {
   posts: PostWithComments[];
 };
+
+export type FilterNavProps = {
+  categoryFilter: string | null;
+  userNameFilter: string | null;
+};
