@@ -7,6 +7,8 @@ import { useRequireAuth } from "../shared/hooks";
 import { useCategoryFilter, usePostsFilter } from "./hooks";
 import { useEffect } from "react";
 import { fetchComments, fetchPosts } from "@/shared/api/fetchData";
+import Link from "next/link";
+import { jost } from "@/shared/components/font";
 
 export default function PostListPage() {
   // Storeから必要なデータと関数を取得
@@ -92,18 +94,45 @@ export default function PostListPage() {
   if (error) return <StatusInfo status="service-down" data={null} />;
   return (
     <>
-      <div className="m-4 md:mt-4 md:mx-auto md:mb-20">
+      <div className="md:m-4 md:mt-4 md:mx-auto md:mb-20">
         {!posts || posts.length === 0 ? (
           <StatusInfo status="empty" data={null} />
         ) : (
           <>
-            <div className="text-center mb-5">
+            <div className="wrapper mb-5">
               {userName && (
-                <p className="mb-5">
-                  <span className="font-bold">{userName}</span> の投稿一覧
-                </p>
+                <>
+                  <p className="text-center mb-5">
+                    <span className="font-bold text-2xl">{userName}</span>{" "}
+                    の投稿一覧
+                  </p>
+                  <Link
+                    href="/"
+                    className={`${jost.className} tracking-[.2em] pr-5 inline-flex items-center rounded-lg text-[#6C9FE0] text-sm`}
+                  >
+                    <div className="mr-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                        className="w-4 h-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15.75 19.5 8.25 12l7.5-7.5"
+                        ></path>
+                      </svg>
+                    </div>
+                    BACK
+                  </Link>
+                </>
               )}
-              {!userName && <FilterNav categoryFilter={category} />}
+              <div className="text-center">
+                {!userName && <FilterNav categoryFilter={category} />}
+              </div>
             </div>
             <PostList posts={posts} />
           </>
