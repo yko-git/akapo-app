@@ -31,7 +31,6 @@ About
 - `Image`: Next.jsの画像表示コンポーネント
 - `Link`: Next.jsのリンクコンポーネント
 - `Button`: 共通のボタンコンポーネント
-- `jost`: 共通のフォントコンポーネント
 
 ## 9. 使用しているHooks / Stores / API / Schema
 - 特になし
@@ -41,5 +40,5 @@ About
 
 <!-- META -->
 - 画面ID: about
-- 最終更新日: 2026-02-23
+- 最終更新日: 2026-02-24
 <!-- /META -->
