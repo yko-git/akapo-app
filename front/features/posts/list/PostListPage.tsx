@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { fetchComments, fetchPosts } from "@/shared/api/fetchData";
 import Link from "next/link";
 import { jost } from "@/shared/components/font";
+import Image from "next/image";
 
 export default function PostListPage() {
   // Storeから必要なデータと関数を取得
@@ -102,10 +103,21 @@ export default function PostListPage() {
             <div className="wrapper mb-5">
               {userName && (
                 <>
-                  <p className="text-center mb-5">
-                    <span className="font-bold text-2xl">{userName}</span>{" "}
-                    の投稿一覧
-                  </p>
+                  <div className="text-center mb-5">
+                    <Image
+                      src={posts[0].user.iconSignedUrl}
+                      width="70"
+                      height="70"
+                      alt={posts[0].user.name}
+                      className="inline-block rounded-full object-cover w-[70px] h-[70px]"
+                    />
+                    <p className="text-center mt-5">
+                      <span className="font-bold text-2xl mr-2 tracking-wide">
+                        {userName}
+                      </span>
+                      の投稿一覧
+                    </p>
+                  </div>
                   <Link
                     href="/"
                     className={`${jost.className} tracking-[.2em] pr-5 inline-flex items-center rounded-lg text-[#6C9FE0] text-sm`}
