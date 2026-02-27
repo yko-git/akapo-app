@@ -86,24 +86,27 @@ export const userPosts = async (req: any, res: Response) => {
 
 export const getPostsList = async (req: any, res: Response) => {
   try {
-    const posts = await fetchPosts({
-      data: req.query.data,
-      limit: req.query.limit || 100,
-      page: req.query.page || 1,
-    });
+    // ページネーションの計算
     const offset =
       req.query.page && req.query.limit
         ? (Number(req.query.page) - 1) * Number(req.query.limit)
         : 0;
+    // 投稿の取得
+    const posts = await fetchPosts({
+      limit: Number(req.query.limit || 100),
+      offset: offset,
+    });
 
+    // 署名付きURLの更新とアイコンURLの更新
     const updatedPosts = await updateSignedUrls(posts);
     await Promise.all(
       updatedPosts.map((post) => updateIconSignedUrls(post.user)),
     );
 
+    // レスポンスの返却
     return res.json({
       posts: updatedPosts,
-      limit: req.query.limit,
+      limit: Number(req.query.limit || 100),
       offset: offset,
     });
   } catch (err) {
