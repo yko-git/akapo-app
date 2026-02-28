@@ -9,9 +9,16 @@ import { User } from "../models/user";
 import { Comment } from "../models/comment";
 
 // 複数取得
-export async function fetchPosts(query?: any) {
+export async function fetchPosts({
+  limit,
+  offset,
+}: {
+  limit: number;
+  offset: number;
+}) {
   return Post.findAll({
-    where: query || {},
+    limit,
+    offset,
     include: [
       {
         model: Category,
@@ -69,7 +76,7 @@ export async function updateSignedUrls(posts: Post[]) {
       return {
         ...post.toJSON(),
       };
-    })
+    }),
   );
 }
 
@@ -108,7 +115,7 @@ export async function updateIconSignedUrls(item: any) {
 function toCDNUrl(signedUrl: string) {
   return signedUrl.replace(
     `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}`,
-    `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`
+    `https://images.akapo-app.com/${process.env.AWS_S3_BUCKET_NAME}`,
   );
 }
 
