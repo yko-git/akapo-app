@@ -60,8 +60,16 @@ export async function fetchPost({ id }: { id: number }) {
   return parsed.data.post;
 }
 // 複数投稿データ取得関数
-export async function fetchPosts(): Promise<Post[]> {
-  const res = await instance.get(API_ENDPOINTS.POSTS);
+export async function fetchPosts({
+  limit,
+  offset,
+}: {
+  limit: number;
+  offset: number;
+}): Promise<Post[]> {
+  const res = await instance.get(API_ENDPOINTS.POSTS, {
+    params: { limit, offset },
+  });
 
   // レスポンスデータのバリデーション
   const parsed = PostListResponseSchema.parse(res.data);
