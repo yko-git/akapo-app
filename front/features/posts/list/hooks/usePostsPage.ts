@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 export const usePostsPage = () => {
   const searchParams = useSearchParams();
   const page = searchParams.get("page") || "1";
-  const limit = searchParams.get("limit") || "10";
+  const limit = searchParams.get("limit") || "4";
 
   // ページ番号と表示件数を数値に変換
   const normalizedPage = Math.max(Number(page), 1);
