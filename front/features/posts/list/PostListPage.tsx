@@ -4,12 +4,13 @@ import FilterNav from "./components/FilterNav";
 import PostList from "./components/PostList";
 import StatusInfo from "@/shared/components/statusInfo";
 import { useRequireAuth } from "../shared/hooks";
-import { useCategoryFilter, usePostsFilter } from "./hooks";
+import { useCategoryFilter, usePostsFilter, usePostsPage } from "./hooks";
 import { useEffect } from "react";
 import { fetchComments, fetchPosts } from "@/shared/api/fetchData";
 import Link from "next/link";
 import { jost } from "@/shared/components/font";
 import Image from "next/image";
+import { PageNation } from "@/shared/components/pageNation";
 
 export default function PostListPage() {
   // Storeから必要なデータと関数を取得
@@ -22,6 +23,8 @@ export default function PostListPage() {
   const { category } = useCategoryFilter();
   // 投稿の取得と状態管理
   const { userName } = usePostsFilter();
+  // 現在のページ番号を管理
+  const { page, limit, offset } = usePostsPage();
 
   useEffect(() => {
     if (!isAuthChecked) return;
@@ -31,7 +34,7 @@ export default function PostListPage() {
         setLoading(true);
         setError(null);
 
-        const postsData = await fetchPosts();
+        const postsData = await fetchPosts({ limit, offset });
 
         // 日付でソート
         const sortedPosts = (postsData ?? []).sort(
@@ -89,7 +92,17 @@ export default function PostListPage() {
     }
 
     fetchData();
-  }, [isAuthChecked, category, userName, setPosts, setLoading, setError]);
+  }, [
+    isAuthChecked,
+    category,
+    userName,
+    page,
+    limit,
+    offset,
+    setPosts,
+    setLoading,
+    setError,
+  ]);
 
   if (isLoading) return <StatusInfo status="loading" data={null} />;
   if (error) return <StatusInfo status="service-down" data={null} />;
@@ -147,6 +160,9 @@ export default function PostListPage() {
               </div>
             </div>
             <PostList posts={posts} />
+            <div className="wrapper mt-15">
+              <PageNation page={page} limit={limit} />
+            </div>
           </>
         )}
       </div>
