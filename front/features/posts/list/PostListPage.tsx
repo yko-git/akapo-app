@@ -5,7 +5,7 @@ import PostList from "./components/PostList";
 import StatusInfo from "@/shared/components/statusInfo";
 import { useRequireAuth } from "../shared/hooks";
 import { useCategoryFilter, usePostsFilter, usePostsPage } from "./hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchComments, fetchPosts } from "@/shared/api/fetchData";
 import Link from "next/link";
 import { jost } from "@/shared/components/font";
@@ -25,6 +25,8 @@ export default function PostListPage() {
   const { userName } = usePostsFilter();
   // 現在のページ番号を管理
   const { page, limit, offset } = usePostsPage();
+  // 総投稿数を管理するローカルステート
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     if (!isAuthChecked) return;
@@ -34,10 +36,16 @@ export default function PostListPage() {
         setLoading(true);
         setError(null);
 
-        const postsData = await fetchPosts({ limit, offset });
+        // 投稿データの取得
+        const { posts: fetchedPosts, totalCount } = await fetchPosts({
+          limit,
+          offset,
+        });
+        // 総投稿数をローカルステートにセット
+        setTotalCount(totalCount);
 
         // 日付でソート
-        const sortedPosts = (postsData ?? []).sort(
+        const sortedPosts = (fetchedPosts ?? []).sort(
           (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         );
@@ -161,7 +169,7 @@ export default function PostListPage() {
             </div>
             <PostList posts={posts} />
             <div className="wrapper mt-15">
-              <PageNation page={page} limit={limit} />
+              <PageNation page={page} limit={limit} totalCount={totalCount} />
             </div>
           </>
         )}
