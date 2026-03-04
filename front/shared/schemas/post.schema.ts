@@ -33,6 +33,7 @@ export const PostResponseSchema = z.object({
 // 複数 Post 用
 export const PostListResponseSchema = z.object({
   posts: z.array(PostSchema),
+  totalCount: z.number(),
 });
 
 // NewPost スキーマ
