@@ -11,6 +11,7 @@ import Link from "next/link";
 import { jost } from "@/shared/components/font";
 import Image from "next/image";
 import { PageNation } from "@/shared/components/pageNation";
+import { Post } from "@/shared/schemas";
 
 export default function PostListPage() {
   // Storeから必要なデータと関数を取得
@@ -36,13 +37,20 @@ export default function PostListPage() {
         setLoading(true);
         setError(null);
 
-        // 投稿データの取得
-        const { posts: fetchedPosts, totalCount } = await fetchPosts({
-          limit,
-          offset,
-        });
-        // 総投稿数をローカルステートにセット
-        setTotalCount(totalCount);
+        let fetchedPosts: Post[];
+        let totalCountValue = 0;
+
+        if (category || userName) {
+          const res = await fetchPosts({ limit: 1000, offset: 0 });
+          fetchedPosts = res.posts;
+          totalCountValue = res.totalCount;
+        } else {
+          const res = await fetchPosts({ limit, offset });
+          fetchedPosts = res.posts;
+          totalCountValue = res.totalCount;
+        }
+
+        setTotalCount(totalCountValue);
 
         // コメント情報を追加
         const postsWithComments: PostWithComments[] = await Promise.all(
