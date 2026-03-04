@@ -43,6 +43,7 @@
 ## 9. 使用しているHooks / Stores / API / Schema
 - `usePostStore`: 記事の状態を管理するストア
 - `deletePost`: 記事を削除するAPI関数
+- `Post`: 記事のスキーマ
 
 ## 10. 補足・制約
 - 記事の削除は、ユーザーの確認ダイアログを経て行われます。

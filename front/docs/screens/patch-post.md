@@ -43,8 +43,8 @@
 ## 9. 使用しているHooks / Stores / API / Schema
 - `usePostForm`: 投稿フォームの状態管理と入力値バリデーションを行うカスタムフック
 - `patchPost`: 投稿の更新APIを呼び出す関数
-- `fetchPost`: 既存の投稿情報を取得する関数
-- `uploadImage`: 画像をアップロードする関数
+- `fetchPost`: 既存の投稿情報を取得するAPI
+- `uploadImage`: 画像をアップロードするAPI
 - `NewPostSchema`: 投稿の入力値バリデーションスキーマ
 
 ## 10. 補足・制約
