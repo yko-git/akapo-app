@@ -3,9 +3,11 @@ import Link from "next/link";
 export const PageNation = ({
   page,
   limit,
+  totalCount,
 }: {
   page: number;
   limit: number;
+  totalCount: number;
 }) => {
   return (
     <div>
@@ -13,7 +15,7 @@ export const PageNation = ({
         {page > 1 ? (
           <li>
             <Link
-              href={`/?page=${page - 1}&limit=${limit}`}
+              href={`/?page=${page - 1}`}
               className="text-[#6C9FE0] font-bold"
             >
               前へ
@@ -23,14 +25,18 @@ export const PageNation = ({
           <li className="text-slate-300">前へ</li>
         )}
         <li className="text-[#6C9FE0] font-bold">{page}</li>
-        <li>
-          <Link
-            href={`/?page=${page + 1}&limit=${limit}`}
-            className="text-[#6C9FE0] font-bold"
-          >
-            次へ
-          </Link>
-        </li>
+        {page * limit < totalCount ? (
+          <li>
+            <Link
+              href={`/?page=${page + 1}`}
+              className="text-[#6C9FE0] font-bold"
+            >
+              次へ
+            </Link>
+          </li>
+        ) : (
+          <li className="text-slate-300">次へ</li>
+        )}
       </ul>
     </div>
   );

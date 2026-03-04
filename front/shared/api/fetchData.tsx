@@ -66,14 +66,14 @@ export async function fetchPosts({
 }: {
   limit: number;
   offset: number;
-}): Promise<Post[]> {
+}): Promise<{ posts: Post[]; totalCount: number }> {
   const res = await instance.get(API_ENDPOINTS.POSTS, {
     params: { limit, offset },
   });
 
   // レスポンスデータのバリデーション
   const parsed = PostListResponseSchema.parse(res.data);
-  return parsed.posts;
+  return { posts: parsed.posts, totalCount: parsed.totalCount };
 }
 
 // 記事投稿関数
