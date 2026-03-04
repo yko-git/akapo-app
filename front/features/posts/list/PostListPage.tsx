@@ -168,9 +168,11 @@ export default function PostListPage() {
               </div>
             </div>
             <PostList posts={posts} />
-            <div className="wrapper mt-15">
-              <PageNation page={page} limit={limit} totalCount={totalCount} />
-            </div>
+            {!category && !userName && (
+              <div className="wrapper mt-15">
+                <PageNation page={page} limit={limit} totalCount={totalCount} />
+              </div>
+            )}
           </>
         )}
       </div>
