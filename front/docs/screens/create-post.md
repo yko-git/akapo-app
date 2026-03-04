@@ -7,7 +7,7 @@
 新しい投稿を作成するための画面です。ユーザーは題名、本文、下書き/本番の状態、カテゴリー、画像を入力して投稿を作成できます。
 
 ## 2. URL
-`/posts/new`
+/posts/new
 
 ## 3. フォーム項目・表示要素
 - 題名 (テキスト入力)
@@ -37,20 +37,24 @@
 - 投稿に失敗した場合はエラーメッセージを表示
 
 ## 7. 画面遷移
-- 投稿一覧ページ (`/`) にリンクしている
+- 投稿一覧ページ(/mypage)に遷移する
 
 ## 8. 使用しているコンポーネント
-- `CreatePost`: 投稿作成フォームを表示するコンポーネント
-- `Button`: ボタンコンポーネント
-- `SelectBox`: ドロップダウンリストコンポーネント
+- CreatePost
+- Button
+- SelectBox
 
 ## 9. 使用しているHooks / Stores / API / Schema
-- `usePostForm`: 投稿フォームの状態管理と入力値バリデーションを行うカスタムフック
-- `useRequireAuth`: ユーザーの認証状態を確認するカスタムフック
-- `createPost`: 投稿を作成するAPI関数
-- `NewPost`: 投稿の新規作成に必要な入力値の型定義
+- usePostForm
+- useRequireAuth
+- createPost API
+- NewPost Schema
 
 ## 10. 補足・制約
-- 画像ファイルの圧縮は `browser-image-compression` ライブラリを使用して行っている
-- 画像ファイルのバリデーションは `validateImageFile` 関数を使用して行っている
-- 投稿完了後は `mypage` ページに遷移する
+- 認証済みユーザーのみ投稿できる
+- 画像サイズが大きい場合は圧縮して送信する
+
+<!-- META -->
+- 画面ID: create-post
+- 最終更新日: 2026-03-04
+<!-- /META -->

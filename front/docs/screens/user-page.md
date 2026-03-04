@@ -33,27 +33,25 @@
 - 新しい投稿を作成するためのボタンをクリックすると、投稿作成ページ(/posts/new)に遷移します。
 - ログアウトボタンをクリックすると、ログインページ(/login)に遷移します。
 
-## 8. 使用しているコンポーネント
+## 8. 使用している コンポーネント
 - User
 - Button
 - StatusInfo
 - Image
 - UserPostListPage
 
-## 9. 使用しているHooks / Stores / API / Schema
+## 9. 使用している Hooks / Stores / API / Schema
 - useAuthStore
 - usePostStore
 - useRequireAuth
 - fetchUserData
 - fetchUserPosts
-- UserProfile
-- Post
 
 ## 10. 補足・制約
-- ユーザープロフィールの取得やユーザー投稿の取得は、ログイン状態でのみ行われます。
-- ログアウト後は、ログインページに遷移します。
+- ユーザープロフィールの取得やユーザー投稿の取得は、ログイン状態が確認された後に行われます。
+- ログアウト機能は、ログアウトボタンをクリックすることで実現されます。
 
 <!-- META -->
 - 画面ID: user-page
-- 最終更新日: 2026-02-25
+- 最終更新日: 2026-03-04
 <!-- /META -->
