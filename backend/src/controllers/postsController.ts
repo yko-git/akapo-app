@@ -87,11 +87,8 @@ export const userPosts = async (req: any, res: Response) => {
 // 投稿一覧の取得
 export const getPostsList = async (req: any, res: Response) => {
   try {
-    // ページネーションの計算
-    const offset =
-      req.query.page && req.query.limit
-        ? (Number(req.query.page) - 1) * Number(req.query.limit)
-        : 0;
+    // ページネーションのパラメータを取得
+    const offset = Number(req.query.offset || 0);
     // 投稿の取得
     const posts = await fetchPosts({
       limit: Number(req.query.limit || 100),
@@ -107,11 +104,9 @@ export const getPostsList = async (req: any, res: Response) => {
       updatedPosts.map((post) => updateIconSignedUrls(post.user)),
     );
 
-    // レスポンスの返却
+    // レスポンスに投稿データと総投稿数を含めて返す
     return res.json({
       posts: updatedPosts,
-      limit: Number(req.query.limit || 100),
-      offset: offset,
       totalCount: totalCount,
     });
   } catch (err) {
