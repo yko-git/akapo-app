@@ -44,15 +44,9 @@ export default function PostListPage() {
         // 総投稿数をローカルステートにセット
         setTotalCount(totalCount);
 
-        // 日付でソート
-        const sortedPosts = (fetchedPosts ?? []).sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-        );
-
         // コメント情報を追加
         const postsWithComments: PostWithComments[] = await Promise.all(
-          sortedPosts.map(async (post) => {
+          fetchedPosts.map(async (post) => {
             const comments = await fetchComments({ postId: post.id });
             const now = new Date();
 
