@@ -19,6 +19,7 @@ export async function fetchPosts({
   return Post.findAll({
     limit,
     offset,
+    order: [["createdAt", "DESC"]],
     include: [
       {
         model: Category,
