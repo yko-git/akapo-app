@@ -38,14 +38,14 @@
 - `PatchPost`: 投稿の編集フォームを表示するコンポーネント
 - `Button`: ボタンコンポーネント
 - `SelectBox`: ドロップダウンリストコンポーネント
-- `StatusInfo`: エラー時の表示コンポーネント
+- `StatusInfo`: エラー表示用のコンポーネント
 
 ## 9. 使用しているHooks / Stores / API / Schema
-- `usePostForm`: 投稿フォームの状態管理と入力値バリデーションを行うカスタムフック
+- `usePostForm`: 投稿フォームの状態管理用のカスタムフック
 - `patchPost`: 投稿の更新APIを呼び出す関数
-- `fetchPost`: 既存の投稿情報を取得するAPI
-- `uploadImage`: 画像をアップロードするAPI
-- `NewPostSchema`: 投稿の入力値バリデーションスキーマ
+- `uploadImage`: 画像のアップロードAPIを呼び出す関数
+- `fetchPost`: 既存の投稿情報を取得する関数
+- `NewPostSchema`: 投稿データのバリデーションスキーマ
 
 ## 10. 補足・制約
 - 画像の圧縮処理を行っている
