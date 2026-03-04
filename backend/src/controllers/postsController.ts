@@ -84,6 +84,7 @@ export const userPosts = async (req: any, res: Response) => {
   }
 };
 
+// 投稿一覧の取得
 export const getPostsList = async (req: any, res: Response) => {
   try {
     // ページネーションの計算
@@ -97,6 +98,9 @@ export const getPostsList = async (req: any, res: Response) => {
       offset: offset,
     });
 
+    // 総投稿数の取得
+    const totalCount = await Post.count();
+
     // 署名付きURLの更新とアイコンURLの更新
     const updatedPosts = await updateSignedUrls(posts);
     await Promise.all(
@@ -108,6 +112,7 @@ export const getPostsList = async (req: any, res: Response) => {
       posts: updatedPosts,
       limit: Number(req.query.limit || 100),
       offset: offset,
+      totalCount: totalCount,
     });
   } catch (err) {
     return res.status(500).json({ errorMessage: "投稿取得失敗" });
