@@ -7,7 +7,7 @@
 投稿の編集を行う画面です。既存の投稿の情報を表示し、ユーザーが必要に応じて編集を行うことができます。
 
 ## 2. URL
-`/posts/new/[id]`
+/posts/new/[id]
 
 ## 3. フォーム項目・表示要素
 - タイトル
@@ -35,17 +35,18 @@
 - 「投稿一覧に戻る」ボタンをクリックすると、投稿一覧画面に遷移する
 
 ## 8. 使用しているコンポーネント
-- `PatchPost`: 投稿の編集フォームを表示するコンポーネント
-- `Button`: ボタンコンポーネント
-- `SelectBox`: ドロップダウンリストコンポーネント
-- `StatusInfo`: エラー表示用のコンポーネント
+- PatchPost
+- Button
+- SelectBox
+- StatusInfo
 
 ## 9. 使用しているHooks / Stores / API / Schema
-- `usePostForm`: 投稿フォームの状態管理用のカスタムフック
-- `patchPost`: 投稿の更新APIを呼び出す関数
-- `fetchPost`: 既存の投稿情報を取得する関数
-- `uploadImage`: 画像をアップロードする関数
-- `NewPostSchema`: 投稿データのバリデーションスキーマ
+- usePostForm
+- patchPost
+- uploadImage
+- fetchPost
+- NewPost
+- NewPostSchema
 
 ## 10. 補足・制約
 - 画像の圧縮処理を行っている
