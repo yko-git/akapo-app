@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Post } from "@/schemas/post.schema";
+import { Post } from "../schemas";
 
 // コメント情報を含む拡張Post型
 export type PostWithComments = Post & {
@@ -54,7 +54,7 @@ export const usePostStore = create<PostState>((set) => ({
               commentCount: p.commentCount,
               hasNewComment: p.hasNewComment,
             }
-          : p
+          : p,
       ),
       userPosts: state.userPosts.map((p) => (p.id === id ? post : p)),
       currentPost: state.currentPost?.id === id ? post : state.currentPost,

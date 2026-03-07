@@ -84,16 +84,31 @@ export const userPosts = async (req: any, res: Response) => {
   }
 };
 
+// 投稿一覧の取得
 export const getPostsList = async (req: any, res: Response) => {
   try {
-    const posts = await fetchPosts(req.query);
+    // ページネーションのパラメータを取得
+    const offset = Number(req.query.offset || 0);
+    // 投稿の取得
+    const posts = await fetchPosts({
+      limit: Number(req.query.limit || 100),
+      offset: offset,
+    });
 
+    // 総投稿数の取得
+    const totalCount = await Post.count();
+
+    // 署名付きURLの更新とアイコンURLの更新
     const updatedPosts = await updateSignedUrls(posts);
     await Promise.all(
-      updatedPosts.map((post) => updateIconSignedUrls(post.user))
+      updatedPosts.map((post) => updateIconSignedUrls(post.user)),
     );
 
-    return res.json({ posts: updatedPosts });
+    // レスポンスに投稿データと総投稿数を含めて返す
+    return res.json({
+      posts: updatedPosts,
+      totalCount: totalCount,
+    });
   } catch (err) {
     return res.status(500).json({ errorMessage: "投稿取得失敗" });
   }
@@ -272,7 +287,7 @@ export const getComment = async (req: any, res: Response) => {
 
     // ユーザーの署名付きURLを更新
     const updatedUsers = await Promise.all(
-      users.map((user) => updateIconSignedUrls(user))
+      users.map((user) => updateIconSignedUrls(user)),
     );
 
     return res.json({ comments, users: updatedUsers });

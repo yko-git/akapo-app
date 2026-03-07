@@ -1,10 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { patchPost, uploadImage } from "../api";
-import { NewPost } from "@/schemas/post.schema";
+import { NewPost } from "@/shared/schemas";
 import Button from "@/shared/components/button";
 import SelectBox from "@/shared/components/selectBox";
-import { statusList, categories } from "@/shared/components/data";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import StatusInfo from "@/shared/components/statusInfo";
@@ -14,6 +13,8 @@ import { Controller } from "react-hook-form";
 import { IMAGE_COMPRESSION_OPTIONS } from "@/shared/constants/image";
 import { validateImageFile } from "@/shared/lib/validateImageFile";
 import { fetchPost } from "../../shared/api";
+import { STATUS_LIST } from "@/shared/constants/status";
+import { CATEGORIES_TYPES } from "@/shared/constants/categories";
 
 const PatchPost = ({ id }: { id: number }) => {
   const { register, handleSubmit, control, errors, reset } = usePostForm();
@@ -138,7 +139,7 @@ const PatchPost = ({ id }: { id: number }) => {
           control={control}
           render={({ field }) => (
             <SelectBox
-              options={statusList}
+              options={STATUS_LIST}
               value={field.value}
               onChange={(value) => {
                 if (typeof value === "string") {
@@ -158,7 +159,7 @@ const PatchPost = ({ id }: { id: number }) => {
           control={control}
           render={({ field }) => (
             <SelectBox
-              options={categories}
+              options={CATEGORIES_TYPES}
               multiple
               value={(field.value ?? []).map(String)}
               onChange={(value) => {

@@ -103,7 +103,7 @@ ${screen.name}
 6. バリデーション・エラーハンドリング
 7. 画面遷移
 8. 使用している コンポーネント
-9. 使用している Hooks / Stores
+9. 使用している Hooks / Stores / API / Schema
 10. 補足・制約
 
 <!-- META -->

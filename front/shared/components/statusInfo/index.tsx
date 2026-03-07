@@ -1,4 +1,4 @@
-import { StatusInfoProps } from "@/types";
+import { StatusInfoProps } from "@/shared/types";
 import Image from "next/image";
 
 export default function StatusInfo({ status, data }: StatusInfoProps) {

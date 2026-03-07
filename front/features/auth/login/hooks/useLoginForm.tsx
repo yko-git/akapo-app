@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NewLogin, NewLoginSchema } from "@/schemas/user.schema";
+import { NewLogin, NewLoginSchema } from "@/shared/schemas";
 
 // ログインフォーム用のカスタムフック
 export const useLoginForm = (defaultValues?: Partial<NewLogin>) => {

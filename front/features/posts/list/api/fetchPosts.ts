@@ -1,6 +1,12 @@
 import { fetchPosts as fetchPostsApi } from "@/shared/api/fetchData";
-import { Post } from "@/types";
+import { Post } from "@/shared/types";
 
-export const fetchPosts = (): Promise<Post[]> => {
-  return fetchPostsApi();
+export const fetchPosts = ({
+  limit,
+  offset,
+}: {
+  limit: number;
+  offset: number;
+}) => {
+  return fetchPostsApi({ limit, offset });
 };

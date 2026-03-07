@@ -1,4 +1,4 @@
-import { TagListProps } from "@/types";
+import { TagListProps } from "@/shared/types";
 
 export default function TagList({ categories = [] }: TagListProps) {
   return (

@@ -5,8 +5,8 @@ import { jost } from "@/shared/components/font";
 import TagList from "@/shared/components/tagList";
 import Photo from "@/shared/components/photo";
 import StatusInfo from "@/shared/components/statusInfo";
-import { usePostStore } from "@/stores/usePostStore";
-import { useCommentStore } from "@/stores/useCommentStore";
+import { usePostStore } from "@/shared/stores";
+import { useCommentStore } from "@/shared/stores";
 import Image from "next/image";
 import { useRequireAuth } from "@/features/posts/shared/hooks";
 import { fetchPost } from "../../shared/api";
@@ -94,14 +94,19 @@ export default function PostDetail({ id }: { id: number }) {
             <div className="md:pl-10 tracking-[.2em] relative md:min-w-96">
               <div className="inline-block text-center md:absolute right-0 -top-2 md:mt-0 mt-4">
                 <div className="md:block flex items-center text-center">
-                  <Image
-                    className="inline-block mr-2 rounded-full object-cover md:w-[90px] md:h-[90px] w-[40px] h-[40px]"
-                    src={currentPost.user.iconSignedUrl}
-                    alt=""
-                    width={90}
-                    height={90}
-                    loading="lazy"
-                  />
+                  <Link
+                    href={`/?user=${currentPost.user.name}`}
+                    className="flex items-center"
+                  >
+                    <Image
+                      className="inline-block mr-2 rounded-full object-cover md:w-[90px] md:h-[90px] w-[40px] h-[40px]"
+                      src={currentPost.user.iconSignedUrl}
+                      alt=""
+                      width={90}
+                      height={90}
+                      loading="lazy"
+                    />
+                  </Link>
                   <p className="text-[12px] md:mt-1">{currentPost.user.name}</p>
                 </div>
               </div>

@@ -4,7 +4,7 @@ import Button from "@/shared/components/button";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression";
-import { NewUser } from "@/schemas/user.schema";
+import { NewUser } from "@/shared/schemas";
 import { useUserForm } from "../hooks";
 import { IMAGE_COMPRESSION_OPTIONS } from "@/shared/constants/image";
 import { validateImageFile } from "@/shared/lib/validateImageFile";

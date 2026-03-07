@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import Button from "@/shared/components/button";
-import { useCommentStore } from "@/stores/useCommentStore";
-import { CreateCommentProps } from "@/types";
+import { useCommentStore } from "@/shared/stores";
+import { CreateCommentProps } from "@/shared/types";
 import { createComment } from "../api";
 
 export default function CreateComment({ postId }: CreateCommentProps) {

@@ -56,7 +56,7 @@ export default function RootLayout({
         router.push("/login");
       }
     }
-  }, [pathname]);
+  }, [pathname, router]);
 
   return (
     <html lang="ja">

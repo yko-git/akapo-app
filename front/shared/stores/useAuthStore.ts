@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { UserProfile } from "@/schemas/user.schema";
+import { UserProfile } from "@/shared/schemas";
 
 interface AuthState {
   // データ
