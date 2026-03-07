@@ -43,8 +43,8 @@
 ## 9. 使用しているHooks / Stores / API / Schema
 - `usePostForm`: 投稿フォームの状態管理用のカスタムフック
 - `patchPost`: 投稿の更新APIを呼び出す関数
-- `uploadImage`: 画像のアップロードAPIを呼び出す関数
 - `fetchPost`: 既存の投稿情報を取得する関数
+- `uploadImage`: 画像をアップロードする関数
 - `NewPostSchema`: 投稿データのバリデーションスキーマ
 
 ## 10. 補足・制約
@@ -53,5 +53,5 @@
 
 <!-- META -->
 - 画面ID: patch-post
-- 最終更新日: 2026-03-04
+- 最終更新日: 2026-03-07
 <!-- /META -->
