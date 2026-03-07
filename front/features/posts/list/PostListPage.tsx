@@ -18,7 +18,7 @@ export default function PostListPage() {
   const { posts, setPosts, isLoading, error, setLoading, setError } =
     usePostStore();
 
-  // Storeから必要なデータと関数を取得
+  // 認証状態の管理
   const isAuthChecked = useRequireAuth();
   // URLクエリからカテゴリーフィルターの状態を取得
   const { category } = useCategoryFilter();
@@ -37,9 +37,11 @@ export default function PostListPage() {
         setLoading(true);
         setError(null);
 
+        // 投稿の取得
         let fetchedPosts: Post[];
         let totalCountValue = 0;
 
+        // カテゴリーやユーザーフィルターがある場合は全件取得してからクライアント側でフィルタリング
         if (category || userName) {
           const res = await fetchPosts({ limit: 1000, offset: 0 });
           fetchedPosts = res.posts;
@@ -181,3 +183,4 @@ export default function PostListPage() {
     </>
   );
 }
+// test change for AI docs
