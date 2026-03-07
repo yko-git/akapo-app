@@ -34,8 +34,10 @@ jobs:
       - name: Detect changed files
         id: changed
         run: |
-          git fetch origin develop
-          echo "files=$(git diff --name-only origin/develop...HEAD | tr '\n' ',')" >> $GITHUB_OUTPUT
+          echo "Changed files:"
+          git diff --name-only HEAD~1 HEAD
+
+          echo "files=$(git diff --name-only HEAD~1 HEAD | tr '\n' ',')" >> $GITHUB_OUTPUT
 
       - name: Generate screen docs
         working-directory: front
