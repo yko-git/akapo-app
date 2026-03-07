@@ -31,10 +31,17 @@ jobs:
         working-directory: front
         run: npm ci
 
+      - name: Detect changed files
+        id: changed
+        run: |
+          git fetch origin develop
+          echo "files=$(git diff --name-only origin/develop...HEAD | tr '\n' ',')" >> $GITHUB_OUTPUT
+
       - name: Generate screen docs
         working-directory: front
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CHANGED_FILES: ${{ steps.changed.outputs.files }}
         run: npx tsx scripts/generate-screen-docs.ts
 
       - name: Commit and push docs
