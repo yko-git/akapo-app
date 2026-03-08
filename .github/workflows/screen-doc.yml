@@ -49,12 +49,9 @@ jobs:
       - name: Commit and push docs
         working-directory: front
         run: |
-          if git status --porcelain | grep docs/screens; then
-            git config user.name "github-actions"
-            git config user.email "github-actions@github.com"
-            git add docs/screens
-            git commit -m "docs: update screen specs"
-            git push
-          else
-            echo "No screen doc changes"
-          fi
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add .
+          git commit -m "docs: update screen specs" || echo "No changes"
+          git push
