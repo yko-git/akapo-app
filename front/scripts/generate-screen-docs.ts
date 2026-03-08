@@ -56,9 +56,10 @@ function generateIndexMarkdown(screens: ScreenConfig[]) {
     "",
     "## 画面一覧",
     "",
-    ...screens.map(
-      (screen) => `- [${screen.name}](./${path.basename(screen.output)})`,
-    ),
+    ...screens.map((screen) => {
+      const relativePath = path.relative("front/docs/screens", screen.output);
+      return `- [${screen.name}](${relativePath})`;
+    }),
     "",
     "<!-- META -->",
     "- 自動生成: scripts/generate-screen-docs.ts",
