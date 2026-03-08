@@ -22,18 +22,6 @@ export default function ProfilePage() {
             />
             <div className="pb-12 md:pt-0 pt-7">
               <ul className="text-left text-[#657994] tracking-[.15rem] leading-7 text-sm space-y-4">
-                <li className="flex">
-                  <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline block md:mr-6 mr-4">
-                    職業
-                  </span>
-                  フロントエンドエンジニア
-                </li>
-                <li className="flex">
-                  <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline block md:mr-6 mr-4">
-                    住まい
-                  </span>
-                  東京都
-                </li>
                 <li className="md:flex">
                   <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline block md:mr-6 mr-0">
                     紹　介
