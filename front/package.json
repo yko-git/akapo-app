@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest"
+    "test": "vitest",
+    "docs:generate": "tsx scripts/generate-screen-docs.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.72.1",
