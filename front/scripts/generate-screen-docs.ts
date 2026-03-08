@@ -57,7 +57,7 @@ function generateIndexMarkdown(screens: ScreenConfig[]) {
     "## 画面一覧",
     "",
     ...screens.map((screen) => {
-      const relativePath = path.relative("front/docs/screens", screen.output);
+      const relativePath = path.relative("docs/screens", screen.output);
       return `- [${screen.name}](${relativePath})`;
     }),
     "",
