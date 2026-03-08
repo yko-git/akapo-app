@@ -69,8 +69,28 @@ function generateIndexMarkdown(screens: ScreenConfig[]) {
   return lines.join("\n");
 }
 
+const changedFiles =
+  process.env.CHANGED_FILES?.split(",").filter(Boolean) ?? [];
+
+console.log("Changed files from CI:", changedFiles);
+
 async function run() {
-  for (const screen of screens) {
+  let targetScreens = screens;
+
+  if (changedFiles.length > 0) {
+    targetScreens = screens.filter((screen) =>
+      screen.files.some((file) =>
+        changedFiles.some((changed) => changed.includes(file)),
+      ),
+    );
+  }
+
+  console.log(
+    "Screens to generate:",
+    targetScreens.map((s) => s.id),
+  );
+
+  for (const screen of targetScreens) {
     console.log(`\n📄 Generating: ${screen.id}`);
 
     // ソースコード取得
