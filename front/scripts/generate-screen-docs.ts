@@ -73,7 +73,7 @@ function generateIndexMarkdown(screens: ScreenConfig[]) {
 
 // GitHub Actions から変更されたファイルのリストを受け取る（ローカル実行時は空配列）
 const changedFiles =
-  process.env.CHANGED_FILES?.split(",").filter(Boolean) ?? [];
+  process.env.CHANGED_FILES?.split(/\r?\n|,/).filter(Boolean) ?? [];
 
 console.log("Changed files from CI:", changedFiles);
 
@@ -81,13 +81,15 @@ console.log("Changed files from CI:", changedFiles);
 async function run() {
   // 対象スクリーンの絞り込み
   let targetScreens = screens;
+  // 変更されたファイルがある場合は、それらのファイルを含むスクリーンのみを対象とする
+  const normalizedChangedFiles = changedFiles.map((file) =>
+    file.replace(/^front\//, ""),
+  );
 
   // 変更されたファイルがある場合は、それらのファイルを含むスクリーンのみを対象とする
   if (changedFiles.length > 0) {
     targetScreens = screens.filter((screen) =>
-      screen.files.some((file) =>
-        changedFiles.some((changed) => changed.includes(file)),
-      ),
+      screen.files.some((file) => normalizedChangedFiles.includes(file)),
     );
   }
 
