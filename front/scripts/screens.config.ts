@@ -13,11 +13,11 @@ export const screens: ScreenConfig[] = [
       "app/signup/page.tsx",
       "features/auth/register/CreateUserPage.tsx",
       "features/auth/register/components/CreateUser.tsx",
-      "features/auth/register/hooks/useUserForm.tsx",
+      "features/auth/register/hooks/useUserForm.ts",
       "features/auth/register/api/createUser.ts",
       "features/auth/register/api/index.ts",
     ],
-    output: "docs/screens/register.md",
+    output: "features/auth/docs/register.md",
   },
 
   {
@@ -31,7 +31,7 @@ export const screens: ScreenConfig[] = [
       "features/auth/login/api/createLogin.ts",
       "features/auth/login/api/index.ts",
     ],
-    output: "docs/screens/login.md",
+    output: "features/auth/docs/login.md",
   },
 
   {
@@ -41,11 +41,11 @@ export const screens: ScreenConfig[] = [
       "app/posts/new/page.tsx",
       "features/posts/create/CreatePostPage.tsx",
       "features/posts/create/components/CreatePost.tsx",
-      "features/posts/shared/hooks/usePostForm.tsx",
+      "features/posts/shared/hooks/usePostForm.ts",
       "features/posts/create/api/createPost.ts",
       "features/posts/create/api/index.ts",
     ],
-    output: "docs/screens/create-post.md",
+    output: "features/posts/docs/create-post.md",
   },
   {
     id: "patch-post",
@@ -54,13 +54,13 @@ export const screens: ScreenConfig[] = [
       "app/posts/new/[id]/page.tsx",
       "features/posts/patch/PatchPostPage.tsx",
       "features/posts/patch/components/PatchPost.tsx",
-      "features/posts/shared/hooks/usePostForm.tsx",
+      "features/posts/shared/hooks/usePostForm.ts",
       "features/posts/patch/api/patchPost.ts",
       "features/posts/shared/api/fetchPost.ts",
       "features/posts/patch/api/uploadImage.ts",
       "features/posts/patch/api/index.ts",
     ],
-    output: "docs/screens/patch-post.md",
+    output: "features/posts/docs/patch-post.md",
   },
   {
     id: "post-detail",
@@ -69,11 +69,11 @@ export const screens: ScreenConfig[] = [
       "app/posts/[id]/page.tsx",
       "features/posts/detail/PostDetailPage.tsx",
       "features/posts/detail/components/PostDetail.tsx",
-      "features/posts/shared/hooks/useRequireAuth.tsx",
+      "features/posts/shared/hooks/useRequireAuth.ts",
       "features/posts/shared/api/fetchPost.ts",
       "features/posts/shared/api/fetchComments.ts",
     ],
-    output: "docs/screens/post-detail.md",
+    output: "features/posts/docs/post-detail.md",
   },
 
   {
@@ -85,14 +85,14 @@ export const screens: ScreenConfig[] = [
       "features/posts/list/components/PostList.tsx",
       "features/posts/list/api/fetchPosts.ts",
       "features/posts/shared/api/fetchComments.ts",
-      "features/posts/shared/hooks/useRequireAuth.tsx",
+      "features/posts/shared/hooks/useRequireAuth.ts",
     ],
-    output: "docs/screens/post-list.md",
+    output: "features/posts/docs/post-list.md",
   },
 
   {
     id: "user-page",
-    name: "ユーザー投稿一覧",
+    name: "ユーザーページ",
     files: [
       "app/mypage/page.tsx",
       "features/users/mypage/UsersPage.tsx",
@@ -100,7 +100,7 @@ export const screens: ScreenConfig[] = [
       "features/users/mypage/api/fetchUserData.ts",
       "features/users/mypage/api/fetchUserPosts.ts",
     ],
-    output: "docs/screens/user-page.md",
+    output: "features/users/docs/user-page.md",
   },
 
   {
@@ -112,20 +112,20 @@ export const screens: ScreenConfig[] = [
       "features/posts/user-list/components/UserPostList.tsx",
       "features/posts/user-list/api/deletePosts.ts",
     ],
-    output: "docs/screens/user-post-list.md",
+    output: "features/posts/docs/user-post-list.md",
   },
 
   {
     id: "about",
     name: "About",
     files: ["app/about/page.tsx", "features/about/AboutPage.tsx"],
-    output: "docs/screens/about.md",
+    output: "features/about/docs/about.md",
   },
 
   {
     id: "profile",
     name: "Profile",
     files: ["app/profile/page.tsx", "features/profile/ProfilePage.tsx"],
-    output: "docs/screens/profile.md",
+    output: "features/profile/docs/profile.md",
   },
 ];

@@ -21,7 +21,7 @@ const opts: StrategyOptions = {
 passport.use(
   new JWTStrategy(opts, (jwtPayload: any, done: any) => {
     done(null, jwtPayload);
-  })
+  }),
 );
 
 // パスワードのハッシュ化
@@ -46,7 +46,7 @@ passport.use(
       if (user) {
         const userMatch = await bcrypt.compare(
           `${password}${process.env.MYPEPPER}`,
-          user.dataValues.authorizeToken
+          user.dataValues.authorizeToken,
         );
         if (userMatch) {
           const {
@@ -71,7 +71,7 @@ passport.use(
             },
             {
               message: "ユーザーID・パスワードが正しく認証されました。",
-            }
+            },
           );
         }
       } else {
@@ -79,8 +79,8 @@ passport.use(
           message: "認証情報と一致するレコードがありません。",
         });
       }
-    }
-  )
+    },
+  ),
 );
 
 export default passport;

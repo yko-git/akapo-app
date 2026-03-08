@@ -10,7 +10,7 @@
 - [投稿編集](./patch-post.md)
 - [投稿詳細](./post-detail.md)
 - [投稿一覧](./post-list.md)
-- [ユーザー投稿一覧](./user-page.md)
+- [ユーザーページ](./user-page.md)
 - [ユーザー投稿一覧](./user-post-list.md)
 - [About](./about.md)
 - [Profile](./profile.md)
