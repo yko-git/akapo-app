@@ -31,21 +31,27 @@ jobs:
         working-directory: front
         run: npm ci
 
+      - name: Detect changed files
+        id: changed
+        run: |
+          echo "Changed files:"
+          git diff --name-only HEAD~1 HEAD
+
+          echo "files=$(git diff --name-only HEAD~1 HEAD | tr '\n' ',')" >> $GITHUB_OUTPUT
+
       - name: Generate screen docs
         working-directory: front
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CHANGED_FILES: ${{ steps.changed.outputs.files }}
         run: npx tsx scripts/generate-screen-docs.ts
 
       - name: Commit and push docs
         working-directory: front
         run: |
-          if git status --porcelain | grep docs/screens; then
-            git config user.name "github-actions"
-            git config user.email "github-actions@github.com"
-            git add docs/screens
-            git commit -m "docs: update screen specs"
-            git push
-          else
-            echo "No screen doc changes"
-          fi
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add .
+          git commit -m "docs: update screen specs" || echo "No changes"
+          git push

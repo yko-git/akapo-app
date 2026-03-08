@@ -40,7 +40,7 @@ export default function ProfilePage() {
                   バックエンドには AWS（EC2 / RDS / S3）や Cloudflare
                   を活用しています。
                   <br />
-                  まだまだ開発途中のため、頻繁にアップデートを行っています！
+                  開発途中のため、頻繁にアップデートを行っています！
                 </li>
               </ul>
             </div>

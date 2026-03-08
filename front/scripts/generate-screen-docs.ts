@@ -1,4 +1,4 @@
-// screens.config.ts を唯一の入力としてReact 実装 → 画面仕様書（Markdown）を自動生成するバッチ
+// 画面仕様ドキュメント自動生成スクリプト
 
 // ローカル実行 / CI のどちらでもANTHROPIC_API_KEY を同じコードで扱えるようにする
 import dotenv from "dotenv";
@@ -22,18 +22,19 @@ const anthropic = new Anthropic({
 // 日付生成
 const today = new Date().toISOString().split("T")[0];
 
-// 「画面に紐づく複数ファイルを、Claude が読みやすい“教材”形式に整形する関数」
+// React コンポーネントのコードを読み込む関数
 function readSourceFiles(files: string[]) {
   return files
     .map((filePath) => {
+      // ファイルの絶対パスを生成
       const absolutePath = path.resolve(process.cwd(), filePath);
 
-      // 開発途中でファイル構成が揺れても CIを落とさない
+      // ファイルが存在しない場合は警告を出してスキップ
       if (!fs.existsSync(absolutePath)) {
         console.warn(`⚠️ File not found: ${filePath}`);
         return null;
       }
-
+      // React コンポーネントのコードを読み込む
       const code = fs.readFileSync(absolutePath, "utf-8");
       return `
 ### ${filePath}
@@ -55,9 +56,10 @@ function generateIndexMarkdown(screens: ScreenConfig[]) {
     "",
     "## 画面一覧",
     "",
-    ...screens.map(
-      (screen) => `- [${screen.name}](./${path.basename(screen.output)})`,
-    ),
+    ...screens.map((screen) => {
+      const relativePath = path.relative("docs/screens", screen.output);
+      return `- [${screen.name}](${relativePath})`;
+    }),
     "",
     "<!-- META -->",
     "- 自動生成: scripts/generate-screen-docs.ts",
@@ -69,8 +71,35 @@ function generateIndexMarkdown(screens: ScreenConfig[]) {
   return lines.join("\n");
 }
 
+// GitHub Actions から変更されたファイルのリストを受け取る（ローカル実行時は空配列）
+const changedFiles =
+  process.env.CHANGED_FILES?.split(/\r?\n|,/).filter(Boolean) ?? [];
+
+console.log("Changed files from CI:", changedFiles);
+
+// メイン処理
 async function run() {
-  for (const screen of screens) {
+  // 対象スクリーンの絞り込み
+  let targetScreens = screens;
+  // 変更されたファイルがある場合は、それらのファイルを含むスクリーンのみを対象とする
+  const normalizedChangedFiles = changedFiles.map((file) =>
+    file.replace(/^front\//, ""),
+  );
+
+  // 変更されたファイルがある場合は、それらのファイルを含むスクリーンのみを対象とする
+  if (changedFiles.length > 0) {
+    targetScreens = screens.filter((screen) =>
+      screen.files.some((file) => normalizedChangedFiles.includes(file)),
+    );
+  }
+
+  console.log(
+    "Screens to generate:",
+    targetScreens.map((s) => s.id),
+  );
+
+  // screenごとに処理を実行
+  for (const screen of targetScreens) {
     console.log(`\n📄 Generating: ${screen.id}`);
 
     // ソースコード取得
@@ -80,6 +109,7 @@ async function run() {
       continue;
     }
 
+    // プロンプト生成
     const prompt = `
 あなたはシニアなフロントエンドエンジニアです。
 以下の React コンポーネントを解析し、
@@ -117,6 +147,7 @@ ${sourceCode}
 
     console.log("📨 Sending request to Claude...");
 
+    // Claude API にプロンプトを送信して、画面仕様ドキュメントを生成
     const response = await anthropic.messages.create({
       model: "claude-3-haiku-20240307",
       max_tokens: 2000,
@@ -136,7 +167,7 @@ ${sourceCode}
       .join("\n");
 
     const outputPath = path.resolve(process.cwd(), screen.output);
-    // ファイル出力
+    // Markdown ファイルを書き出す（既存ファイルは完全に上書き）
     fs.mkdirSync(path.dirname(outputPath), { recursive: true }); // 初回生成でも落ちない
     fs.writeFileSync(outputPath, markdown); // 既存ファイルは完全に上書き
 
@@ -153,6 +184,7 @@ ${sourceCode}
   console.log("📘 Screen index updated: docs/screens/index.md");
 }
 
+// エラーがあればキャッチしてログに出す
 run().catch((err) => {
   console.error("❌ Failed to generate screen docs");
   console.error(err);
