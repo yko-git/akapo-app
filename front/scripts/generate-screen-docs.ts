@@ -1,6 +1,6 @@
 // 画面仕様ドキュメント自動生成スクリプト
 
-// ローカル実行 / CI のどちらでもANTHROPIC_API_KEY を同じコードで扱えるようにする
+// 環境変数の読み込み
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -9,7 +9,7 @@ import path from "path";
 import Anthropic from "@anthropic-ai/sdk";
 import { ScreenConfig, screens } from "./screens.config";
 
-// 「設定ミスなのに黙って失敗」を防ぐ
+// 環境変数の検証
 if (!process.env.ANTHROPIC_API_KEY) {
   throw new Error("ANTHROPIC_API_KEY is not set");
 }
@@ -47,7 +47,7 @@ ${code}
     .join("\n");
 }
 
-// すべての画面生成が終わったあと、index.md も更新する
+// 画面仕様のインデックスを生成する関数
 function generateIndexMarkdown(screens: ScreenConfig[]) {
   const lines = [
     "# 画面仕様一覧",
@@ -92,11 +92,6 @@ async function run() {
       screen.files.some((file) => normalizedChangedFiles.includes(file)),
     );
   }
-
-  console.log(
-    "Screens to generate:",
-    targetScreens.map((s) => s.id),
-  );
 
   // screenごとに処理を実行
   for (const screen of targetScreens) {
@@ -145,8 +140,6 @@ ${screen.name}
 ${sourceCode}
 `;
 
-    console.log("📨 Sending request to Claude...");
-
     // Claude API にプロンプトを送信して、画面仕様ドキュメントを生成
     const response = await anthropic.messages.create({
       model: "claude-3-haiku-20240307",
@@ -170,18 +163,14 @@ ${sourceCode}
     // Markdown ファイルを書き出す（既存ファイルは完全に上書き）
     fs.mkdirSync(path.dirname(outputPath), { recursive: true }); // 初回生成でも落ちない
     fs.writeFileSync(outputPath, markdown); // 既存ファイルは完全に上書き
-
-    console.log(`✅ Screen spec updated: ${screen.output}`);
   }
 
-  // すべての画面生成が終わったあと
+  // すべての画面生成が終わったあと、index.md も更新する
   const indexPath = path.resolve(process.cwd(), "docs/screens/index.md");
   const indexMarkdown = generateIndexMarkdown(screens);
 
   fs.mkdirSync(path.dirname(indexPath), { recursive: true });
   fs.writeFileSync(indexPath, indexMarkdown);
-
-  console.log("📘 Screen index updated: docs/screens/index.md");
 }
 
 // エラーがあればキャッチしてログに出す
