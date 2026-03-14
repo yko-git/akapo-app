@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { UserProfile } from "@/shared/schemas";
+import { devtools } from "zustand/middleware";
 
 interface AuthState {
   // データ
@@ -23,19 +24,26 @@ const initialState = {
   error: null,
 };
 
-export const useAuthStore = create<AuthState>((set) => ({
-  ...initialState,
+export const useAuthStore = create<AuthState>()(
+  devtools(
+    (set) => ({
+      ...initialState,
 
-  setUserProfile: (profile) => set({ userProfile: profile }),
+      setUserProfile: (profile) =>
+        set({ userProfile: profile }, false, "auth/setUserProfile"),
 
-  setLoading: (loading) => set({ isLoading: loading }),
+      setLoading: (loading) =>
+        set({ isLoading: loading }, false, "auth/setLoading"),
 
-  setError: (error) => set({ error }),
+      setError: (error) => set({ error }, false, "auth/setError"),
 
-  logout: () => {
-    localStorage.removeItem("token");
-    set({ userProfile: null });
-  },
+      logout: () => {
+        localStorage.removeItem("token");
+        set({ userProfile: null }, false, "auth/logout");
+      },
 
-  reset: () => set(initialState),
-}));
+      reset: () => set(initialState, false, "auth/reset"),
+    }),
+    { name: "AuthStore" },
+  ),
+);
