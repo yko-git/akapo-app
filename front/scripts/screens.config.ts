@@ -1,6 +1,8 @@
 export type ScreenConfig = {
   id: string;
   name: string;
+  route: string;
+  screenshotRoute?: string;
   files: string[];
   output: string;
 };
@@ -9,6 +11,7 @@ export const screens: ScreenConfig[] = [
   {
     id: "register",
     name: "新規ユーザー作成",
+    route: "/signup",
     files: [
       "app/signup/page.tsx",
       "features/auth/register/CreateUserPage.tsx",
@@ -23,6 +26,7 @@ export const screens: ScreenConfig[] = [
   {
     id: "login",
     name: "ログイン",
+    route: "/login",
     files: [
       "app/login/page.tsx",
       "features/auth/login/LoginPage.tsx",
@@ -37,6 +41,7 @@ export const screens: ScreenConfig[] = [
   {
     id: "create-post",
     name: "投稿作成",
+    route: "/posts/new",
     files: [
       "app/posts/new/page.tsx",
       "features/posts/create/CreatePostPage.tsx",
@@ -50,6 +55,8 @@ export const screens: ScreenConfig[] = [
   {
     id: "patch-post",
     name: "投稿編集",
+    route: "/posts/new/[id]",
+    screenshotRoute: "/posts/new/1",
     files: [
       "app/posts/new/[id]/page.tsx",
       "features/posts/patch/PatchPostPage.tsx",
@@ -65,6 +72,8 @@ export const screens: ScreenConfig[] = [
   {
     id: "post-detail",
     name: "投稿詳細",
+    route: "/posts/[id]",
+    screenshotRoute: "/posts/1",
     files: [
       "app/posts/[id]/page.tsx",
       "features/posts/detail/PostDetailPage.tsx",
@@ -79,6 +88,7 @@ export const screens: ScreenConfig[] = [
   {
     id: "post-list",
     name: "投稿一覧",
+    route: "/",
     files: [
       "app/page.tsx",
       "features/posts/list/PostListPage.tsx",
@@ -93,6 +103,7 @@ export const screens: ScreenConfig[] = [
   {
     id: "user-page",
     name: "ユーザーページ",
+    route: "/mypage",
     files: [
       "app/mypage/page.tsx",
       "features/users/mypage/UsersPage.tsx",
@@ -106,6 +117,7 @@ export const screens: ScreenConfig[] = [
   {
     id: "user-post-list",
     name: "ユーザー投稿一覧",
+    route: "/mypage",
     files: [
       "app/mypage/page.tsx",
       "features/posts/user-list/UserPostListPage.tsx",
@@ -118,6 +130,7 @@ export const screens: ScreenConfig[] = [
   {
     id: "about",
     name: "About",
+    route: "/about",
     files: ["app/about/page.tsx", "features/about/AboutPage.tsx"],
     output: "features/about/docs/about.md",
   },
@@ -125,6 +138,7 @@ export const screens: ScreenConfig[] = [
   {
     id: "profile",
     name: "Profile",
+    route: "/profile",
     files: ["app/profile/page.tsx", "features/profile/ProfilePage.tsx"],
     output: "features/profile/docs/profile.md",
   },
