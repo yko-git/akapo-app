@@ -121,7 +121,7 @@ ${screen.name}
 
 # 必須構成
 1. 画面概要
-2. ![screen](../docs/screens/${screen.id}.png)
+2. ![screen](../../../docs/screens/${screen.id}.png)
 3. URL
 4. フォーム項目・表示要素
 5. 初期表示・デフォルト値

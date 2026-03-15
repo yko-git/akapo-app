@@ -6,7 +6,7 @@
 ## 1. 画面概要
 この画面は、新しい投稿を作成するためのページです。ユーザーは題名、本文、下書き/本番の状態、カテゴリー、画像を入力し、投稿を作成することができます。
 
-## 2. ![screen](../docs/screens/create-post.png)
+## 2. ![screen](../../../docs/screens/create-post.png)
 
 ## 3. URL
 /posts/new
@@ -33,26 +33,26 @@
 
 ## 7. バリデーション・エラーハンドリング
 - 題名と本文は必須入力
-- 画像ファイルのサイズが制限を超えている場合はエラーを表示
+- 画像ファイルのサイズと形式が正しいことを確認
+- 入力エラーがある場合はエラーメッセージを表示
 - 投稿に失敗した場合はエラーメッセージを表示
 
 ## 8. 画面遷移
-- 投稿完了後、投稿一覧ページ(/mypage)に遷移する
-- 「投稿一覧に戻る」ボタンをクリックすると、投稿一覧ページ(/mypage)に遷移する
+- 投稿一覧ページ(/mypage)に遷移する
 
 ## 9. 使用しているコンポーネント
 - Button
 - SelectBox
 
 ## 10. 使用しているHooks / Stores / API / Schema
-- usePostForm (カスタムフック)
-- useRequireAuth (カスタムフック)
-- createPost (API)
-- NewPost (Schema)
+- usePostForm
+- useRequireAuth
+- createPost API
+- NewPost Schema
 
 ## 11. 補足・制約
 - 画像ファイルは圧縮処理を行う
-- 認証済みユーザーのみ投稿できる
+- 投稿完了までに時間がかかる場合があるため、ユーザーに待機を促す
 
 <!-- META -->
 - 画面ID: create-post
