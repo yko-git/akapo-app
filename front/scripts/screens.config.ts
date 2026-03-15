@@ -56,7 +56,7 @@ export const screens: ScreenConfig[] = [
     id: "patch-post",
     name: "投稿編集",
     route: "/posts/new/[id]",
-    screenshotRoute: "/posts/new/1",
+    screenshotRoute: "/posts/new/65",
     files: [
       "app/posts/new/[id]/page.tsx",
       "features/posts/patch/PatchPostPage.tsx",
@@ -73,7 +73,7 @@ export const screens: ScreenConfig[] = [
     id: "post-detail",
     name: "投稿詳細",
     route: "/posts/[id]",
-    screenshotRoute: "/posts/1",
+    screenshotRoute: "/posts/65",
     files: [
       "app/posts/[id]/page.tsx",
       "features/posts/detail/PostDetailPage.tsx",
