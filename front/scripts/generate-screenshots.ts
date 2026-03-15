@@ -1,6 +1,7 @@
 import { chromium } from "playwright";
 import { screens } from "./screens.config";
 import fs from "fs";
+import path from "path";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -8,7 +9,8 @@ const BASE_URL = "http://localhost:3000";
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
-  fs.mkdirSync("docs/screens", { recursive: true });
+  const outputDir = path.resolve(process.cwd(), "docs/screens");
+  fs.mkdirSync(outputDir, { recursive: true });
 
   // ログイン
   await page.goto(BASE_URL + "/login");
@@ -18,7 +20,6 @@ const BASE_URL = "http://localhost:3000";
 
   await page.getByRole("button", { name: "ログイン" }).click();
 
-  // ログイン完了待機
   await page.waitForURL("**/mypage");
 
   await page.waitForLoadState("networkidle");
@@ -35,14 +36,14 @@ const BASE_URL = "http://localhost:3000";
       waitUntil: "networkidle",
     });
 
-    const path = `docs/screens/${screen.id}.png`;
+    const filePath = path.join(outputDir, `${screen.id}.png`);
 
     await page.screenshot({
-      path,
+      path: filePath,
       fullPage: true,
     });
 
-    console.log("generated:", path);
+    console.log("generated:", filePath);
   }
 
   await browser.close();
