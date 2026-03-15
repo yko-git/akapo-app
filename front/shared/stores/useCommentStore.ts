@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { Comment } from "@/shared/schemas";
+import { devtools } from "zustand/middleware";
 
 interface CommentState {
   // 現在の投稿のコメントだけ管理
@@ -25,21 +26,35 @@ const initialState = {
   error: null,
 };
 
-export const useCommentStore = create<CommentState>((set) => ({
-  ...initialState,
-  setComments: (comments) => set({ comments }),
+export const useCommentStore = create<CommentState>()(
+  devtools(
+    (set) => ({
+      ...initialState,
+      setComments: (comments) => set({ comments }, false, "comment/setComment"),
 
-  addComment: (comment) =>
-    set((state) => ({ comments: [...state.comments, comment] })),
+      addComment: (comment) =>
+        set(
+          (state) => ({ comments: [...state.comments, comment] }),
+          false,
+          "comment/addComment",
+        ),
 
-  removeComment: (id) =>
-    set((state) => ({
-      comments: state.comments.filter((comment) => comment.id !== id),
-    })),
+      removeComment: (id) =>
+        set(
+          (state) => ({
+            comments: state.comments.filter((comment) => comment.id !== id),
+          }),
+          false,
+          "comment/removeComment",
+        ),
 
-  setLoading: (loading) => set({ isLoading: loading }),
+      setLoading: (loading) =>
+        set({ isLoading: loading }, false, "comment/setLoading"),
 
-  setError: (error) => set({ error }),
+      setError: (error) => set({ error }, false, "comment/setError"),
 
-  reset: () => set(initialState),
-}));
+      reset: () => set(initialState, false, "comment/reset"),
+    }),
+    { name: "CommentStore" },
+  ),
+);

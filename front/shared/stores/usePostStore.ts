@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { Post } from "../schemas";
+import { devtools } from "zustand/middleware";
 
 // コメント情報を含む拡張Post型
 export type PostWithComments = Post & {
@@ -37,39 +38,57 @@ const initialState = {
   error: null,
 };
 
-export const usePostStore = create<PostState>((set) => ({
-  ...initialState,
-  setPosts: (posts) => set({ posts }),
+export const usePostStore = create<PostState>()(
+  devtools(
+    (set) => ({
+      ...initialState,
+      setPosts: (posts) => set({ posts }, false, "post/setPosts"),
 
-  setCurrentPost: (post) => set({ currentPost: post }),
+      setCurrentPost: (post) =>
+        set({ currentPost: post }, false, "post/setCurrentPost"),
 
-  setUserPosts: (posts) => set({ userPosts: posts }),
+      setUserPosts: (posts) =>
+        set({ userPosts: posts }, false, "post/setUserPosts"),
 
-  updatePost: (id, post) =>
-    set((state) => ({
-      posts: state.posts.map((p) =>
-        p.id === id
-          ? {
-              ...post,
-              commentCount: p.commentCount,
-              hasNewComment: p.hasNewComment,
-            }
-          : p,
-      ),
-      userPosts: state.userPosts.map((p) => (p.id === id ? post : p)),
-      currentPost: state.currentPost?.id === id ? post : state.currentPost,
-    })),
+      updatePost: (id, post) =>
+        set(
+          (state) => ({
+            posts: state.posts.map((p) =>
+              p.id === id
+                ? {
+                    ...post,
+                    commentCount: p.commentCount,
+                    hasNewComment: p.hasNewComment,
+                  }
+                : p,
+            ),
+            userPosts: state.userPosts.map((p) => (p.id === id ? post : p)),
+            currentPost:
+              state.currentPost?.id === id ? post : state.currentPost,
+          }),
+          false,
+          "post/updatePost",
+        ),
 
-  removePost: (id) =>
-    set((state) => ({
-      posts: state.posts.filter((p) => p.id !== id),
-      userPosts: state.userPosts.filter((p) => p.id !== id),
-      currentPost: state.currentPost?.id === id ? null : state.currentPost,
-    })),
+      removePost: (id) =>
+        set(
+          (state) => ({
+            posts: state.posts.filter((p) => p.id !== id),
+            userPosts: state.userPosts.filter((p) => p.id !== id),
+            currentPost:
+              state.currentPost?.id === id ? null : state.currentPost,
+          }),
+          false,
+          "post/removePost",
+        ),
 
-  setLoading: (loading) => set({ isLoading: loading }),
+      setLoading: (loading) =>
+        set({ isLoading: loading }, false, "post/setLoading"),
 
-  setError: (error) => set({ error }),
+      setError: (error) => set({ error }, false, "post/setError"),
 
-  reset: () => set(initialState),
-}));
+      reset: () => set(initialState, false, "post/reset"),
+    }),
+    { name: "PostStore" },
+  ),
+);
