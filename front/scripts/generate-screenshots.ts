@@ -10,6 +10,22 @@ const BASE_URL = "http://localhost:3000";
 
   fs.mkdirSync("docs/screens", { recursive: true });
 
+  // ログイン
+  await page.goto(BASE_URL + "/login");
+
+  await page.getByLabel("ログインID").fill("test");
+  await page.getByLabel("パスワード").fill("ps");
+
+  await page.getByRole("button", { name: "ログイン" }).click();
+
+  // ログイン完了待機
+  await page.waitForURL("**/mypage");
+
+  await page.waitForLoadState("networkidle");
+  await page.waitForTimeout(500);
+
+  console.log("✅ logged in");
+
   for (const screen of screens) {
     if (!screen.route) continue;
 
