@@ -6,7 +6,7 @@
 ## 1. 画面概要
 ユーザーが投稿した記事の一覧を表示する画面です。記事のタイトル、本文、画像、カテゴリーを表示し、編集と削除の機能を提供します。
 
-## 2. ![screen](../../docs/screens/user-post-list.png)
+## 2. ![screen](../docs/screens/user-post-list.png)
 
 ## 3. URL
 `/mypage`
