@@ -45,10 +45,15 @@ const LoginForm = () => {
         id="loginForm"
       >
         <div>
-          <label className="font-semibold text-lg tracking-widest">
+          <label
+            htmlFor="loginId"
+            className="font-semibold text-lg tracking-widest"
+          >
             ログインID
           </label>
+
           <input
+            id="loginId"
             type="text"
             {...register("loginId")}
             className="border rounded p-2 w-full mt-2"
@@ -60,10 +65,15 @@ const LoginForm = () => {
           )}
         </div>
         <div>
-          <label className="font-semibold text-lg tracking-widest">
+          <label
+            htmlFor="password"
+            className="font-semibold text-lg tracking-widest"
+          >
             パスワード
           </label>
+
           <input
+            id="password"
             type="password"
             {...register("password")}
             className="border rounded p-2 w-full mt-2"
