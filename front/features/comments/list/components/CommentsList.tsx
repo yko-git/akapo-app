@@ -78,7 +78,7 @@ export default function CommentsList({ postUserId, postId }: CommentListProps) {
                   }`}
                 >
                   {comment.body}
-                  {comments && (
+                  {comments && userComment && (
                     <div
                       className="absolute right-2 bottom-2 p-1 border-1 border border-gray-300"
                       onClick={() => handleDelete(comment.id)}
