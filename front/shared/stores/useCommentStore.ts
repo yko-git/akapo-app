@@ -30,7 +30,7 @@ export const useCommentStore = create<CommentState>()(
   devtools(
     (set) => ({
       ...initialState,
-      setComments: (comments) => set({ comments }, false, "comment/setComment"),
+      setComments: (comments) => set({ comments }, false, "comment/setComments"),
 
       addComment: (comment) =>
         set(
