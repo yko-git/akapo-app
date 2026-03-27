@@ -17,5 +17,5 @@
 
 <!-- META -->
 - 自動生成: scripts/generate-screen-docs.ts
-- 最終更新日: 2026-03-24
+- 最終更新日: 2026-03-27
 <!-- /META -->
