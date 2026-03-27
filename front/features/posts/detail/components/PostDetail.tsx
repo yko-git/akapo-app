@@ -57,9 +57,9 @@ export default function PostDetail({ id }: PostDetailProps) {
     };
   }, [id, isAuthChecked, setCurrentPost, setLoading, setError, setComments]);
 
-  if (isLoading) return <StatusInfo status="loading" data={null} />;
-  if (error) return <StatusInfo status="service-down" data={null} />;
-  if (!currentPost) return <StatusInfo status="service-down" data={null} />;
+  if (isLoading) return <StatusInfo status="loading" />;
+  if (error) return <StatusInfo status="service-down" />;
+  if (!currentPost) return <StatusInfo status="service-down" />;
 
   return (
     <>

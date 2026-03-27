@@ -61,8 +61,8 @@ export default function User() {
     router.push("/login");
   };
 
-  if (isLoading) return <StatusInfo status="loading" data={null} />;
-  if (error) return <StatusInfo status="service-down" data={null} />;
+  if (isLoading) return <StatusInfo status="loading" />;
+  if (error) return <StatusInfo status="service-down" />;
 
   return (
     <div className="wrapper">

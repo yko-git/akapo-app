@@ -116,13 +116,13 @@ export default function PostListPage() {
     setError,
   ]);
 
-  if (isLoading) return <StatusInfo status="loading" data={null} />;
-  if (error) return <StatusInfo status="service-down" data={null} />;
+  if (isLoading) return <StatusInfo status="loading" />;
+  if (error) return <StatusInfo status="service-down" />;
   return (
     <>
       <div className="md:m-4 md:mt-4 md:mx-auto md:mb-20">
         {!posts || posts.length === 0 ? (
-          <StatusInfo status="empty" data={null} />
+          <StatusInfo status="empty" />
         ) : (
           <>
             <div className="wrapper mb-5">

@@ -1,7 +1,7 @@
 import { StatusInfoProps } from "@/shared/types";
 import Image from "next/image";
 
-export default function StatusInfo({ status, data }: StatusInfoProps) {
+export default function StatusInfo({ status }: StatusInfoProps) {
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
