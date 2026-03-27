@@ -124,21 +124,17 @@ export default function PostDetail({ id }: PostDetailProps) {
               </div>
 
               <div className="md:block hidden mt-4 leading-8 text-slate-500">
-                {currentPost.body
-                  .split("\n")
-                  .map((item: string, index: number) => (
-                    <p key={index}>{item}</p>
-                  ))}
+                {currentPost.body.split("\n").map((item, index) => (
+                  <p key={index}>{item}</p>
+                ))}
               </div>
             </div>
           </div>
           <div className="md:hidden block mt-4">
             <div className="mt-4 leading-8 text-slate-500">
-              {currentPost.body
-                .split("\n")
-                .map((item: string, index: number) => (
-                  <p key={index}>{item}</p>
-                ))}
+              {currentPost.body.split("\n").map((item, index) => (
+                <p key={index}>{item}</p>
+              ))}
             </div>
           </div>
         </div>
