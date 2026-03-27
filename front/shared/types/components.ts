@@ -34,6 +34,10 @@ export interface CreateCommentProps {
   postId: number;
 }
 
+export interface PostDetailProps {
+  id: number;
+}
+
 // Tag
 export interface TagListProps {
   categories: Pick<Category, "name">[];

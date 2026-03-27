@@ -13,8 +13,9 @@ import { fetchPost } from "../../shared/api";
 import { fetchComments } from "../../shared/api/fetchComments";
 import CreateComment from "@/features/comments/create/components/CreateComment";
 import CommentsList from "@/features/comments/list/components/CommentsList";
+import { PostDetailProps } from "@/shared/types";
 
-export default function PostDetail({ id }: { id: number }) {
+export default function PostDetail({ id }: PostDetailProps) {
   const { setComments, reset } = useCommentStore();
   const {
     currentPost,
