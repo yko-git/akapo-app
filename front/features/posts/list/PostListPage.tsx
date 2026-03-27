@@ -12,6 +12,7 @@ import { jost } from "@/shared/components/font";
 import Image from "next/image";
 import { PageNation } from "@/shared/components/pageNation";
 import { Post } from "@/shared/schemas";
+import { getErrorMessage } from "@/shared/lib/getErrorMessage";
 
 export default function PostListPage() {
   // Storeから必要なデータと関数を取得
@@ -95,9 +96,7 @@ export default function PostListPage() {
         setPosts(postsWithComments);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
-        setError(
-          error instanceof Error ? error.message : "投稿の取得に失敗しました",
-        );
+        setError(getErrorMessage(error));
       } finally {
         setLoading(false);
       }

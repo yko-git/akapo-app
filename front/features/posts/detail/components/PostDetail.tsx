@@ -14,6 +14,7 @@ import { fetchComments } from "../../shared/api/fetchComments";
 import CreateComment from "@/features/comments/create/components/CreateComment";
 import CommentsList from "@/features/comments/list/components/CommentsList";
 import { PostDetailProps } from "@/shared/types";
+import { getErrorMessage } from "@/shared/lib/getErrorMessage";
 
 export default function PostDetail({ id }: PostDetailProps) {
   const { setComments, reset } = useCommentStore();
@@ -40,9 +41,7 @@ export default function PostDetail({ id }: PostDetailProps) {
         setComments(commentList);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
-        setError(
-          error instanceof Error ? error.message : "投稿の取得に失敗しました",
-        );
+        setError(getErrorMessage(error));
       } finally {
         setLoading(false);
       }
