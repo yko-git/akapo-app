@@ -95,7 +95,7 @@ const PatchPost = ({ id }: { id: number }) => {
       setIsSubmitting(false);
     }
   };
-  if (error) return <StatusInfo status="service-down" data={null} />;
+  if (error) return <StatusInfo status="service-down" />;
 
   return (
     <form

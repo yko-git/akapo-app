@@ -12,6 +12,7 @@ import { jost } from "@/shared/components/font";
 import Image from "next/image";
 import { PageNation } from "@/shared/components/pageNation";
 import { Post } from "@/shared/schemas";
+import { getErrorMessage } from "@/shared/lib/getErrorMessage";
 
 export default function PostListPage() {
   // Storeから必要なデータと関数を取得
@@ -95,9 +96,7 @@ export default function PostListPage() {
         setPosts(postsWithComments);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
-        setError(
-          error instanceof Error ? error.message : "投稿の取得に失敗しました",
-        );
+        setError(getErrorMessage(error));
       } finally {
         setLoading(false);
       }
@@ -116,13 +115,13 @@ export default function PostListPage() {
     setError,
   ]);
 
-  if (isLoading) return <StatusInfo status="loading" data={null} />;
-  if (error) return <StatusInfo status="service-down" data={null} />;
+  if (isLoading) return <StatusInfo status="loading" />;
+  if (error) return <StatusInfo status="service-down" />;
   return (
     <>
       <div className="md:m-4 md:mt-4 md:mx-auto md:mb-20">
         {!posts || posts.length === 0 ? (
-          <StatusInfo status="empty" data={null} />
+          <StatusInfo status="empty" />
         ) : (
           <>
             <div className="wrapper mb-5">
