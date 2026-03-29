@@ -10,5 +10,4 @@ export type Status = (typeof STATUS_INFO)[number];
 
 export interface StatusInfoProps {
   status: Status;
-  data: Post | Post[] | null | undefined;
 }

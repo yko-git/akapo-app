@@ -11,6 +11,7 @@ import Image from "next/image";
 import UserPostListPage from "@/features/posts/user-list/UserPostListPage";
 import { useRequireAuth } from "@/features/posts/shared/hooks";
 import { fetchUserData, fetchUserPosts } from "../api";
+import { getErrorMessage } from "@/shared/lib/getErrorMessage";
 
 export default function User() {
   const { userProfile, setUserProfile, logout } = useAuthStore();
@@ -38,9 +39,7 @@ export default function User() {
         }
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
-        setError(
-          error instanceof Error ? error.message : "投稿の取得に失敗しました",
-        );
+        setError(getErrorMessage(error));
       } finally {
         setLoading(false);
       }
@@ -61,8 +60,8 @@ export default function User() {
     router.push("/login");
   };
 
-  if (isLoading) return <StatusInfo status="loading" data={null} />;
-  if (error) return <StatusInfo status="service-down" data={null} />;
+  if (isLoading) return <StatusInfo status="loading" />;
+  if (error) return <StatusInfo status="service-down" />;
 
   return (
     <div className="wrapper">

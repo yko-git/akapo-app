@@ -24,7 +24,7 @@ export default function CommentsList({ postUserId, postId }: CommentListProps) {
   };
 
   // 空チェック
-  if (!comments || comments.length === 0) {
+  if (comments.length === 0) {
     return (
       <div className="mt-20">
         <p className="text-center font-bold tracking-wider">
@@ -78,7 +78,7 @@ export default function CommentsList({ postUserId, postId }: CommentListProps) {
                   }`}
                 >
                   {comment.body}
-                  {comments && (
+                  {comments && userComment && (
                     <div
                       className="absolute right-2 bottom-2 p-1 border-1 border border-gray-300"
                       onClick={() => handleDelete(comment.id)}

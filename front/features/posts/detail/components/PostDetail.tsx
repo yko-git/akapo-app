@@ -13,8 +13,10 @@ import { fetchPost } from "../../shared/api";
 import { fetchComments } from "../../shared/api/fetchComments";
 import CreateComment from "@/features/comments/create/components/CreateComment";
 import CommentsList from "@/features/comments/list/components/CommentsList";
+import { PostDetailProps } from "@/shared/types";
+import { getErrorMessage } from "@/shared/lib/getErrorMessage";
 
-export default function PostDetail({ id }: { id: number }) {
+export default function PostDetail({ id }: PostDetailProps) {
   const { setComments, reset } = useCommentStore();
   const {
     currentPost,
@@ -39,9 +41,7 @@ export default function PostDetail({ id }: { id: number }) {
         setComments(commentList);
       } catch (error) {
         console.error("投稿の取得でエラーが発生しました:", error);
-        setError(
-          error instanceof Error ? error.message : "投稿の取得に失敗しました",
-        );
+        setError(getErrorMessage(error));
       } finally {
         setLoading(false);
       }
@@ -56,9 +56,9 @@ export default function PostDetail({ id }: { id: number }) {
     };
   }, [id, isAuthChecked, setCurrentPost, setLoading, setError, setComments]);
 
-  if (isLoading) return <StatusInfo status="loading" data={null} />;
-  if (error) return <StatusInfo status="service-down" data={null} />;
-  if (!currentPost) return <StatusInfo status="service-down" data={null} />;
+  if (isLoading) return <StatusInfo status="loading" />;
+  if (error) return <StatusInfo status="service-down" />;
+  if (!currentPost) return <StatusInfo status="service-down" />;
 
   return (
     <>
@@ -123,21 +123,17 @@ export default function PostDetail({ id }: { id: number }) {
               </div>
 
               <div className="md:block hidden mt-4 leading-8 text-slate-500">
-                {currentPost.body
-                  .split("\n")
-                  .map((item: string, index: number) => (
-                    <p key={index}>{item}</p>
-                  ))}
+                {currentPost.body.split("\n").map((item, index) => (
+                  <p key={index}>{item}</p>
+                ))}
               </div>
             </div>
           </div>
           <div className="md:hidden block mt-4">
             <div className="mt-4 leading-8 text-slate-500">
-              {currentPost.body
-                .split("\n")
-                .map((item: string, index: number) => (
-                  <p key={index}>{item}</p>
-                ))}
+              {currentPost.body.split("\n").map((item, index) => (
+                <p key={index}>{item}</p>
+              ))}
             </div>
           </div>
         </div>
