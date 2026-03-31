@@ -131,7 +131,7 @@ ${screen.name}
 6. バリデーション・エラーハンドリング
 7. 画面遷移
 8. 使用している コンポーネント
-9. 使用している Hooks / Stores / API / Schema
+9. 使用している Hooks / Stores / API / Schema / Lib
 10. 補足・制約
 
 <!-- META -->
