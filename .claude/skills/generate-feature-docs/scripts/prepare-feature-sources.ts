@@ -1,4 +1,6 @@
+import * as fs from "node:fs";
 import { execSync } from "child_process";
+import path from "path";
 
 // 変更されたFeatureの検出
 function getChangedFeatureIds(): string[] {
@@ -13,8 +15,8 @@ function getChangedFeatureIds(): string[] {
     .split("\n")
     .filter(Boolean);
 
-  for (const path of diff) {
-    const parts = path.split("/");
+  for (const filePath of diff) {
+    const parts = filePath.split("/");
     const featuresIndex = parts.indexOf("features");
     if (featuresIndex !== -1) {
       featureID.push(parts[featuresIndex + 1]);
@@ -25,6 +27,26 @@ function getChangedFeatureIds(): string[] {
 }
 
 // Featureのソースコード収集
-function readSourceFiles(): string {
-  const getFeatureID = getChangedFeatureIds();
+function readSourceFiles(
+  featureId: string,
+): { filePath: string; code: string }[] {
+  // process.cwd()で現在の作業ディレクトリを取得し、path.resolveでそれを基準にfeatures/featureIdを結合して絶対パスを生成
+  const featureDir = path.resolve(process.cwd(), "features", featureId);
+  const files = fs.readdirSync(featureDir, {
+    encoding: "utf8",
+    recursive: true,
+  });
+
+  const sources = files
+    .filter(
+      (file) =>
+        !file.startsWith("docs") &&
+        (file.endsWith(".ts") || file.endsWith(".tsx")),
+    )
+    .map((file) => ({
+      filePath: file,
+      code: fs.readFileSync(path.resolve(featureDir, file), "utf-8"), // readFileSync（同期処理メソッド）で同期的にファイルを読み込む
+    }));
+
+  return sources;
 }
