@@ -1,5 +1,8 @@
 ---
+name: generate-feature-docs
 user-invocable: true
+disable-model-invocation: true
+description: Feature単位のソースコードを解析し、日本語の仕様ドキュメントを自動生成する
 ---
 
 # generate-feature-docs
