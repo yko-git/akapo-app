@@ -76,11 +76,12 @@ function main() {
     generatedAt: new Date().toISOString().split("T")[0],
     features,
   };
-  fs.mkdirSync(".claude/tmp", { recursive: true });
-  fs.writeFileSync(
-    ".claude/tmp/feature-sources.json",
-    JSON.stringify(output, null, 2),
+  fs.mkdirSync(path.resolve(__dirname, "../../../tmp"), { recursive: true });
+  const featurePath = path.resolve(
+    __dirname,
+    "../../../tmp/feature-sources.json",
   );
+  fs.writeFileSync(featurePath, JSON.stringify(output, null, 2));
 }
 
 main();
