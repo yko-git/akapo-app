@@ -50,3 +50,26 @@ function readSourceFiles(
 
   return sources;
 }
+
+function main() {
+  // 1. 変更された Feature ID を取得
+  const featureIds = getChangedFeatureIds();
+  // 2. 各 Feature のソースコードを収集
+  const features = featureIds.map((id) => ({
+    id,
+    name: id,
+    sources: readSourceFiles(id),
+  }));
+  // 3. JSON に出力
+  const output = {
+    generatedAt: new Date().toISOString().split("T")[0],
+    features,
+  };
+  fs.mkdirSync(".claude/tmp", { recursive: true });
+  fs.writeFileSync(
+    ".claude/tmp/feature-sources.json",
+    JSON.stringify(output, null, 2),
+  );
+}
+
+main();
