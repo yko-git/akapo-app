@@ -51,6 +51,16 @@ function readSourceFiles(
   return sources;
 }
 
+// 各 Feature のルートを設定
+const FEATURE_ROUTES: Record<string, string> = {
+  auth: "/login",
+  posts: "/",
+  comments: "/posts/65",
+  users: "/mypage",
+  profile: "/profile",
+  about: "/about",
+};
+
 function main() {
   // 1. 変更された Feature ID を取得
   const featureIds = getChangedFeatureIds();
@@ -58,6 +68,7 @@ function main() {
   const features = featureIds.map((id) => ({
     id,
     name: id,
+    route: FEATURE_ROUTES[id] ?? null,
     sources: readSourceFiles(id),
   }));
   // 3. JSON に出力
