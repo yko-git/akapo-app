@@ -18,10 +18,26 @@ Feature仕様ドキュメントを自動生成する
 このスキルは、Feature単位のソースコードを解析し、日本語の仕様ドキュメントを自動生成します。
 スキル実行時に事前処理→ドキュメント生成→事後処理の全フローを完結させます。
 
+### 引数
+
+| 引数 | 説明 |
+|---|---|
+| `--all` | 全 Feature を対象にドキュメントを生成する。省略時は git diff で変更があった Feature のみ対象 |
+
+例：
+- `/generate-feature-docs` → 差分のある Feature のみ生成
+- `/generate-feature-docs --all` → 全 Feature を生成
+
 ### 実行フロー
 
 **ステップ1: 事前処理（ソースコード収集）**
 
+`--all` が指定された場合：
+```bash
+npm run prepare:feature-sources:all
+```
+
+指定なしの場合：
 ```bash
 npm run prepare:feature-sources
 ```
@@ -30,13 +46,13 @@ npm run prepare:feature-sources
 
 このスクリプトは：
 
-**git diff でコード変更があった Feature を自動検出**（`GITHUB_EVENT_BEFORE` 環境変数を使用）
+**git diff でコード変更があった Feature を自動検出**（`GITHUB_EVENT_BEFORE` 環境変数を使用）、`--all` 時は全 Feature を対象
 検出された Feature のソースコードを全て収集
 `.claude/tmp/feature-sources.json` に出力
 
 このファイルには以下の情報が含まれます:
 
-対象Feature一覧（変更があったもののみ）
+対象Feature一覧
 各Featureのソースコード
 生成日
 

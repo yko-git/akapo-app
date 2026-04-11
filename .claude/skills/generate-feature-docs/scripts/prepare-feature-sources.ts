@@ -62,8 +62,9 @@ const FEATURE_ROUTES: Record<string, string> = {
 };
 
 function main() {
-  // 1. 変更された Feature ID を取得
-  const featureIds = getChangedFeatureIds();
+  // 1. 変更された Feature ID を取得（--all フラグで全件対象）
+  const all = process.argv.includes("--all");
+  const featureIds = all ? Object.keys(FEATURE_ROUTES) : getChangedFeatureIds();
   // 2. 各 Feature のソースコードを収集
   const features = featureIds.map((id) => ({
     id,

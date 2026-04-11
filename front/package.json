@@ -9,6 +9,7 @@
     "lint": "next lint",
     "test": "vitest",
     "prepare:feature-sources": "tsx ../.claude/skills/generate-feature-docs/scripts/prepare-feature-sources.ts",
+    "prepare:feature-sources:all": "tsx ../.claude/skills/generate-feature-docs/scripts/prepare-feature-sources.ts --all",
     "apply:feature-docs": "tsx ../.claude/skills/generate-feature-docs/scripts/apply-feature-docs.ts",
     "prepare:screenshots": "NODE_PATH=./node_modules tsx ../.claude/skills/generate-feature-docs/scripts/prepare-screenshots.ts"
   },
