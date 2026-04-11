@@ -10,7 +10,7 @@
     "test": "vitest",
     "prepare:feature-sources": "tsx ../.claude/skills/generate-feature-docs/scripts/prepare-feature-sources.ts",
     "apply:feature-docs": "tsx ../.claude/skills/generate-feature-docs/scripts/apply-feature-docs.ts",
-    "prepare:screenshots": "tsx ../.claude/skills/generate-feature-docs/scripts/prepare-screenshots.ts"
+    "prepare:screenshots": "NODE_PATH=./node_modules tsx ../.claude/skills/generate-feature-docs/scripts/prepare-screenshots.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.72.1",
@@ -30,7 +30,7 @@
     "zustand": "^5.0.10"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.59.1",
     "@testing-library/react": "^16.3.0",
     "@types/node": "^20",
     "@types/react": "^18",
