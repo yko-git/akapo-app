@@ -9,7 +9,8 @@
     "lint": "next lint",
     "test": "vitest",
     "prepare:feature-sources": "tsx ../.claude/skills/generate-feature-docs/scripts/prepare-feature-sources.ts",
-    "apply:feature-docs": "tsx ../.claude/skills/generate-feature-docs/scripts/apply-feature-docs.ts"
+    "apply:feature-docs": "tsx ../.claude/skills/generate-feature-docs/scripts/apply-feature-docs.ts",
+    "prepare:screenshots": "tsx ../.claude/skills/generate-feature-docs/scripts/prepare-screenshots.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.72.1",

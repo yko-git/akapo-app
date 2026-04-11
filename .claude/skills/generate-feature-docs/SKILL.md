@@ -5,6 +5,10 @@ disable-model-invocation: true
 description: Feature単位のソースコードを解析し、日本語の仕様ドキュメントを自動生成する
 ---
 
+## Additional resources
+
+- For complete API details, see [scripts/prepare-feature-sources.ts](scripts/prepare-feature-sources.ts)
+
 # generate-feature-docs
 
 Feature仕様ドキュメントを自動生成する
@@ -35,6 +39,12 @@ npm run prepare:feature-sources
 対象Feature一覧（変更があったもののみ）
 各Featureのソースコード
 生成日
+
+**ステップ1.5: 画像生成**
+
+```bash
+npm run prepare:screenshots
+```
 
 **ステップ2: ドキュメント生成**
 
@@ -73,6 +83,7 @@ META ブロックは絶対に削除・省略しない
 
 # 必須構成
 
+![feature](../../../docs/screens/${feature.id}.png)
 Feature概要
 主要な責務
 提供するコンポーネント
