@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
-    "docs:generate": "tsx scripts/generate-screen-docs.ts"
+    "prepare:feature-sources": "tsx ../.claude/skills/generate-feature-docs/scripts/prepare-feature-sources.ts",
+    "apply:feature-docs": "tsx ../.claude/skills/generate-feature-docs/scripts/apply-feature-docs.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.72.1",
