@@ -1,50 +1,135 @@
-# 画面名
-Profile
----
-![screen](../../../docs/screens/profile.png)
----
+# Feature名
 
-# 画面仕様
+profile
 
-## 1. 画面概要
-このページは、ユーザーのプロフィールを表示する画面です。ユーザーの基本情報や経歴、スキルなどが確認できます。
+![feature](../../../docs/screens/profile.png)
 
-## 2. URL
-`/profile`
+## Feature概要
 
-## 3. フォーム項目・表示要素
-- ユーザーの写真
-- 住まい
-- 自己紹介
-- 使用言語
-- 使用ツール
-- 経歴
+サイト運営者のプロフィールを表示する静的ページ Feature。住まい・自己紹介・使用言語・ツール・経歴をリスト形式で表示する。
 
-## 4. 初期表示・デフォルト値
-- ユーザーの写真、住まい、自己紹介、使用言語、使用ツール、経歴が初期表示されます。
+## 主要な責務
 
-## 5. ユーザー操作
-- このページはユーザーが閲覧するだけの画面で、ユーザー操作はありません。
+- 運営者のプロフィール情報（住まい・紹介・言語・ツール・経歴）をハードコードされたテキストで表示
+- プロフィール画像（`/profile/img-01.png`）を表示
 
-## 6. バリデーション・エラーハンドリング
-- 特になし
+## 提供するコンポーネント
 
-## 7. 画面遷移
-- このページは単独の画面で、他の画面への遷移はありません。
+| コンポーネント | 説明 |
+|---|---|
+| `ProfilePage` | プロフィールページのルートコンポーネント（デフォルトエクスポート）。完全な静的コンポーネント |
 
-## 8. 使用しているコンポーネント
-- `Image`: ユーザーの写真を表示するために使用
-- `jost`: フォントを適用するために使用
+## 提供するHooks
 
-## 9. 使用しているHooks / Stores / API / Schema
-- 特になし
+なし
 
-## 10. 補足・制約
-- 本画面はユーザーのプロフィールを表示する静的な画面です。
-- 実際のユーザー情報は別の場所で管理されており、本画面では表示のみを行っています。
-- 今後、ユーザー情報の編集機能などが追加される可能性があります。
+## 状態管理（Store）
+
+なし
+
+## 使用している外部依存
+
+| 依存 | 用途 |
+|---|---|
+| `next/image` (`Image`) | プロフィール画像の最適化表示 |
+| `@/shared/components/font` (`jost`) | タイトルフォント |
+
+## 使用されている箇所（routes）
+
+| ルート | 説明 |
+|---|---|
+| `/profile` | `ProfilePage` が表示される |
+
+## 補足・制約
+
+- 表示内容はすべてコードにハードコードされており、外部データソース・状態管理・サーバーサイドフェッチは一切行わない
+- プロフィール画像は `public/profile/img-01.png` を参照
 
 <!-- META -->
-- 画面ID: profile
-- 最終更新日: 2026-03-15
+Feature ID: profile
+最終更新日: 2026-04-11
 <!-- /META -->
+
+# 実装コード
+
+### ProfilePage.tsx
+
+```tsx
+import Image from "next/image";
+import { jost } from "@/shared/components/font";
+
+export default function ProfilePage() {
+  return (
+    <>
+      <div className="m-4 wrapper">
+        <div className="text-center md:mb-20 mb-10">
+          <h3
+            className={`${jost.className} md:text-[53px] text-[22px] text-[#6C9FE0] tracking-[.2rem] font-bold`}
+          >
+            Profile
+          </h3>
+          <div className="md:flex mt-11 md:text-left text-center md:px-4 px-2">
+            <Image
+              src="/profile/img-01.png"
+              loading="lazy"
+              alt=""
+              width={115}
+              height={115}
+              className="mr-0 w-[115px] h-[115px] md:mr-10 inline-block"
+            />
+            <div className="pb-12 md:pt-0 pt-7">
+              <ul className="text-left text-[#657994] tracking-[.15rem] leading-7 text-sm space-y-4">
+                <li className="flex">
+                  <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline block md:mr-6 mr-4">
+                    住まい
+                  </span>
+                  東京都
+                </li>
+                <li className="md:flex">
+                  <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline block md:mr-6 mr-0">
+                    紹　介
+                  </span>
+                  散歩やものづくりが好きなママです。
+                  <br />
+                  「akapo」は、自身の学習やインプットを目的に開発しており、React
+                  / Next.js / TypeScript を使用しています。
+                  <br />
+                  バックエンドには AWS（EC2 / RDS / S3）や Cloudflare
+                  を活用しています。
+                  <br />
+                  開発途中のため、頻繁にアップデートを行っています！
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t-2 border-[#E7E7E7] pt-10 md:px-4 px-2">
+            <ul className="text-left text-[#657994] tracking-[.15rem] leading-7 text-sm space-y-4">
+              <li className="md:flex">
+                <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline block md:mr-6 mr-0">
+                  言　語
+                </span>
+                HTML, JavaScript, CSS, PHP, React, Vue, TypeScript, Next.js...
+              </li>
+              <li className="md:flex">
+                <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline block md:mr-6 mr-0">
+                  TOOL
+                </span>
+                Photoshop, Illustrator, Figma, XD, VScode, git, github, Docker
+                ...
+              </li>
+              <li className="md:flex">
+                <span className="font-bold whitespace-nowrap text-[#2F4561] md:inline block md:mr-6 mr-0">
+                  経　歴
+                </span>
+                21歳のときに都内のデザイン制作会社でキャリアをスタートし、
+                <br />
+                主にWebページの作成からフロントエンド開発まで、幅広い業務を経験してきました。
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+```

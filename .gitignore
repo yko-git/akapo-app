@@ -24,6 +24,9 @@ front/out/
 front/build
 backend/build
 
+# claude
+.claude/tmp/
+
 # misc
 front/.DS_Store
 front/*.pem
