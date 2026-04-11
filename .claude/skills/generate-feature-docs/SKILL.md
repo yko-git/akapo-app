@@ -106,7 +106,7 @@ Feature ID: {feature.id}
 
 ---
 
-生成されたMarkdownを **直接** `app/features/{feature.id}/docs/feature.md` に書き込む
+生成されたMarkdownを **直接** `app/features/{feature.id}/docs/{feature.id}.md` に書き込む
 `app/features/{feature.id}/docs/` ディレクトリが存在しない場合は作成する
 Write ツールを使用してファイルを作成
 

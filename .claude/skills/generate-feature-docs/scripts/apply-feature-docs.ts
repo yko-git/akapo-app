@@ -14,7 +14,7 @@ function generateIndexContent(): string {
   );
   const sourceData = JSON.parse(fs.readFileSync(featurePath, "utf-8"));
   const featureLinks = sourceData.features
-    .map((f: FeatureSource) => `- [${f.id}](../${f.name}/docs/feature.md)`)
+    .map((f: FeatureSource) => `- [${f.id}](../${f.name}/docs/${f.name}.md)`)
     .join("\n");
 
   return `# Feature一覧\n\n${featureLinks}`;
