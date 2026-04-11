@@ -4,7 +4,10 @@ import path from "path";
 
 const BASE_URL = "http://localhost:3000";
 
-const sourceDataPath = ".claude/tmp/feature-sources.json";
+const sourceDataPath = path.resolve(
+  __dirname,
+  "../../../tmp/feature-sources.json",
+);
 const sourceData = JSON.parse(fs.readFileSync(sourceDataPath, "utf-8"));
 
 (async () => {
