@@ -34,8 +34,10 @@ jobs:
         working-directory: front
         env:
           GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           npm run prepare:feature-sources
+          npm run generate:feature-docs
           npm run apply:feature-docs
 
       - name: Commit and push docs
