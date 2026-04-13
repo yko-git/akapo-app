@@ -53,3 +53,7 @@ front/next-env.d.ts
 
 backend/*.tsbuildinfo
 backend/next-env.d.ts
+
+# claude
+.claude/tmp/
+.claude/skills/*-workspace/
