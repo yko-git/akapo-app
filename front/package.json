@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
-    "docs:generate": "tsx scripts/generate-screen-docs.ts"
+    "docs:generate": "tsx scripts/generate-screen-docs.ts",
+    "prepare:feature-sources": "tsx ../.claude/skills/generate-feature-docs/scripts/prepare-feature-sources.ts",
+    "prepare:screenshots": "NODE_PATH=./node_modules tsx ../.claude/skills/generate-feature-docs/scripts/prepare-screenshots.ts",
+    "generate:feature-docs": "NODE_PATH=./node_modules tsx ../.claude/skills/generate-feature-docs/scripts/generate-docs.ts",
+    "apply:feature-docs": "NODE_PATH=./node_modules tsx ../.claude/skills/generate-feature-docs/scripts/apply-feature-docs.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.72.1",
