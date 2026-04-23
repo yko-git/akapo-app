@@ -1,0 +1,33 @@
+name: EC2 Instance Control
+
+on:
+  schedule:
+    - cron: "0 23 * * *" # 毎日 08:00 JST (UTC 23:00 前日)
+    - cron: "0 12 * * *" # 毎日 21:00 JST (UTC 12:00)
+
+jobs:
+  start-instance:
+    if: github.event.schedule == '0 23 * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+      - name: Start EC2 instance
+        run: aws ec2 start-instances --instance-ids i-08963515a51435611
+
+  stop-instance:
+    if: github.event.schedule == '0 12 * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+      - name: Stop EC2 instance
+        run: aws ec2 stop-instances --instance-ids i-08963515a51435611
