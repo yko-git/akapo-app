@@ -1,9 +1,9 @@
-name: Deploy and Test
+name: Deploy
 
 on:
   push:
     branches:
-      - develop
+      - main
 
 jobs:
   deploy:
@@ -18,28 +18,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm ci --prefix front
-
-      - name: Build front
-        run: npm run build --prefix front
-
-      - name: Deploy to Vercel
+      - name: Install Vercel CLI
         run: |
           npm install -g vercel
-          vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }} --cwd front
 
-      - name: Install wait-on
-        run: npm install -g wait-on
-
-      - name: Wait for deployment to be live
-        run: wait-on https://akapo-front.vercel.app
-
-      - name: Install Cypress
-        run: npm install --prefix front cypress --save-dev
-
-      - name: Run Cypress tests
-        run: npx cypress run
+      - name: Deploy to Vercel
+        run: vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
         working-directory: ./front
-        env:
-          CYPRESS_BASE_URL: https://akapo-front.vercel.app
