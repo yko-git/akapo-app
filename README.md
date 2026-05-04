@@ -91,6 +91,26 @@ API Server (Node.js / Express on EC2)
 
 ---
 
+## Architecture Decision Records (ADR)
+
+本プロジェクトでは、設計上の意思決定を ADR（Architecture Decision Records）として記録しています。
+
+技術選定や構成方針について、  
+「なぜその選択をしたか」を後から参照できるようにしています。
+
+例:
+
+- Zustand を採用した理由
+- ディレクトリ構成の方針
+- フロントエンド / バックエンド分離構成の判断
+- API設計方針
+
+ADR一覧:
+
+- [docs/adr](front/docs/adr)
+
+---
+
 ## 使用技術
 
 ### フロントエンド
