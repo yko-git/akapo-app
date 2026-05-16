@@ -9,6 +9,7 @@
 | [0001](./0001-vercel-ec2-rds-architecture.md) | Vercel + EC2 + RDS構成の採用理由 | 採用       | 2026-05-09 |
 | [0002](./0002-cloudflare.md)                  | Cloudflare経由構成               | 採用       | 2026-05-13 |
 | [0003](./0003-cicd-strategy.md)               | CI/CD構成                        | 採用       | 2026-05-14 |
+| [0004](./0004-authentication.md)              | 認証全体設計                     | 採用       | 2026-05-16 |
 
 ---
 
