@@ -39,6 +39,13 @@ API 境界を設けた Frontend / Backend 分離構成を採用
 
 - Frontend を UIに集中させたい
 - API設計を学習したい
+  - Frontend ⇄ API ⇄ Backend
+  - 「データ取得・更新は全部API経由」に統一
+    - 実務構成に近い
+    - Backendに以下のロジックを集約することで、Frontendを差し替えしやすくなる
+      - Validation
+      - 認証
+      - 投稿制限など
 
 ## トレードオフ
 
